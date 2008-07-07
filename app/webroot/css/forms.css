@@ -1,0 +1,176 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* fieldset styling */
+fieldset 
+{
+	margin: 1em 0; /*  space out the fieldsets a little*/
+	padding: 1em;
+	background:#f5e1c9;
+	border:0;
+}
+/* legend styling */
+fieldset legend 
+{
+	font-size:15px;
+	color:#F56C1E;
+	width:100%;
+}
+fieldset fieldset legend
+{
+	font-size:13px;
+}
+/* IE hack */
+html html fieldset
+{ 
+	position: relative; 
+}
+html legend
+{ 
+	position:absolute; top: -.5em; left: .5em; 
+}
+html fieldset
+{ 
+	position: relative; margin-top:1em; padding-top:.75em; 
+}
+/* End hack */
+form p 
+{
+	position: relative;
+	width: 100%;
+}
+/* style for  labels */
+label, dt
+{
+	float: left;
+	width: 12em;
+	padding-top:3px;
+	padding-bottom:3px;
+	margin-top:1px;
+}
+/* style for required labels */
+label.required 
+{
+}
+/* style for optional labels */
+label.optional:after
+{
+	font-size:80%;
+	color:#666;
+	content:"(optional)";
+}
+/* :KLUDGE: Explicitly set the width for IE6- */
+* html.feedback
+{
+	width: 10em;
+}
+input 
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	padding:3px 4px 2px 3px;
+}
+input[type="text"], textarea, input[type="password"]
+{
+	border: 1px solid #F56C1E;
+	width: 200px;
+}
+input.radio, input.checkbox, input.submit 
+{
+	width: auto;
+}
+input[type="submit"]
+{
+	font-weight:bold;
+	margin-left:2px;
+	margin-top:10px;
+	font-size:9px;
+	padding:3px 10px 3px 10px;
+	text-transform:uppercase;
+	border:0;
+	background:#F56C1E;
+	color:#FFF;
+}
+input[type="submit"]:hover
+{
+	background:#F56C1E;
+	
+}
+/* style form elements on focus */
+input[type="text"]:focus, textarea:focus, input[type="password"]:focus
+{
+	background:#F56C1E;
+	color:#FFF;
+}
+input.radio 
+{
+	float: left;
+	margin-right: 1em;
+}
+textarea 
+{
+	width: 350px;
+	height: 200px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	padding:4px;
+}
+select
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+.helpBox
+{
+	width:200px;
+	background:#93CBEC;
+	padding:3px;
+	position:absolute;
+	left:200px;
+	margin-top:-35px;
+}
+.helpBox p
+{
+	color:#FFF;
+	font-size:11px;
+	margin:0;
+	line-height:normal;
+}
+form .error, form .success
+{
+	padding:2px 5px 2px 5px;
+	display:inline-block;
+}
+.input
+{
+	margin-bottom:8px;
+}
+input[type="text"].form-error
+{
+}
+.error-message
+{
+	display:inline;
+	margin:0 0 0 5px;
+	font-size:smaller;
+}
+.input label:after
+{
+	/*content:" (optional)";*/
+	color:#888;
+	font-size:smaller;
+}
+.input.required label:after
+{
+	content:" *";
+	color:#F56C1E;
+	font-size:smaller;
+}
+.input.required
+{
+	padding:0;
+}
+.input.required.error label
+{
+	font-weight:bold;
+}
