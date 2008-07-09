@@ -30,6 +30,7 @@ h1
 {
 	background:#FFF;
 	padding:15px;
+	position:relative;
 	/*border-top:3px solid #5cdb39;*/
 }
 #content > h1, #content > h2
@@ -38,7 +39,7 @@ h1
 }
 #menu
 {
-	padding-left:5px;
+	padding-left:8px;
 }
 #menu a
 {
@@ -46,7 +47,7 @@ h1
 	float:left;
 	padding:5px 8px 3px 8px;
 	background:#F9F9F9;
-	margin:0 0 0 2px;
+	margin:0 2px 0 0;
 	text-decoration:none;
 	color:#555;
 	font-weight:bold;
@@ -67,7 +68,6 @@ h1
 	padding-bottom:5px;
 	margin-top:-4px;
 }
-
 #footer
 {
 	border-top:3px solid #F56C1E;
@@ -77,6 +77,24 @@ h1
 	padding:6px;
 	background:#EFEFEF;
 	margin-bottom:10px;
+}
+#topRightCorner
+{
+	background:url(/img/menu_item.gif) top right;
+	height:8px;
+	width:8px;
+	position:absolute;
+	right:0;
+	top:0;
+}
+#topLeftCorner
+{
+	background:url(/img/menu_item.gif);
+	height:8px;
+	width:8px;
+	position:absolute;
+	left:0;
+	top:0;
 }
 /* Classes */
 #flashMessage.error

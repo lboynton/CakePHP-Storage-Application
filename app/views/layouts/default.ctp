@@ -4,22 +4,16 @@
 <head>
 <title><?php echo $title_for_layout?></title>
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-<?php echo $html->css('main'); ?>
-<?php echo $html->css('forms'); ?>
-<?php echo $scripts_for_layout?>
+<?php echo $html->css(array('main','forms','tables')); ?>
+<?php echo $scripts_for_layout; ?>
 </head>
 <body>
 <div id="container">
     <div id="header">
-        <div id="menu">
-            <?php
-            echo $link->menu(array(
-				'Home' => '/',
-                'Login' => '/users/login',
-                'Register' => '/users/add'));
-            ?> 
-            <div class="clear"></div>
-        </div>
+		<?php 
+        if($session->check('User')) echo $this->element('authenticatedMenu');
+        else echo $this->element('unauthenticatedMenu');
+        ?> 
     </div>
     <div id="content">
     	<?php echo $content_for_layout ?>

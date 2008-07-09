@@ -3,13 +3,18 @@ class BackupsController extends AppController
 {
 	var $name = "Backups";
 	var $helpers = array('Html', 'Form');
+	
+	function beforeFilter()
+    {
+		// require all functions to be authenticated
+        $this->__validateLoginStatus();
+    }
 		
 	function restore()
 	{
 		$this->helpers[] = "Time";
 		$this->helpers[] = "Number";
 		$this->pageTitle = "Restore";
-		$this->layout = "authenticated";
 		
 		$this->set('backups', $this->Backup->find('all', array('conditions' => array('user_id' => $this->Session->read('User.id')))));
 	}
@@ -19,7 +24,7 @@ class BackupsController extends AppController
 	 */
 	 function add() 
 	 {
-	 	$this->layout = "authenticated";
+	 	$this->pageTitle = "Backup";
 		
         if (!empty($this->data) &&
              is_uploaded_file($this->data['Backup']['File']['tmp_name'])) 
@@ -39,6 +44,7 @@ class BackupsController extends AppController
             $this->redirect('/users');
         }
     }
+	
 	function download($id) 
 	{
 		Configure::write('debug', 0);

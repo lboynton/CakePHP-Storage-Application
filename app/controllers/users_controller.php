@@ -6,13 +6,8 @@ class UsersController extends AppController
     
     function index()
     {
+		$this->__validateLoginStatus(); // require authentication
 		$this->pageTitle = "Summary";
-        $this->layout = "authenticated";
-    }
-    
-    function beforeFilter()
-    {
-        $this->__validateLoginStatus();
     }
     
     function login()
@@ -38,18 +33,6 @@ class UsersController extends AppController
         $this->Session->destroy('user');
         $this->Session->setFlash('You\'ve successfully logged out.');
         $this->redirect('/');
-    }
-        
-    function __validateLoginStatus()
-    {
-        if($this->action != 'login' && $this->action != 'logout' && $this->action != 'add')
-        {
-            if($this->Session->check('User') == false)
-            {
-                $this->redirect('login');
-                $this->Session->setFlash('The URL you\'ve followed requires you login.');
-            }
-        }
     }
 
 	function add()
