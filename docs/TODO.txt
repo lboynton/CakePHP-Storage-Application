@@ -1,0 +1,15 @@
+Admin section
+	- Allow user to change database
+	
+Backup/restore
+	- Display a tree of files, perhaps using applet
+	- Use incremental backing up by looking at the modified date
+	- Compress files before transmitting
+	- User quotas
+	- Backup files for a particular day or time period
+	- Restore files to either their original location or a user selected location
+	
+User interface
+	- Add help section
+	- Change summary to "My account"
+	- Test on other browsers

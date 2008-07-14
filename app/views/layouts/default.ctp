@@ -5,6 +5,8 @@
 <title><?php echo $title_for_layout?></title>
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <?php echo $html->css(array('main','forms','tables')); ?>
+<script type="text/javascript" src="/js/prototype.js"></script>
+<script type="text/javascript" src="/js/scriptaculous.js"></script>
 <?php echo $scripts_for_layout; ?>
 </head>
 <body>
