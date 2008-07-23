@@ -12,6 +12,8 @@ class AppController extends Controller
 		// allow unregistered access to the homepage
 		$this->Auth->allow(array('controller' => 'pages', 'action' => 'display', 'home'));
 		// controller action access is defined on a per controller basis
+		
+		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 	}
 }
 ?>
