@@ -4,24 +4,14 @@ class AppController extends Controller
 	// add custom link helper so it can be used in layouts
 	var $helpers = array('Html', 'Link');
 	
-	/**
-	 * Returns true if user is logged in, false otherwise
-	 */
-	function __userIsLoggedIn()
-	{
-		return $this->Session->check('User');
-	}
+	// add authentication component for logging in users
+	var $components = array('Auth');
 	
-	/**
-	 * Redirects user to login page if they're not logged in
-	 */    
-    function __validateLoginStatus()
-    {
-		if(!$this->__userIsLoggedIn())
-		{
-			$this->Session->setFlash('The URL you\'ve followed requires you to login, please do so below.');
-			$this->redirect(array('controller' => 'users', 'action' => 'login'));
-		}
-    }
+	function beforeFilter()
+	{
+		// allow unregistered access to the homepage
+		$this->Auth->allow(array('controller' => 'pages', 'action' => 'display', 'home'));
+		// controller action access is defined on a per controller basis
+	}
 }
 ?>

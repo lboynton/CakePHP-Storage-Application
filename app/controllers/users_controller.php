@@ -2,71 +2,74 @@
 class UsersController extends AppController
 {
     var $name = "Users";
-    var $helpers = array('Html', 'Form');
+    var $helpers = array('Html', 'Form', 'Javascript');
+	
+	function beforeFilter()
+	{
+		// allow unregistered access to the register page
+		$this->Auth->allow('register');
+	}
     
     function index()
     {
-		$this->__validateLoginStatus(); // require authentication
 		$this->pageTitle = "Summary";
     }
     
     function login()
     {
-		$this->pageTitle = "Login";
+		// handled by auth component
 		
-        if(empty($this->data) == false)
-        {
-            if(($user = $this->User->validateLogin($this->data['User'])) == true)
-            {
-                $this->Session->write('User', $user);
-                $this->flash('You\'ve successfully logged in.','index');
-            }
-            else
-            {
-                $this->Session->setFlash('Sorry, the information you\'ve entered is incorrect.', 'default', array('class' => 'error'));
-            }
-        }
+		// set the default username to the one created during registration if form hasn't been posted
+		if(empty($this->data)) $this->set('defaultUsername', $this->Session->read('username'));
+		else $this->set('defaultUsername', null);
     }
     
     function logout()
     {
-        $this->Session->destroy('user');
-        $this->Session->setFlash('You\'ve successfully logged out.');
-        $this->redirect('/');
+		$this->redirect($this->Auth->logout());
     }
-
-	function add()
+	
+	function register() 
 	{
-        if (!empty($this->data)) 
+		// check for POST data
+		if (!empty($this->data)) 
 		{
-			if($this->data['User']['password'] != $this->data['User']['confirmPassword'])
+			// create user with defaults
+			//
+			//
+			// verify this step is required
+			//
+			//
+			$this->User->create();
+
+			// try to store the data
+			if($this->User->save($this->data))
 			{
-				$this->Session->setFlash('The passwords do not match','default', array('class' => 'error'));
+				// passed validation
+				
+				// login after registering
+				//$this->Session->write('User', $this->User->findByUsername($this->data['User']['username']));
+				
+				// store the username in the session for speedier login
+				$this->Session->write('username', $this->data['User']['username']);
+				
+				// clear POST data
+				$this->data = null;
+				
+				$this->Session->setFlash('Thank you for registering, please login below.');
+				$this->redirect(array('action' => 'login'));
 			}
 			else
 			{
-				$this->User->set($this->data);
-				
-				if ($this->User->validates()) 
-				{
-					$this->data['User']['password'] = md5($this->data['User']['password']);
-					$this->User->create();
-				
-					if ($this->User->save($this->data)) 
-					{
-						// login after registering
-						//$this->Session->write('User', $this->User->findByUsername($this->data['User']['username']));
-						$this->Session->write('username', $this->data['User']['username']);
-						$this->Session->setFlash('Thank you for registering, please login below.');
-						$this->redirect(array('action' => 'login'));
-					} 
-				}
-				else 
-				{
-					$this->Session->setFlash('Your account could not be created due to the errors noted below. Please try again.','default', array('class' => 'error'));
-				}
+				// failed validation
+				$this->Session->setFlash('Your account could not be created due to the problems highlighted below.','default', array('class' => 'error'));
 			}
-        } 
+		}
+	}
+	
+	function admin_index()
+	{
+		$this->pageTitle = "Admin index";
 	}
 }
 ?>

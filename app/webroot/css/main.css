@@ -10,6 +10,7 @@ body
 h2
 {
 	color:#F56C1E;
+	font-size:18px;
 }
 p, strong
 {
@@ -19,7 +20,18 @@ h1
 {
 	font-size:18px;
 }
-
+a
+{
+	color:#333;
+	font-weight:bold;
+	padding:1px 0 1px 0;
+	text-decoration:none;
+}
+a:hover
+{
+	background:#F56C1E;
+	color:#FFF;
+}
 /* IDs */
 #container
 {
@@ -72,7 +84,7 @@ h1
 {
 	border-top:3px solid #F56C1E;
 }
-#flashMessage
+.message, #flashMessage
 {
 	padding:6px;
 	background:#EFEFEF;

@@ -3,7 +3,7 @@
     echo $link->menu(array(
         'Home' => '/',
         'Login' => '/users/login',
-        'Register' => '/users/add'));
+        'Register' => '/users/register'));
     ?> 
     <div class="clear"></div>
 </div>

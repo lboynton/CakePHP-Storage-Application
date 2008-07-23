@@ -3,12 +3,6 @@ class BackupsController extends AppController
 {
 	var $name = "Backups";
 	var $helpers = array('Html', 'Form');
-	
-	function beforeFilter()
-    {
-		// require all functions to be authenticated
-        $this->__validateLoginStatus();
-    }
 		
 	function restore()
 	{
@@ -41,7 +35,7 @@ class BackupsController extends AppController
 
             $this->Backup->save($this->data);
 
-            $this->redirect('/users');
+            //$this->redirect('/users'); // don't need to redirect the applet
         }
     }
 	

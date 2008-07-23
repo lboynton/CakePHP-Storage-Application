@@ -72,7 +72,6 @@ input
 }
 input[type="text"], textarea, input[type="password"]
 {
-	border: 1px solid #F56C1E;
 	width: 200px;
 }
 input.radio, input.checkbox, input.submit 
@@ -81,26 +80,17 @@ input.radio, input.checkbox, input.submit
 }
 input[type="submit"]
 {
-	font-weight:bold;
 	margin-left:2px;
 	margin-top:10px;
-	font-size:9px;
-	padding:3px 10px 3px 10px;
-	text-transform:uppercase;
-	border:0;
-	background:#F56C1E;
-	color:#FFF;
+	padding:4px 2px 4px 2px;
 }
 input[type="submit"]:hover
 {
-	background:#F56C1E;
-	
 }
 /* style form elements on focus */
 input[type="text"]:focus, textarea:focus, input[type="password"]:focus
 {
-	background:#F56C1E;
-	color:#FFF;
+	font-weight:bold;
 }
 input.radio 
 {
@@ -154,6 +144,11 @@ input[type="text"].form-error
 	margin:0 0 0 5px;
 	font-size:smaller;
 }
+.input
+{
+	padding-left:5px;
+	color:#444;
+}
 .input label:after
 {
 	/*content:" (optional)";*/
@@ -168,9 +163,20 @@ input[type="text"].form-error
 }
 .input.required
 {
-	padding:0;
+	color:#000;
+}
+.input.required.error
+{
 }
 .input.required.error label
 {
 	font-weight:bold;
+}
+form .help
+{
+	font-size:9px;
+	padding:0 0 0 10px;
+	display:block;
+	margin:-8px 0 4px 0;
+	color:#777;
 }
