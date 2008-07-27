@@ -1,7 +1,7 @@
 -- MySQL Administrator dump 1.4
 --
 -- ------------------------------------------------------
--- Server version	5.0.51a
+-- Server version	5.0.51b-community-nt
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -22,67 +22,53 @@ CREATE DATABASE IF NOT EXISTS `backup`;
 USE `backup`;
 
 --
--- Definition of table `backup`.`backups`
+-- Definition of table `backups`
 --
 
-DROP TABLE IF EXISTS `backup`.`backups`;
-CREATE TABLE  `backup`.`backups` (
+DROP TABLE IF EXISTS `backups`;
+CREATE TABLE `backups` (
   `id` int(11) NOT NULL auto_increment,
-  `user_id` int(11) NOT NULL,
-  `data` mediumblob NOT NULL,
   `name` varchar(75) NOT NULL,
   `type` varchar(255) NOT NULL,
   `size` int(11) NOT NULL,
-  `created` datetime NOT NULL,
-  `modified` datetime NOT NULL,
-  `md5sum` varchar(32) NOT NULL,
+  `data` mediumblob NOT NULL,
+  `created` datetime default NULL,
+  `modified` datetime default NULL,
+  `user_id` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=829 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `backup`.`backups`
+-- Dumping data for table `backups`
 --
 
 /*!40000 ALTER TABLE `backups` DISABLE KEYS */;
-LOCK TABLES `backups` WRITE;
-INSERT INTO `backup`.`backups` VALUES  (5,1,0x746573740A,'test','application/octet-stream',5,'2008-07-07 14:47:07','2008-07-07 14:47:07','d8e8fca2dc0f896fd7cb4cb0031ba249');
-UNLOCK TABLES;
 /*!40000 ALTER TABLE `backups` ENABLE KEYS */;
 
 
 --
--- Definition of table `backup`.`users`
+-- Definition of table `users`
 --
 
-DROP TABLE IF EXISTS `backup`.`users`;
-CREATE TABLE  `backup`.`users` (
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `username` varchar(20) NOT NULL,
   `password` varchar(40) NOT NULL,
   `email` varchar(40) default NULL,
   `created` datetime default NULL,
-  `realName` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+  `real_name` varchar(45) default NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `UNIQUE` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `backup`.`users`
+-- Dumping data for table `users`
 --
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-LOCK TABLES `users` WRITE;
-INSERT INTO `backup`.`users` VALUES  (1,'newuser','098f6bcd4621d373cade4e832627b4f6','user@domain.com','2008-06-30 20:25:15',''),
- (9,'testing','ae2b1fca515949e5d54fb22b8ed95575','testing@testing.com','2008-07-07 12:54:53','Mr Test'),
- (10,'asdf','e10adc3949ba59abbe56e057f20f883e','asdf@asdf.com','2008-07-07 13:40:14','asdf'),
- (11,'abcdef','e80b5017098950fc58aad83c8c14978e','a@a.com','2008-07-07 13:42:03','abcdef'),
- (12,'aaaaaa','0b4e7a0e5fe84ad35fb5f95b9ceeac79','a@a.com','2008-07-07 13:42:29','aaaaaa'),
- (13,'bbbbbb','875f26fdb1cecf20ceb4ca028263dec6','a@a.com','2008-07-07 13:42:48','bbbbbb'),
- (14,'cccccc','c1f68ec06b490b3ecb4066b1b13a9ee9','c@c.com','2008-07-07 13:44:53','cccccc'),
- (15,'eeeeee','cd87cd5ef753a06ee79fc75dc7cfe66c','eeeeee@eeeeee.com','2008-07-07 13:46:37','eeeeee'),
- (16,'pppppp','e882b72bccfc2ad578c27b0d9b472a14','p@p.com','2008-07-07 14:01:30','pppppp'),
- (17,'1','e10adc3949ba59abbe56e057f20f883e','1@1.com','2008-07-07 14:17:55','123456'),
- (18,'kkkkkk','c08ac56ae1145566f2ce54cbbea35fa3','k@k.com','2008-07-07 14:18:24','kkkkkk');
-UNLOCK TABLES;
+INSERT INTO `users` (`id`,`username`,`password`,`email`,`created`,`real_name`) VALUES 
+ (0,'lee','d3521f0f4841ff1a777252f1d0ed1671236ae505','lee@lboynton.com','2008-07-22 22:50:55','Lee Boynton');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 

@@ -61,11 +61,11 @@ a:hover
 #menu li
 {
 	list-style:none;
+	float:left;
 }
 #menu a
 {
 	display:block;
-	float:left;
 	padding:5px 8px 3px 8px;
 	background:#F9F9F9;
 	margin:0 2px 0 0;

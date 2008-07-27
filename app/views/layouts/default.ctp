@@ -5,6 +5,9 @@
 <title><?php echo $title_for_layout?></title>
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <?php echo $html->css(array('main','forms','tables')); ?>
+<!--[if lt IE 8]>
+<script type="text/javascript" src="/js/ie8.js"></script>
+<![endif]-->
 <script type="text/javascript" src="/js/prototype.js"></script>
 <script type="text/javascript" src="/js/forms.js"></script>
 <?php echo $scripts_for_layout; ?>

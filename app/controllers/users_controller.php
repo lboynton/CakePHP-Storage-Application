@@ -19,6 +19,8 @@ class UsersController extends AppController
     {
 		// handled by auth component
 		
+		$this->pageTitle = "Login";
+		
 		// set the default username to the one created during registration if form hasn't been posted
 		if(empty($this->data)) $this->set('defaultUsername', $this->Session->read('username'));
 		else $this->set('defaultUsername', null);
