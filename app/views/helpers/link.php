@@ -13,23 +13,35 @@ class LinkHelper extends AppHelper
 		);
     }
 	
-    function menu($links = array())
+    function menu($links = array(), $htmlAttributes = array())
     {
 		$out = array();
 		
+		//echo $this->_parseAttributes($htmlAttributes);
+		
+		$out[] = "<ul>";
+		
         foreach ($links as $title => $link)
-        {			
+        {
             if($link == $this->here)
             {
-                $out[] = sprintf(
-					"<a href=\"%s\" class=\"active\"><div class=\"menuItemLeft\"></div>%s<div class=\"menuItemRight\"></div></a>", $link, $title);
+                $out[] = sprintf
+				(
+					"<li%s><a href=\"%s\" class=\"active\"><div class=\"menuItemLeft\"></div>%s<div class=\"menuItemRight\"></div></a></li>", 
+					$this->_parseAttributes($htmlAttributes), $link, $title
+				);
             }
             else
             {
-                $out[] = sprintf(
-					"<a href=\"%s\"><div class=\"menuItemLeft\"></div>%s<div class=\"menuItemRight\"></div></a>", $link, $title);
+                $out[] = sprintf
+				(
+					"<li%s><a href=\"%s\"><div class=\"menuItemLeft\"></div>%s<div class=\"menuItemRight\"></div></a></li>", 
+					$this->_parseAttributes($htmlAttributes), $link, $title
+				);
             }
         }
+		
+		$out[] = "</ul>";
 		
 		$tmp = join("\n", $out);
         return $this->output($tmp);

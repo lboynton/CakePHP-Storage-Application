@@ -10,7 +10,7 @@ class BackupsController extends AppController
 		$this->helpers[] = "Number";
 		$this->pageTitle = "Restore";
 		
-		$this->set('backups', $this->Backup->find('all', array('conditions' => array('user_id' => $this->Session->read('User.id')))));
+		$this->set('backups', $this->Backup->find('all', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
 	}
 	
 	/**
@@ -31,7 +31,7 @@ class BackupsController extends AppController
             $this->data['Backup']['size'] = $this->data['Backup']['File']['size'];
             $this->data['Backup']['data'] = $fileData;
 			$this->data['Backup']['md5sum'] = md5($fileData);
-			$this->data['Backup']['user_id'] = $this->Session->read('User.id');
+			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 
             $this->Backup->save($this->data);
 

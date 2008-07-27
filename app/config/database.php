@@ -89,6 +89,16 @@ class DATABASE_CONFIG {
 		'database' => 'backup',
 		'prefix' => '',
 	);
+	
+	var $admin = array(
+		'driver' => 'sqlite',
+		'persistent' => false,
+		'host' => 'localhost',
+		'login' => 'backup',
+		'password' => 'backup',
+		'database' => 'backup',
+		'prefix' => '',
+	);
 
 	var $test = array(
 		'driver' => 'mysql',

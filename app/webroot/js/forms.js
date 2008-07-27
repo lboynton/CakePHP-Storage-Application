@@ -2,6 +2,7 @@
 // Provides form related JS functions
 //
 
+// calls functions after the page has loaded
 Event.observe(window, 'load', function() 
 {		
 	formHelp();	

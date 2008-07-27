@@ -1,5 +1,6 @@
 Admin section
 	- Allow user to change database
+	- Possibly could use sqlite for admin logins and configuration settings. As they are files, they can be copied along with the website files and provide the ability to login and change settings before having a MySQL etc server setup. 
 	
 Backup/restore
 	- Display a tree of files, perhaps using applet
