@@ -1,5 +1,5 @@
 <?php
-class LinkHelper extends AppHelper 
+class MenuHelper extends AppHelper 
 {
     function menuItem($title, $url) 
 	{
@@ -13,11 +13,9 @@ class LinkHelper extends AppHelper
 		);
     }
 	
-    function menu($links = array(), $htmlAttributes = array())
+    function mainMenu($links = array(), $htmlAttributes = array())
     {
 		$out = array();
-		
-		//echo $this->_parseAttributes($htmlAttributes);
 		
 		$out[] = "<ul>";
 		
@@ -67,6 +65,20 @@ class LinkHelper extends AppHelper
         $tmp = join("\n", $out);
         return $this->output(sprintf($this->tags[$type],$this->_parseAttributes($htmlAttributes), $tmp));
     } 
+	
+	function normalMenu($links = array(),$htmlAttributes = array())
+	{
+		$out[] = sprintf("<ul%s>", $this->_parseAttributes($htmlAttributes));
+		
+		foreach ($links as $title => $link)
+		{
+			$out[] = sprintf('<li><a href="%s">%s</a></li>',$link, $title);
+		}
+		
+		$out[] = "</ul>";
+		
+		$tmp = join("\n", $out);
+        return $this->output($tmp);
+	}
 }
-
 ?>

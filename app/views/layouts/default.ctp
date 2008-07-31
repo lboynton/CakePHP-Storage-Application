@@ -15,13 +15,16 @@
 <body>
 <div id="container">
     <div id="header">
+    	<h1></h1>
 		<?php 
         if($session->check('Auth.User')) echo $this->element('authenticatedMenu');
+		elseif($session->check('Auth.Admin')) echo $this->element('adminMenu');
         else echo $this->element('unauthenticatedMenu');
         ?> 
     </div>
     <div id="content">
     	<?php echo $content_for_layout ?>
+        <div style="clear:both"></div>
     </div>
     <div id="footer"></div>
 </div>

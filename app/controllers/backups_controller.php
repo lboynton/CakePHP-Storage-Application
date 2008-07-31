@@ -63,19 +63,25 @@ class BackupsController extends AppController
 		exit();
 	}
 	
-	function xml($path = null)
+	function xml($duplicates = false)
 	{
 		$this->layout = 'xml';
 		
 		if(isset($this->params['url']['path'])) $path = $this->params['url']['path'];
 		else $path = null;
+		
+		if(isset($this->params['url']['duplicates'])) $duplicates = (boolean) $this->params['url']['duplicates'];
+		else $duplicates = false;
+		
+		if($duplicates) $fields = array('name', 'hash', 'path');
+		else $fields = array('DISTINCT backup.hash', 'name', 'path');
 
 		if($path == null)
 		{
 			$this->set('backups', $this->Backup->find('all', array
 			(
 				'conditions' => array('user_id' => $this->Session->read('Auth.User.id')),
-				'fields' => array('name', 'hash', 'path')			
+				'fields' => $fields		
 			)));
 		}
 		else
@@ -87,9 +93,10 @@ class BackupsController extends AppController
 					'user_id' => $this->Session->read('Auth.User.id'),
 					'path' => $path
 				),
-				'fields' => array('name', 'hash', 'path')			
+				'fields' => $fields
 			)));
 		}
+
 		$this->helpers[] = "Xml";
 	}
 }

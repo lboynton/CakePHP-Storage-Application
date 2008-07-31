@@ -12,7 +12,22 @@ class UsersController extends AppController
     
     function index()
     {
+		$this->helpers[] = "Time";
 		$this->pageTitle = "Summary";
+		$this->Backup = &new Backup();
+		$this->set('lastBackup', $this->Backup->find
+		(
+			'all',
+			array
+			(
+				'conditions' => array('user_id' => $this->Session->read('Auth.User.id')),
+				'fields' => array('created'),
+				'limit' => 1,
+				'order' => 'backup.id DESC'
+			)
+		));
+		
+		$this->set('backupCount', $this->Backup->find('count', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
     }
     
     function login()
@@ -32,7 +47,7 @@ class UsersController extends AppController
     }
 	
 	function register() 
-	{
+	{	
 		// check for POST data
 		if (!empty($this->data)) 
 		{
@@ -67,6 +82,10 @@ class UsersController extends AppController
 				$this->Session->setFlash('Your account could not be created due to the problems highlighted below.','default', array('class' => 'error'));
 			}
 		}
+	}
+	
+	function admin_login()
+	{
 	}
 	
 	function admin_index()

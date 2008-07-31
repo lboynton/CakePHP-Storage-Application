@@ -1,4 +1,5 @@
 <h2>Register</h2>
+<p>Please enter your details below to register a new account.</p>
 <?php $session->flash(); ?>
 <?php $session->flash('auth'); ?>
 <?php echo $form->create(array('action' => 'register')); ?>
@@ -17,5 +18,4 @@
     <?php echo $form->input('email'); ?>
     <p id="UserEmailHelp" class="help">Finally, your email. This should be valid.</p> 
 <?php echo $form->end('Register'); ?>
-
-<p><strong>Note:</strong> If a field has an asterisk, it is required that you enter something.</p>
+<div class="message"><strong>Note:</strong> Fields denoted by an asterisk cannot be left blank.</div>

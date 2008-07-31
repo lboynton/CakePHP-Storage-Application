@@ -10,7 +10,12 @@ body
 h2
 {
 	color:#F56C1E;
-	font-size:18px;
+	font-size:20px;
+	font-weight:normal;
+	padding:6px 8px 4px 8px;
+	border-bottom:1px solid #DDD;
+	margin:0 0 10px 0;
+	background:#F3F3F3;
 }
 p, strong
 {
@@ -18,7 +23,13 @@ p, strong
 }
 h1
 {
-	font-size:18px;
+	height:29px;
+	width:169px;
+	background:url(/img/logo.png) no-repeat;
+	position:absolute;
+	right:10px;
+	top:15px;
+	display:none;
 }
 a
 {
@@ -32,22 +43,75 @@ a:hover
 	background:#F56C1E;
 	color:#FFF;
 }
+dl
+{
+	display: block;
+	margin-left:15px;
+	margin-right:15px;
+}
+dt
+{
+	clear:   left;
+	display:  block;
+	font-weight: bold;
+	float:   left;
+	width:   150px;
+	margin-bottom:8px;
+}
+dd
+{
+	clear:   right;
+	margin-bottom:8px;
+	display:  block;
+	white-space: nowrap;
+}
+dd:after
+{
+	content:".";
+	visibility:hidden;
+}
+applet
+{
+}
+#content p
+{
+	margin-left:10px;
+	margin-right:10px;
+	line-height:18px;
+}
+.message p
+{
+	margin:0 0 0 0;
+	padding:0;
+}
 /* IDs */
 #container
 {
 	width:750px;
 	margin:50px auto 0 auto;
+	background:#777;
+	-moz-border-radius-topright: 5px;
+	-moz-border-radius: 5px;
+	padding:3px;
+	position:relative;
 }
 #content
 {
 	background:#FFF;
-	padding:15px;
+	padding:0 1px 10px 1px;
 	position:relative;
+	-moz-border-radius-bottomright:5px;
+	-moz-border-radius-bottomleft:5px;
 	/*border-top:3px solid #5cdb39;*/
 }
 #content > h1, #content > h2
 {
-	margin-top:0;
+	/*margin-top:0;*/
+}
+#header
+{
+	background:#777 url(/img/top_grad.gif) repeat-x;
+	padding-top:35px;
 }
 #menu
 {
@@ -67,55 +131,59 @@ a:hover
 {
 	display:block;
 	padding:5px 8px 3px 8px;
-	background:#F9F9F9;
 	margin:0 2px 0 0;
 	text-decoration:none;
 	color:#555;
 	font-weight:bold;
 	font-size:16px;
 	position:relative;
-	border-bottom:1px solid #E5E5E5;
+	-moz-border-radius-topright:6px;
+	-moz-border-radius-topleft:6px;
+	color:#FFF;
+	text-transform:lowercase;
 }
 #menu a:hover, #menu a.active
 {
 	/*border-top:3px solid #F56C1E;*/
 	color:#000;
-	background:#FFF;
-	border-bottom:1px solid #FFF;
-}
-#menu a.active
-{
-	padding-top:7px;
-	padding-bottom:5px;
-	margin-top:-4px;
+	background:#F3F3F3;
 }
 #footer
 {
-	border-top:3px solid #F56C1E;
+/*	border-top:3px solid #F56C1E;*/
 }
 .message, #flashMessage
 {
-	padding:6px;
+	padding:6px 15px;
 	background:#EFEFEF;
 	margin-bottom:10px;
 }
-#topRightCorner
+#subMenu
 {
-	background:url(/img/menu_item.gif) top right;
-	height:8px;
-	width:8px;
 	position:absolute;
-	right:0;
 	top:0;
+	right:7px;
 }
-#topLeftCorner
+#subMenu li
 {
-	background:url(/img/menu_item.gif);
-	height:8px;
-	width:8px;
-	position:absolute;
-	left:0;
-	top:0;
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+#subMenu a
+{
+	background:#F56C1E;
+	color:#FFF;
+	padding:4px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 2px solid #FFF;
+}
+#subMenu a:hover
+{
+	background:#FFF;
+	color:#F56C1E;
+	border: 2px solid #F56C1E;
 }
 /* Classes */
 #flashMessage.error
@@ -134,6 +202,7 @@ a:hover
 	position:absolute;
 	left:0;
 	top:0;
+	display:none;
 }
 .menuItemRight
 {
@@ -143,4 +212,5 @@ a:hover
 	position:absolute;
 	right:0;
 	top:0;
+	display:none;
 }

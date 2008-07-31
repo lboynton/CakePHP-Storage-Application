@@ -2,19 +2,22 @@
 
 table
 {
-	width:100%;
+	width:98%;
 	border-collapse:collapse;
+	margin-left:10px;
 }
 table th
 {
 	color:#444;
-	margin:0;
-	background:#FFF;
-	border-bottom:1px solid #CDCDCD;
+	margin:2px;
+	background:#777;
+	padding:2px;
+	color:#FFF;
 }
 table td
 {
 	padding:2px;
 	text-align:center;
 	border-bottom:1px dotted #DDD;
+	margin:2px;
 }

@@ -91,12 +91,12 @@ class DATABASE_CONFIG {
 	);
 	
 	var $admin = array(
-		'driver' => 'sqlite',
+		'driver' => 'sqlite3',
 		'persistent' => false,
 		'host' => 'localhost',
 		'login' => 'backup',
 		'password' => 'backup',
-		'database' => 'backup',
+		'database' => '../config/admin.db',
 		'prefix' => '',
 	);
 
