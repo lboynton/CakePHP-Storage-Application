@@ -8,6 +8,8 @@ class UsersController extends AppController
 	{
 		// allow unregistered access to the register page
 		$this->Auth->allow('register');
+		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
+		$this->Auth->autoRedirect = false;
 	}
     
     function index()
@@ -32,13 +34,18 @@ class UsersController extends AppController
     
     function login()
     {
-		// handled by auth component
-		
 		$this->pageTitle = "Login";
 		
 		// set the default username to the one created during registration if form hasn't been posted
 		if(empty($this->data)) $this->set('defaultUsername', $this->Session->read('username'));
 		else $this->set('defaultUsername', null);
+		
+		// redirect if the user is logged in
+		if ($this->Auth->user()) 
+		{
+			$this->redirect('/users');
+			return;
+		}
     }
     
     function logout()

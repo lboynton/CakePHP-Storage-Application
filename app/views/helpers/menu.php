@@ -6,9 +6,9 @@ class MenuHelper extends AppHelper
 		return $this->output
 		(
 			"<a href=\"$url\" class=\"edit\">
-				<div class=\"menuItemLeft\"></div>
+				<span class=\"menuItemLeft\"></span>
 				$title
-				<div class=\"menuItemRight\"></div>
+				<span class=\"menuItemRight\"></span>
 			</a>"
 		);
     }
@@ -25,7 +25,7 @@ class MenuHelper extends AppHelper
             {
                 $out[] = sprintf
 				(
-					"<li%s><a href=\"%s\" class=\"active\"><div class=\"menuItemLeft\"></div>%s<div class=\"menuItemRight\"></div></a></li>", 
+					"<li%s><a href=\"%s\" class=\"active\"><span class=\"topLeft\"></span>%s<span class=\"topRight\"></span></a></li>", 
 					$this->_parseAttributes($htmlAttributes), $link, $title
 				);
             }
@@ -33,7 +33,7 @@ class MenuHelper extends AppHelper
             {
                 $out[] = sprintf
 				(
-					"<li%s><a href=\"%s\"><div class=\"menuItemLeft\"></div>%s<div class=\"menuItemRight\"></div></a></li>", 
+					"<li%s><a href=\"%s\"><span class=\"topLeft\"></span>%s<span class=\"topRight\"></span></a></li>", 
 					$this->_parseAttributes($htmlAttributes), $link, $title
 				);
             }

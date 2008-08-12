@@ -90,6 +90,16 @@ class DATABASE_CONFIG {
 		'prefix' => '',
 	);
 	
+	var $default2 = array(
+		'driver' => 'mysqli',
+		'persistent' => false,
+		'host' => 'p50mysql199.secureserver.net',
+		'login' => 'lee_backup',
+		'password' => 'P0l0p01!',
+		'database' => 'lee_backup',
+		'prefix' => '',
+	);
+	
 	var $admin = array(
 		'driver' => 'sqlite3',
 		'persistent' => false,

@@ -69,12 +69,12 @@ class BackupsController extends AppController
 		
 		if(isset($this->params['url']['path'])) $path = $this->params['url']['path'];
 		else $path = null;
-		
+
 		if(isset($this->params['url']['duplicates'])) $duplicates = (boolean) $this->params['url']['duplicates'];
 		else $duplicates = false;
 		
 		if($duplicates) $fields = array('name', 'hash', 'path');
-		else $fields = array('DISTINCT backup.hash', 'name', 'path');
+		else $fields = array('DISTINCT hash', 'name', 'path');
 
 		if($path == null)
 		{

@@ -43,8 +43,7 @@ form
 }
 form p 
 {
-	position: relative;
-	width: 100%;
+
 }
 /* style for  labels */
 label
@@ -150,6 +149,8 @@ input[type="text"].form-error
 	display:inline;
 	margin:0 0 0 5px;
 	font-size:smaller;
+	background:url(/img/error.png) no-repeat 0 0;
+	padding:3px 0 1px 20px;
 }
 .input
 {
@@ -182,8 +183,9 @@ input[type="text"].form-error
 form .help
 {
 	font-size:9px;
-	padding:0 0 0 10px;
+	padding:0 0 0 20px;
 	display:block;
-	margin:-8px 0 4px 0;
+	margin:-8px 0 0 0;
 	color:#777;
+	background:url(/img/information.png) no-repeat 0 2px;
 }

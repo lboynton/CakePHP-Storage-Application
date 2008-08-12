@@ -188,7 +188,8 @@ applet
 /* Classes */
 #flashMessage.error
 {
-	background:#EFEFEF;
+	background:#EFEFEF url(/img/error.png) no-repeat 14px 5px;
+	padding-left:35px;
 }
 .clear
 {

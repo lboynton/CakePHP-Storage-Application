@@ -1,0 +1,18 @@
+#content
+{
+	position:static;
+}
+.topRight, .topLeft, .bottomLeft, .bottomRight
+{
+	display:none;
+}
+#menu a .topLeft
+{
+	left:-8px;
+	display:block;
+}
+#menu a .topRight
+{
+	right:1px;
+	display:block;
+}
