@@ -85,31 +85,6 @@ class BackupsController extends AppController
 			$this->redirect('/backups/restore');
 		}
     }
-	
-	 function add2() 
-	 {
-	 	$this->pageTitle = "Backup";
-		
-		print_r($this->data);
-		
-        if (!empty($this->data) &&
-             is_uploaded_file($this->data['Backup'][0]['File']['tmp_name'])) 
-		{
-            $fileData = fread(fopen($this->data['Backup'][0]['File']['tmp_name'], "r"),
-                                     $this->data['Backup'][0]['File']['size']);
-			$this->Backup->create();
-            $this->data['Backup']['name'] = $this->data['Backup'][0]['File']['name'];
-            $this->data['Backup']['type'] = $this->data['Backup'][0]['File']['type'];
-            $this->data['Backup']['size'] = $this->data['Backup'][0]['File']['size'];
-            $this->data['Backup']['data'] = $fileData;
-			$this->data['Backup']['hash'] = md5($fileData);
-			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
-
-            $this->Backup->save($this->data);
-
-            //$this->redirect('/users'); // don't need to redirect the applet
-        }
-    }
 
 	function download($id) 
 	{
@@ -117,11 +92,12 @@ class BackupsController extends AppController
 		{
 			Configure::write('debug', 0);
 			$file = $this->Backup->findById($id);
+			$fp = fopen("../../backups/{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}", 'r');
 		
 			header('Content-type: ' . $file['Backup']['type']);
 			header('Content-length: ' . $file['Backup']['size']);
 			header('Content-Disposition: attachment; filename="'.$file['Backup']['name'].'"');
-			echo $file['Backup']['data'];
+			echo fread($fp, $file['Backup']['size']);
 			exit();
 		}
 		else
@@ -136,11 +112,12 @@ class BackupsController extends AppController
 		{
 			Configure::write('debug', 0);
 			$file = $this->Backup->findById($id);
+			$fp = fopen("../../backups/{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}", 'r');
 		
 			header('Content-type: ' . $file['Backup']['type']);
 			header('Content-length: ' . $file['Backup']['size']);
 			header('Content-Disposition: inline; filename="'.$file['Backup']['name'].'"');
-			echo $file['Backup']['data'];
+			echo fread($fp, $file['Backup']['size']);
 			exit();
 		}
 		else
