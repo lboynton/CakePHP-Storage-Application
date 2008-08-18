@@ -38,6 +38,8 @@ class BackupsController extends AppController
 						{
 							if(zip_entry_filesize($zip_entry) <= 0) break;
 							
+							@mkdir("../../backups/{$this->Session->read('Auth.User.id')}");
+							
 							$this->Backup->create();
 							
 							// date isn't automagically inserted by Cake for some reason
@@ -48,6 +50,10 @@ class BackupsController extends AppController
 							$this->data['Backup']['data'] = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
 							$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 							$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+							
+							$fp = fopen("../../backups/{$this->Session->read('Auth.User.id')}/{$this->data['Backup']['name']}", 'wb');
+							fwrite($fp, $this->data['Backup']['data']);
+							fclose($fp);
 							
 							$this->Backup->save($this->data);
 						}
@@ -66,6 +72,9 @@ class BackupsController extends AppController
 						$this->data['Backup']['data'] = fread(fopen($file['File']['tmp_name'], "r"), $file['File']['size']);
 						$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 						$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+						
+						@mkdir("../../backups/{$this->Session->read('Auth.User.id')}");
+						move_uploaded_file($file['File']['tmp_name'], "../../backups/{$this->Session->read('Auth.User.id')}/{$file['File']['name']}");
 						
 						$this->Backup->save($this->data);
 					}
