@@ -10,6 +10,3 @@ User interface
 	- Add help section
 	- Test on other browsers
 	- Fix backup timestamp
-	
-Version 1:
-	- 
