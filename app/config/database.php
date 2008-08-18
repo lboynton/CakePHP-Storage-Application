@@ -99,16 +99,6 @@ class DATABASE_CONFIG {
 		'database' => 'lee_backup',
 		'prefix' => '',
 	);
-	
-	var $admin = array(
-		'driver' => 'sqlite3',
-		'persistent' => false,
-		'host' => 'localhost',
-		'login' => 'backup',
-		'password' => 'backup',
-		'database' => '../config/admin.db',
-		'prefix' => '',
-	);
 
 	var $test = array(
 		'driver' => 'mysql',

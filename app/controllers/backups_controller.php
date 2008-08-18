@@ -10,6 +10,9 @@ class BackupsController extends AppController
 		$this->helpers[] = "Number";
 		$this->pageTitle = "Restore";
 		
+		//$data = $this->paginate('Backup');
+		//$this->set(compact('data'));
+		
 		$this->set('backups', $this->Backup->find('all', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
 	}
 	
@@ -20,25 +23,49 @@ class BackupsController extends AppController
 	 {
 	 	$this->pageTitle = "Backup";
 		
-        if (!empty($this->data) &&
-             is_uploaded_file($this->data['Backup']['File']['tmp_name'])) 
+		if (!empty($this->data))
 		{
-            $fileData = fread(fopen($this->data['Backup']['File']['tmp_name'], "r"),
-                                     $this->data['Backup']['File']['size']);
+			foreach($this->data['Backup'] as $file)
+			{
+				if(is_uploaded_file($file['File']['tmp_name']))
+				{
+					$zip = zip_open($file['File']['tmp_name']);
+					
+					if(is_resource($zip))
+					{
+						while ($zip_entry = zip_read($zip))
+						{
+							$this->Backup->create();
+							
+							$this->data['Backup']['name'] = zip_entry_name($zip_entry);	
+							$this->data['Backup']['size'] = zip_entry_filesize($zip_entry);
+							$this->data['Backup']['data'] = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+							$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
+							$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+							
+							$this->Backup->save($this->data);
+						}
+					}
+					else
+					{
+						$this->Backup->create();
 
-            $this->data['Backup']['name'] = $this->data['Backup']['File']['name'];
-            $this->data['Backup']['type'] = $this->data['Backup']['File']['type'];
-            $this->data['Backup']['size'] = $this->data['Backup']['File']['size'];
-            $this->data['Backup']['data'] = $fileData;
-			$this->data['Backup']['hash'] = md5($fileData);
-			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
-
-            $this->Backup->save($this->data);
-
-            //$this->redirect('/users'); // don't need to redirect the applet
-        }
+						$this->data['Backup']['name'] = $file['File']['name'];
+						$this->data['Backup']['size'] = $file['File']['size'];
+						$this->data['Backup']['data'] = fread(fopen($file['File']['tmp_name'], "r"), $file['File']['size']);
+						$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
+						$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+						
+						$this->Backup->save($this->data);
+					}
+				}
+			}
+			
+			$this->Session->setFlash('The selected files have been backed up.');
+			$this->redirect('/backups/restore');
+		}
     }
-	
+
 	function download($id) 
 	{
 		Configure::write('debug', 0);
@@ -63,41 +90,10 @@ class BackupsController extends AppController
 		exit();
 	}
 	
-	function xml($duplicates = false)
+	function delete($id)
 	{
-		$this->layout = 'xml';
-		
-		if(isset($this->params['url']['path'])) $path = $this->params['url']['path'];
-		else $path = null;
-
-		if(isset($this->params['url']['duplicates'])) $duplicates = (boolean) $this->params['url']['duplicates'];
-		else $duplicates = false;
-		
-		if($duplicates) $fields = array('name', 'hash', 'path');
-		else $fields = array('DISTINCT hash', 'name', 'path');
-
-		if($path == null)
-		{
-			$this->set('backups', $this->Backup->find('all', array
-			(
-				'conditions' => array('user_id' => $this->Session->read('Auth.User.id')),
-				'fields' => $fields		
-			)));
-		}
-		else
-		{
-			$this->set('backups', $this->Backup->find('all', array
-			(
-				'conditions' => array
-				(
-					'user_id' => $this->Session->read('Auth.User.id'),
-					'path' => $path
-				),
-				'fields' => $fields
-			)));
-		}
-
-		$this->helpers[] = "Xml";
+		$this->Backup->del($id);
+		$this->flash('The file has been deleted.', '/backups/restore');
 	}
 }
 ?>

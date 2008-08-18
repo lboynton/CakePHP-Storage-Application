@@ -5,15 +5,21 @@
 <p>Here is your account status, <?php echo $session->read("Auth.User.username"); ?>.</p>
 <?php endif; ?>
 <dl>
-	<dt>Quota</dt>
+<!--	<dt>Quota</dt>
     <dd></dd>
     <dt>Usage</dt>
     <dd></dd>
     <dt>Usage percentage</dt>
-    <dd></dd>
+    <dd></dd> -->
     <dt>Files backed up</dt>
     <dd><?php echo $backupCount; ?></dd>
     <dt>Last backup</dt>
-    <dd><?php echo $time->niceShort($lastBackup[0]['Backup']['created']); ?></dd>
+    <dd>
+		<?php 
+		if(isset($lastBackup[0]['Backup']['created'])) 
+		echo $time->niceShort($lastBackup[0]['Backup']['created']); 
+		else echo "No backups yet";
+		?>
+    </dd>
 </dl>
 <?php //echo date_default_timezone_get(); ?>

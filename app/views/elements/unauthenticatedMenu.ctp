@@ -3,8 +3,7 @@
     echo $menu->mainMenu(array(
         'Home' => '/',
         'Login' => '/users/login',
-        'Register' => '/users/register',
-		'Admin' => '/admins/login'));
+        'Register' => '/users/register'));
     ?> 
     <div class="clear"></div>
 </div>

@@ -6,12 +6,13 @@ class UsersController extends AppController
 	
 	function beforeFilter()
 	{
+		parent::beforeFilter();
 		// allow unregistered access to the register page
 		$this->Auth->allow('register');
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 		$this->Auth->autoRedirect = false;
 	}
-    
+	
     function index()
     {
 		$this->helpers[] = "Time";
@@ -59,11 +60,6 @@ class UsersController extends AppController
 		if (!empty($this->data)) 
 		{
 			// create user with defaults
-			//
-			//
-			// verify this step is required
-			//
-			//
 			$this->User->create();
 
 			// try to store the data
@@ -90,11 +86,7 @@ class UsersController extends AppController
 			}
 		}
 	}
-	
-	function admin_login()
-	{
-	}
-	
+
 	function admin_index()
 	{
 		$this->pageTitle = "Admin index";

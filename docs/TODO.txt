@@ -1,16 +1,15 @@
 Admin section
-	- Allow user to change database
-	- Possibly could use sqlite for admin logins and configuration settings. As they are files, they can be copied along with the website files and provide the ability to login and change settings before having a MySQL etc server setup. 
+	- Allow user to change default quota and per user quota
 	
 Backup/restore
-	- Display a tree of files, perhaps using applet
-	- Use incremental backing up by looking at the modified date
-	- Compress files before transmitting
 	- User quotas
-	- Backup files for a particular day or time period
-	- Restore files to either their original location or a user selected location
+	- Store files in file system
+	- Allow for deletion of multiple files at once
 	
 User interface
 	- Add help section
-	- Change summary to "My account"
 	- Test on other browsers
+	- Fix backup timestamp
+	
+Version 1:
+	- 
