@@ -35,7 +35,12 @@ class BackupsController extends AppController
 					{
 						while ($zip_entry = zip_read($zip))
 						{
+							if(zip_entry_filesize($zip_entry) <= 0) break;
+							
 							$this->Backup->create();
+							
+							// date isn't automagically inserted by Cake for some reason
+							$this->data['Backup']['created'] = date( 'Y-m-d H:i:s');
 							
 							$this->data['Backup']['name'] = zip_entry_name($zip_entry);	
 							$this->data['Backup']['size'] = zip_entry_filesize($zip_entry);
@@ -48,8 +53,13 @@ class BackupsController extends AppController
 					}
 					else
 					{
+						if($file['File']['size'] <= 0) break;
+						
 						$this->Backup->create();
-
+						
+						// date isn't automagically inserted by Cake for some reason
+						$this->data['Backup']['created'] = date( 'Y-m-d H:i:s');
+						
 						$this->data['Backup']['name'] = $file['File']['name'];
 						$this->data['Backup']['size'] = $file['File']['size'];
 						$this->data['Backup']['data'] = fread(fopen($file['File']['tmp_name'], "r"), $file['File']['size']);
@@ -64,6 +74,31 @@ class BackupsController extends AppController
 			$this->Session->setFlash('The selected files have been backed up.');
 			$this->redirect('/backups/restore');
 		}
+    }
+	
+	 function add2() 
+	 {
+	 	$this->pageTitle = "Backup";
+		
+		print_r($this->data);
+		
+        if (!empty($this->data) &&
+             is_uploaded_file($this->data['Backup'][0]['File']['tmp_name'])) 
+		{
+            $fileData = fread(fopen($this->data['Backup'][0]['File']['tmp_name'], "r"),
+                                     $this->data['Backup'][0]['File']['size']);
+			$this->Backup->create();
+            $this->data['Backup']['name'] = $this->data['Backup'][0]['File']['name'];
+            $this->data['Backup']['type'] = $this->data['Backup'][0]['File']['type'];
+            $this->data['Backup']['size'] = $this->data['Backup'][0]['File']['size'];
+            $this->data['Backup']['data'] = $fileData;
+			$this->data['Backup']['hash'] = md5($fileData);
+			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+
+            $this->Backup->save($this->data);
+
+            //$this->redirect('/users'); // don't need to redirect the applet
+        }
     }
 
 	function download($id) 
