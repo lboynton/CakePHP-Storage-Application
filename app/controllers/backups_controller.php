@@ -98,6 +98,7 @@ class BackupsController extends AppController
 			header('Content-length: ' . $file['Backup']['size']);
 			header('Content-Disposition: attachment; filename="'.$file['Backup']['name'].'"');
 			echo fread($fp, $file['Backup']['size']);
+			fclose($fp);
 			exit();
 		}
 		else
@@ -118,6 +119,7 @@ class BackupsController extends AppController
 			header('Content-length: ' . $file['Backup']['size']);
 			header('Content-Disposition: inline; filename="'.$file['Backup']['name'].'"');
 			echo fread($fp, $file['Backup']['size']);
+			fclose($fp);
 			exit();
 		}
 		else
@@ -130,8 +132,10 @@ class BackupsController extends AppController
 	{
 		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
 		{
+			$file = $this->Backup->findById($id);
 			$this->Backup->del($id);
-			$this->Session->setFlash('The file has been deleted.');
+			unlink("../../backups/{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}");
+			$this->Session->setFlash("The file \"{$file['Backup']['name']}\" has been deleted.");
 		}
 		
 		$this->redirect('/backups/restore');
