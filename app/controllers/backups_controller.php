@@ -128,8 +128,13 @@ class BackupsController extends AppController
 	
 	function delete($id)
 	{
-		$this->Backup->del($id);
-		$this->flash('The file has been deleted.', '/backups/restore');
+		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
+		{
+			$this->Backup->del($id);
+			$this->Session->setFlash('The file has been deleted.');
+		}
+		
+		$this->redirect('/backups/restore');
 	}
 }
 ?>

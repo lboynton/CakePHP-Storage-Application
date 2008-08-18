@@ -26,7 +26,7 @@ class UsersController extends AppController
 				'conditions' => array('user_id' => $this->Session->read('Auth.User.id')),
 				'fields' => array('created'),
 				'limit' => 1,
-				'order' => 'backup.id DESC'
+				'order' => 'Backup.id DESC'
 			)
 		));
 		
