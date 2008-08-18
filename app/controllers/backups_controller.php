@@ -22,6 +22,7 @@ class BackupsController extends AppController
 	 function add() 
 	 {
 	 	$this->pageTitle = "Backup";
+		date_default_timezone_set("Europe/London");
 		
 		if (!empty($this->data))
 		{
