@@ -104,26 +104,40 @@ class BackupsController extends AppController
 
 	function download($id) 
 	{
-		Configure::write('debug', 0);
-		$file = $this->Backup->findById($id);
-	
-		header('Content-type: ' . $file['Backup']['type']);
-		header('Content-length: ' . $file['Backup']['size']);
-		header('Content-Disposition: attachment; filename="'.$file['Backup']['name'].'"');
-		echo $file['Backup']['data'];
-		exit();
+		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
+		{
+			Configure::write('debug', 0);
+			$file = $this->Backup->findById($id);
+		
+			header('Content-type: ' . $file['Backup']['type']);
+			header('Content-length: ' . $file['Backup']['size']);
+			header('Content-Disposition: attachment; filename="'.$file['Backup']['name'].'"');
+			echo $file['Backup']['data'];
+			exit();
+		}
+		else
+		{
+			$this->redirect('/backups/restore');
+		}
 	}
 	
 	function view($id)
 	{
-		Configure::write('debug', 0);
-		$file = $this->Backup->findById($id);
-	
-		header('Content-type: ' . $file['Backup']['type']);
-		header('Content-length: ' . $file['Backup']['size']);
-		header('Content-Disposition: inline; filename="'.$file['Backup']['name'].'"');
-		echo $file['Backup']['data'];
-		exit();
+		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
+		{
+			Configure::write('debug', 0);
+			$file = $this->Backup->findById($id);
+		
+			header('Content-type: ' . $file['Backup']['type']);
+			header('Content-length: ' . $file['Backup']['size']);
+			header('Content-Disposition: inline; filename="'.$file['Backup']['name'].'"');
+			echo $file['Backup']['data'];
+			exit();
+		}
+		else
+		{
+			$this->redirect('/backups/restore');
+		}
 	}
 	
 	function delete($id)
