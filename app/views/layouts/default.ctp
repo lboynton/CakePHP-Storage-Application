@@ -9,7 +9,7 @@
 <?php echo $html->css(array('ie6')); ?>
 <![endif]-->
 <!--[if lt IE 8]>
-<script type="text/javascript" src="/js/ie8.js"></script>
+<script type="text/javascript" src="/js/IE8.js"></script>
 <![endif]-->
 <script type="text/javascript" src="/js/prototype.js"></script>
 <script type="text/javascript" src="/js/forms.js"></script>
