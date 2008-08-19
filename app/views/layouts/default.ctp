@@ -18,9 +18,6 @@
 <body>
 <div id="container">
     <div id="header">
-        <div class="topLeft"></div>
-    	<div class="topRight"></div>
-    	<h1></h1>
 		<?php 
         if($session->check('Auth.User')) echo $this->element('authenticatedMenu');
 		elseif($session->check('Auth.Admin')) echo $this->element('adminMenu');
@@ -30,13 +27,8 @@
     <div id="content">
     	<?php echo $content_for_layout ?>
         <div style="clear:both"></div>
-        <div class="bottomLeft"></div>
-        <div class="bottomRight"></div>
     </div>
-    <div id="footer">
-    	<div class="bottomLeft"></div>
-    	<div class="bottomRight"></div>
-    </div>  
+    <div id="footer"></div>  
 </div>
 </body>
 </html>

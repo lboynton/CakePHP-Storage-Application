@@ -87,22 +87,19 @@ applet
 /* IDs */
 #container
 {
-	width:750px;
+	width:756px;
 	margin:50px auto 0 auto;
-	background:#777;
-	-moz-border-radius-topright: 5px;
-	-moz-border-radius: 5px;
-	padding:3px;
+	background:#FFF;
 	position:relative;
 }
 #content
 {
 	background:#FFF;
-	padding:0 1px 10px 1px;
+	padding:0 1px 1px 1px;
 	position:relative;
-	-moz-border-radius-bottomright:5px;
-	-moz-border-radius-bottomleft:5px;
 	/*border-top:3px solid #5cdb39;*/
+	border-left:3px solid #777;
+	border-right:3px solid #777;
 }
 #content > h1, #content > h2
 {
@@ -110,7 +107,7 @@ applet
 }
 #header
 {
-	background:#777 url(/img/top_grad.gif) repeat-x;
+	background:#777 url(/img/header-bg.gif) no-repeat;
 	padding-top:35px;
 }
 #menu
@@ -150,6 +147,8 @@ applet
 }
 #footer
 {
+	background:url(/img/footer-bg.gif) no-repeat;
+	height:9px;
 /*	border-top:3px solid #F56C1E;*/
 }
 .message, #flashMessage

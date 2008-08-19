@@ -16,7 +16,7 @@ class UsersController extends AppController
     function index()
     {
 		$this->helpers[] = "Time";
-		$this->pageTitle = "Summary";
+		$this->pageTitle = "Account Summary";
 		$this->Backup = &new Backup();
 		$this->set('lastBackup', $this->Backup->find
 		(
