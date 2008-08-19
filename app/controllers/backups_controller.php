@@ -38,7 +38,7 @@ class BackupsController extends AppController
 						{
 							if(zip_entry_filesize($zip_entry) <= 0) break;
 							
-							@mkdir("../../backups/{$this->Session->read('Auth.User.id')}");
+							@mkdir("../../backups/{$this->Session->read('Auth.User.id')}", 0777, true);
 							
 							$this->Backup->create();
 							
@@ -73,7 +73,7 @@ class BackupsController extends AppController
 						$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 						$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 						
-						@mkdir("../../backups/{$this->Session->read('Auth.User.id')}");
+						@mkdir("../../backups/{$this->Session->read('Auth.User.id')}", 0777, true);
 						move_uploaded_file($file['File']['tmp_name'], "../../backups/{$this->Session->read('Auth.User.id')}/{$file['File']['name']}");
 						
 						$this->Backup->save($this->data);
@@ -134,7 +134,7 @@ class BackupsController extends AppController
 		{
 			$file = $this->Backup->findById($id);
 			$this->Backup->del($id);
-			unlink("../../backups/{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}");
+			@unlink("../../backups/{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}");
 			$this->Session->setFlash("The file \"{$file['Backup']['name']}\" has been deleted.");
 		}
 		
