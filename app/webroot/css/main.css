@@ -112,7 +112,7 @@ applet
 }
 #menu
 {
-	padding-left:8px;
+	padding-left:12px;
 }
 #menu ul
 {
@@ -149,6 +149,7 @@ applet
 {
 	background:url(/img/footer-bg.gif) no-repeat;
 	height:9px;
+	width:756px;
 /*	border-top:3px solid #F56C1E;*/
 }
 .message, #flashMessage

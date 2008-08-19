@@ -16,3 +16,8 @@
 	right:1px;
 	display:block;
 }
+#footer
+{
+	background-position:3px 0;
+	margin-bottom:-5px;
+}
