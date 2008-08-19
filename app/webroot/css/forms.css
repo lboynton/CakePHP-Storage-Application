@@ -48,11 +48,14 @@ form p
 /* style for  labels */
 label
 {
-	float: left;
-	width: 12em;
+	float:left;
+	display:block;
+	width: 10em;
 	padding-top:3px;
 	padding-bottom:3px;
 	margin-top:1px;
+	font-size:14px;
+	font-weight:bold;
 }
 /* style for required labels */
 label.required 

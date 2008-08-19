@@ -1,10 +1,9 @@
 @charset "utf-8";
 /* CSS Document */
-
 body
 {
-	font-family: "Lucida Grande",verdana,helvetica,arial,sans-serif;
-	font-size:12px;
+	font-family: sans-serif;
+	font-size:13px;
 	background:#EFEFEF;
 }
 h2
@@ -20,6 +19,7 @@ h2
 p, strong
 {
 	color:#444;
+	font-stretch:expanded;
 }
 h1
 {
