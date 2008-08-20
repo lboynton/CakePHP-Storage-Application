@@ -8,6 +8,9 @@
 <!--[if lt IE 7]>
 <?php echo $html->css(array('ie6')); ?>
 <![endif]-->
+<!--[if IE 7]>
+<?php echo $html->css(array('ie7')); ?>
+<![endif]-->
 <!--[if lt IE 8]>
 <script type="text/javascript" src="/js/IE8.js"></script>
 <![endif]-->
@@ -30,5 +33,6 @@
     </div>
     <div id="footer"></div>  
 </div>
+<div id="loadingIndicator" style="display:none;">Loading...</div>
 </body>
 </html>

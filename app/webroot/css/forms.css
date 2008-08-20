@@ -50,7 +50,7 @@ label
 {
 	float:left;
 	display:block;
-	width: 10em;
+	width: 12em;
 	padding-top:3px;
 	padding-bottom:3px;
 	margin-top:1px;
@@ -188,7 +188,7 @@ form .help
 	font-size:9px;
 	padding:0 0 0 20px;
 	display:block;
-	margin:-8px 0 0 0;
+	margin:-5px 0 0 0;
 	color:#777;
-	background:url(/img/information.png) no-repeat 0 2px;
+	background:url(/img/information.png) no-repeat 0 1px;
 }

@@ -12,12 +12,5 @@ class Backup extends AppModel {
 								'order' => ''
 			)
 	);
-	
-    var $paginate = array(
-        'limit' => 25,
-        'order' => array(
-            'name' => 'asc'
-        )
-    );
 }
 ?>

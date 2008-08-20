@@ -3,6 +3,11 @@ class BackupsController extends AppController
 {
 	var $name = "Backups";
 	var $helpers = array('Html', 'Form');
+    var $paginate = array(
+        'limit' => 25,
+        'order' => array('name' => 'asc')
+    );
+  	var $components = array('RequestHandler');
 		
 	function restore()
 	{
@@ -10,10 +15,10 @@ class BackupsController extends AppController
 		$this->helpers[] = "Number";
 		$this->pageTitle = "Restore";
 		
-		//$data = $this->paginate('Backup');
-		//$this->set(compact('data'));
+		$backups = $this->paginate('Backup', array('user_id' => $this->Session->read('Auth.User.id')));
+		$this->set(compact('backups'));
 		
-		$this->set('backups', $this->Backup->find('all', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
+		//$this->set('backups', $this->Backup->find('all', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
 	}
 	
 	/**

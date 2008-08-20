@@ -5,6 +5,7 @@ table
 	width:98%;
 	border-collapse:collapse;
 	margin-left:10px;
+	border-bottom:1px solid #CCC;
 }
 table th
 {
@@ -12,7 +13,7 @@ table th
 	margin:2px;
 	background:#777;
 	padding:2px;
-	color:#FFF;
+	color:#EFEFEF;
 }
 table td
 {
@@ -20,4 +21,13 @@ table td
 	text-align:center;
 	border-bottom:1px dotted #DDD;
 	margin:2px;
+}
+table th a
+{
+	color:#FFF;
+	text-decoration:underline;
+}
+table th a:hover
+{
+	background-color:inherit;
 }
