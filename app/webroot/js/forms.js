@@ -49,3 +49,19 @@ function formHelp()
 		});
 	});
 }
+
+/**
+ * Toggles a form item between disabled and not disabled
+ */
+Element.Methods.toggleDisable = function(element) 
+{
+	if (element.hasAttribute('disabled')) 
+	{
+		element.removeAttribute('disabled');
+	} 
+	else 
+	{
+		element.setAttribute('disabled', 'disabled');
+	}
+}
+Element.addMethods();

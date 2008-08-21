@@ -192,3 +192,48 @@ form .help
 	color:#777;
 	background:url(/img/information.png) no-repeat 0 1px;
 }
+form#compact label
+{
+	margin-right:15px;
+}
+form#compact *
+{
+	display:inline;
+	float:none;
+}
+form#compact input[type="submit"]
+{
+	padding:2px 2px 1px 2px;
+}
+form#compact input[type="submit"]:hover
+{
+
+}
+form#compact input[type="text"]
+{
+	width:200px;
+	margin-right:5px;
+}
+form#compact select
+{
+	padding:2px 1px 0 1px;
+}
+form#deleteAllFiles
+{
+	font-size:10px;
+}
+form#deleteAllFiles input[type="checkbox"]
+{
+	position:relative;
+	top:3px;
+	margin-right:5px;
+}
+form#deleteAllFiles input[type="submit"]
+{
+	display:inline;
+	margin:0 0 0 5px;
+}
+form#deleteAllFiles .submit
+{
+	display:inline;
+}

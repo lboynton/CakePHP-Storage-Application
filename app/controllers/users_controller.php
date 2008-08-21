@@ -16,8 +16,11 @@ class UsersController extends AppController
     function index()
     {
 		$this->helpers[] = "Time";
+		$this->helpers[] = "Number";
+		$this->helpers[] = "Javascript";
 		$this->pageTitle = "Account Summary";
 		$this->Backup = &new Backup();
+		
 		$this->set('lastBackup', $this->Backup->find
 		(
 			'all',
@@ -31,6 +34,8 @@ class UsersController extends AppController
 		));
 		
 		$this->set('backupCount', $this->Backup->find('count', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
+
+		$this->set('backupSum', $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
     }
     
     function login()

@@ -199,7 +199,7 @@ applet
 }
 #pagination
 {
-	margin:15px 0 10px 0;
+	margin:10px 0 5px 0;
 	text-align:center;
 	font-size:14px;
 	font-weight:bold;
@@ -226,6 +226,7 @@ applet
 	background:#F3F3F3;
 	display:inline;
 	border:2px solid #DDD;
+	line-height:30px;
 }
 #pagination .box + .box
 {

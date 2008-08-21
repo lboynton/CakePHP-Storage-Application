@@ -5,6 +5,13 @@
 	<?php echo $paginator->next('Next page &raquo;', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
 </div>
 <?php if($session->check('Message.flash')) $session->flash(); ?>
+<?php echo $form->create(array('action' => 'restore', 'type' => 'get', 'id' => 'compact')); ?>
+	<?php echo $form->input('Search', array('name' => 'query', 'value' => $query)); ?>
+    <?php echo $form->submit('Search'); ?>
+<?php echo $form->end(); ?>
+<?php if($query != ""): ?>
+	<div class="message"><p>Showing files matching "<?php echo $query; ?></strong>" (<?php echo $html->link('Reset', '/backups/restore'); ?>)</p></div>
+<?php endif; ?>
 <?php if($backups): ?>
 <table>
 	<tr>
@@ -23,9 +30,9 @@
 <?php endforeach; ?>
 </table>
 <?php else: ?>
-<p>You have not backed up any files.</p>
+<p>There are no files to display.</p>
 <?php endif; ?>
 <div id="pagination">
-    <span class="box"><?php echo $paginator->counter(array('format' => 'Page %page% of %pages%')); ?>&nbsp;</span>
+    <span class="box"><?php echo $paginator->counter(array('format' => 'Page %page% of %pages%, %count% files found, showing %start%-%end%.')); ?>&nbsp;</span>
     <span class="box">Go to page:&nbsp;<?php echo $paginator->numbers(array('separator' => '')); ?></span>
 </div>

@@ -15,10 +15,17 @@ class BackupsController extends AppController
 		$this->helpers[] = "Number";
 		$this->pageTitle = "Restore";
 		
-		$backups = $this->paginate('Backup', array('user_id' => $this->Session->read('Auth.User.id')));
-		$this->set(compact('backups'));
+		// redirect the query to named parameter
+		if(isset($this->params['url']['query'])) $this->redirect('/' . $this->params['url']['url'] . "/query:{$this->params['url']['query']}");
 		
-		//$this->set('backups', $this->Backup->find('all', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
+		App::import('Sanitize'); 
+		if(isset($this->params['named']['query'])) $query = Sanitize::escape($this->params['named']['query']);
+		else $query = "";
+		
+		$this->set('query', $query);
+
+		$backups = $this->paginate('Backup', "name LIKE '%$query%' AND user_id = {$this->Session->read('Auth.User.id')}");
+		$this->set(compact('backups'));
 	}
 	
 	/**
@@ -144,6 +151,17 @@ class BackupsController extends AppController
 		}
 		
 		$this->redirect('/backups/restore');
+	}
+	
+	function deleteAll()
+	{
+		if($this->data['Backup']['deleteAll'] == 1)
+		{
+			$this->Backup->deleteAll(array('Backup.user_id' => $this->Session->read('Auth.User.id')));
+			@unlink("../../backups/{$this->Session->read('Auth.User.id')}/*");
+			$this->Session->setFlash("All files in the backup have been deleted.");
+			$this->redirect('/users');
+		}
 	}
 }
 ?>

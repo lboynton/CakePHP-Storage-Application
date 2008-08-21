@@ -47,7 +47,7 @@
 {
 	background-image:none;
 }
-#menu a.active .topLeft, #menu a.active .topRight, #menu a:hover .topLeft, , #menu a:hover .topRight
+#menu a.active .topLeft, #menu a.active .topRight, #menu a:hover .topLeft, #menu a:hover .topRight
 {
 	background-image:url(/img/menu_item_bg.gif);
 }
