@@ -3,11 +3,11 @@ Admin section
 	
 Backup/restore
 	- User quotas
-	- Store files in file system
 	- Allow for deletion of multiple files at once
 	- Prevent duplicate file metadata (files themselves can not be duplicated as they are simply overwritten)
+	- Allow user to create directories
+	- Display files in tree
 	
 User interface
 	- Add help section
 	- Test on other browsers
-	- Fix backup timestamp

@@ -5,7 +5,6 @@ table
 	width:98%;
 	border-collapse:collapse;
 	margin-left:10px;
-	border-bottom:1px solid #CCC;
 }
 table th
 {
@@ -22,6 +21,10 @@ table td
 	border-bottom:2px dotted #EEE;
 	margin:2px;
 }
+table tr:hover
+{
+	background:#F5F5F5;
+}
 table th a
 {
 	color:#FFF;
@@ -30,4 +33,30 @@ table th a
 table th a:hover
 {
 	background-color:inherit;
+}
+table th.checkbox
+{
+}
+table td.checkbox
+{
+}
+table #footer td
+{
+	background:#EFEFEF;
+	font-size:10px;
+	padding:5px;
+	border:0;
+}
+table #actions
+{
+	text-align:left;
+}
+table p
+{
+	margin:0;
+}
+table form, table form *
+{
+	margin:0;
+	display:inline;
 }

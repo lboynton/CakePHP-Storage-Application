@@ -42,5 +42,7 @@
  * $controllerPaths = array('this path to controllers', 'second full path to controllers', 'etc...');
  *
  */
-//EOF
+define('BACKUP_ROOT_DIR', $_SERVER['DOCUMENT_ROOT'] . DS . 'backups' . DS);
+
+date_default_timezone_set("Europe/London");
 ?>

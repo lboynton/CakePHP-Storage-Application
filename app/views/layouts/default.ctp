@@ -14,8 +14,9 @@
 <!--[if lt IE 8]>
 <script type="text/javascript" src="/js/IE8.js"></script>
 <![endif]-->
-<script type="text/javascript" src="/js/prototype.js"></script>
-<script type="text/javascript" src="/js/forms.js"></script>
+<?php echo $javascript->link('prototype'); ?>
+<?php echo $javascript->link('scriptaculous'); ?>
+<?php echo $javascript->link('forms'); ?>
 <?php echo $scripts_for_layout; ?>
 </head>
 <body>

@@ -2,7 +2,7 @@
 class AppController extends Controller
 {
 	// add custom link helper so it can be used in layouts
-	var $helpers = array('Html', 'Menu');
+	var $helpers = array('Html', 'Menu', 'Javascript');
 	
 	// add authentication component for logging in users
 	var $components = array('Auth');

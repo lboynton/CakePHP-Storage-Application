@@ -2,8 +2,9 @@
 class BackupsController extends AppController
 {
 	var $name = "Backups";
-	var $helpers = array('Html', 'Form');
-    var $paginate = array(
+	var $helpers = array('Html', 'Form', 'Ajax');
+    var $paginate = array
+	(
         'limit' => 25,
         'order' => array('name' => 'asc')
     );
@@ -16,7 +17,11 @@ class BackupsController extends AppController
 		$this->pageTitle = "Restore";
 		
 		// redirect the query to named parameter
-		if(isset($this->params['url']['query'])) $this->redirect('/' . $this->params['url']['url'] . "/query:{$this->params['url']['query']}");
+		if(isset($this->params['url']['query'])) 
+		{
+			$this->redirect('/' . $this->params['url']['url'] . "/query:{$this->params['url']['query']}");
+			return;
+		}
 		
 		App::import('Sanitize'); 
 		if(isset($this->params['named']['query'])) $query = Sanitize::escape($this->params['named']['query']);
@@ -34,7 +39,6 @@ class BackupsController extends AppController
 	 function add() 
 	 {
 	 	$this->pageTitle = "Backup";
-		date_default_timezone_set("Europe/London");
 		
 		if (!empty($this->data))
 		{
@@ -50,7 +54,7 @@ class BackupsController extends AppController
 						{
 							if(zip_entry_filesize($zip_entry) <= 0) break;
 							
-							@mkdir("../../backups/{$this->Session->read('Auth.User.id')}", 0777, true);
+							$this->_createBackupDirectory();
 							
 							$this->Backup->create();
 							
@@ -63,7 +67,7 @@ class BackupsController extends AppController
 							$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 							$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 							
-							$fp = fopen("../../backups/{$this->Session->read('Auth.User.id')}/{$this->data['Backup']['name']}", 'wb');
+							$fp = fopen(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}/{$this->data['Backup']['name']}", 'wb');
 							fwrite($fp, $this->data['Backup']['data']);
 							fclose($fp);
 							
@@ -85,8 +89,8 @@ class BackupsController extends AppController
 						$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 						$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 						
-						@mkdir("../../backups/{$this->Session->read('Auth.User.id')}", 0777, true);
-						move_uploaded_file($file['File']['tmp_name'], "../../backups/{$this->Session->read('Auth.User.id')}/{$file['File']['name']}");
+						$this->_createBackupDirectory();
+						move_uploaded_file($file['File']['tmp_name'], BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}/{$file['File']['name']}");
 						
 						$this->Backup->save($this->data);
 					}
@@ -104,7 +108,7 @@ class BackupsController extends AppController
 		{
 			Configure::write('debug', 0);
 			$file = $this->Backup->findById($id);
-			$fp = fopen("../../backups/{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}", 'r');
+			$fp = fopen(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}", 'r');
 		
 			header('Content-type: ' . $file['Backup']['type']);
 			header('Content-length: ' . $file['Backup']['size']);
@@ -125,7 +129,7 @@ class BackupsController extends AppController
 		{
 			Configure::write('debug', 0);
 			$file = $this->Backup->findById($id);
-			$fp = fopen("../../backups/{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}", 'r');
+			$fp = fopen(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}", 'r');
 		
 			header('Content-type: ' . $file['Backup']['type']);
 			header('Content-length: ' . $file['Backup']['size']);
@@ -145,8 +149,20 @@ class BackupsController extends AppController
 		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
 		{
 			$file = $this->Backup->findById($id);
+			
 			$this->Backup->del($id);
-			@unlink("../../backups/{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}");
+			
+			$absoluteFile = BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['name'];
+			
+			if(unlink(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['name']))
+			{
+				$this->log('Deleted file: ' . $absoluteFile, LOG_DEBUG);
+			}
+			else
+			{
+				$this->log("Could not delete file: " . $absoluteFile);
+			}
+			
 			$this->Session->setFlash("The file \"{$file['Backup']['name']}\" has been deleted.");
 		}
 		
@@ -158,9 +174,90 @@ class BackupsController extends AppController
 		if($this->data['Backup']['deleteAll'] == 1)
 		{
 			$this->Backup->deleteAll(array('Backup.user_id' => $this->Session->read('Auth.User.id')));
-			@unlink("../../backups/{$this->Session->read('Auth.User.id')}/*");
+			$this->_unlinkWildcard(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . "*");
 			$this->Session->setFlash("All files in the backup have been deleted.");
 			$this->redirect('/users');
+		}
+	}
+	
+	function rename($id)
+	{
+		// check user owns this file and it exists, if not redirect them
+		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
+		{
+			// check for POST data
+			if(isset($this->data))
+			{
+				$this->Backup->id = $id;
+				$this->Backup->saveField('name', $this->data['Backup']['Name']);
+				
+				// if this is from an ajax call, we want to show the new file name
+				if($this->RequestHandler->isAjax()) 
+				{
+					$this->set('file', $this->Backup->findById($id));
+				}
+				else
+				{
+					// this is the non-ajax form method, redirect the user
+					$this->Session->setFlash('File successfully renamed.');
+					$this->redirect('/backups/restore');
+				}
+			}
+			
+			$this->set('file', $this->Backup->findById($id));
+		}
+		else $this->redirect('/backups/restore');
+	}
+	
+	function test()
+	{
+		print_r($this->data);
+	}
+	
+	//
+	// Private functions
+	//
+	 
+	/**
+	 * Provides deletion of files using wildcards
+	 */
+	function _unlinkWildcard($str)
+	{
+		foreach(glob($str) as $file) 
+		{
+			$absoluteFile = BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . basename($file);
+			
+			if(unlink($file))
+			{
+				$this->log('Deleted file: ' . $absoluteFile, LOG_DEBUG);
+			}
+			else
+			{
+				$this->log("Could not delete file: " . $absoluteFile);
+			}
+		} 
+	}
+	
+	/**
+	 * Creates the root directory for the user's backups
+	 */
+	function _createBackupDirectory()
+	{
+		if(file_exists(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}"))
+		{
+			$this->log('Not creating backup store for use with ID ' . $this->Session->read('Auth.User.id') . ', directory already present.', LOG_DEBUG);
+			return true;
+		}
+		
+		if(mkdir(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}", 0777, true))
+		{
+			$this->log('Created backup store for user with ID ' . $this->Session->read('Auth.User.id'), LOG_DEBUG);
+			return true;
+		}
+		else
+		{
+			$this->log('Could not create backup store for user with ID ' . $this->Session->read('Auth.User.id'));
+			return false;
 		}
 	}
 }
