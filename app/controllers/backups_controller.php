@@ -59,7 +59,7 @@ class BackupsController extends AppController
 							$this->Backup->create();
 							
 							// date isn't automagically inserted by Cake for some reason
-							$this->data['Backup']['created'] = date( 'Y-m-d H:i:s');
+							$this->data['Backup']['created'] = date('Y-m-d H:i:s');
 							
 							$this->data['Backup']['name'] = zip_entry_name($zip_entry);	
 							$this->data['Backup']['size'] = zip_entry_filesize($zip_entry);
@@ -67,11 +67,12 @@ class BackupsController extends AppController
 							$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 							$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 							
-							$fp = fopen(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}/{$this->data['Backup']['name']}", 'wb');
-							fwrite($fp, $this->data['Backup']['data']);
-							fclose($fp);
-							
-							$this->Backup->save($this->data);
+							if($this->Backup->save($this->data))
+							{
+								$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id, 'wb');
+								fwrite($fp, $this->data['Backup']['data']);
+								fclose($fp);
+							}
 						}
 					}
 					else
@@ -81,7 +82,7 @@ class BackupsController extends AppController
 						$this->Backup->create();
 						
 						// date isn't automagically inserted by Cake for some reason
-						$this->data['Backup']['created'] = date( 'Y-m-d H:i:s');
+						$this->data['Backup']['created'] = date('Y-m-d H:i:s');
 						
 						$this->data['Backup']['name'] = $file['File']['name'];
 						$this->data['Backup']['size'] = $file['File']['size'];
@@ -89,10 +90,11 @@ class BackupsController extends AppController
 						$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 						$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 						
-						$this->_createBackupDirectory();
-						move_uploaded_file($file['File']['tmp_name'], BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}/{$file['File']['name']}");
-						
-						$this->Backup->save($this->data);
+						if($this->Backup->save($this->data))
+						{
+							$this->_createBackupDirectory();
+							move_uploaded_file($file['File']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
+						}
 					}
 				}
 			}
@@ -108,7 +110,7 @@ class BackupsController extends AppController
 		{
 			Configure::write('debug', 0);
 			$file = $this->Backup->findById($id);
-			$fp = fopen(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}", 'r');
+			$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'], 'r');
 		
 			header('Content-type: ' . $file['Backup']['type']);
 			header('Content-length: ' . $file['Backup']['size']);
@@ -129,7 +131,7 @@ class BackupsController extends AppController
 		{
 			Configure::write('debug', 0);
 			$file = $this->Backup->findById($id);
-			$fp = fopen(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}/{$file['Backup']['name']}", 'r');
+			$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'], 'r');
 		
 			header('Content-type: ' . $file['Backup']['type']);
 			header('Content-length: ' . $file['Backup']['size']);
@@ -152,9 +154,9 @@ class BackupsController extends AppController
 			
 			$this->Backup->del($id);
 			
-			$absoluteFile = BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['name'];
+			$absoluteFile = BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'];
 			
-			if(unlink(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['name']))
+			if(unlink(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id']))
 			{
 				$this->log('Deleted file: ' . $absoluteFile, LOG_DEBUG);
 			}
@@ -163,7 +165,7 @@ class BackupsController extends AppController
 				$this->log("Could not delete file: " . $absoluteFile);
 			}
 			
-			$this->Session->setFlash("The file \"{$file['Backup']['name']}\" has been deleted.");
+			$this->Session->setFlash("The file \"{$file['Backup']['id']}\" has been deleted.");
 		}
 		
 		$this->redirect('/backups/restore');

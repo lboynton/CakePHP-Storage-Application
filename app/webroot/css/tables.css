@@ -18,7 +18,7 @@ table td
 {
 	padding:2px;
 	text-align:center;
-	border-bottom:2px dotted #EEE;
+	border-bottom:1px solid #EEE;
 	margin:2px;
 }
 table tr:hover
@@ -45,7 +45,12 @@ table #footer td
 	background:#EFEFEF;
 	font-size:10px;
 	padding:5px;
-	border:0;
+	border-top:2px solid #CCC;
+	border-bottom:2px solid #CCC;
+}
+table #footer input[type="checkbox"]
+{
+	margin:0;
 }
 table #actions
 {
