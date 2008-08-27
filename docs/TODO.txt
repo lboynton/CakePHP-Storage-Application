@@ -4,9 +4,10 @@ Admin section
 Backup/restore
 	- User quotas
 	- Allow for deletion of multiple files at once
-	- Prevent duplicate file metadata (files themselves can not be duplicated as they are simply overwritten)
+	- Prevent duplicate files
 	- Allow user to create directories
 	- Display files in tree
+	- Stop zero length filenames when renaming
 	
 User interface
 	- Add help section

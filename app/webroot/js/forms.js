@@ -54,9 +54,6 @@ function toggleCheckboxes(controller)
 {
 	$$('input[type="checkbox"]').each(function(item)
 	{
-		if(item.class == controller) return;
-		
-		item.checked = $$(controller).checked;
 	});
 }
 

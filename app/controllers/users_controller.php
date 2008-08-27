@@ -87,7 +87,7 @@ class UsersController extends AppController
 			else
 			{
 				// failed validation
-				$this->Session->setFlash('Your account could not be created due to the problems highlighted below.','default', array('class' => 'error'));
+				$this->Session->setFlash('Your account could not be created due to the problems highlighted below.','messages/error');
 			}
 		}
 	}

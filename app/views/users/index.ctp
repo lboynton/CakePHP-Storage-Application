@@ -23,8 +23,8 @@
 		?>
     </dd>
 </dl>
-<?php echo $form->create('Backup', array('action' => 'deleteAll', 'id' => 'deleteAllFiles', 'class' => 'compact')); ?>
-<?php echo $form->checkbox('deleteAll'); ?>Delete all files<?php echo $form->submit('Delete', array('id' => 'DeleteButton', 'disabled' => true)); ?>
+<?php echo $form->create('Backup', array('action' => 'deleteAll', 'id' => 'deleteAllFiles')); ?>
+	<?php echo $form->checkbox('deleteAll'); ?>Delete all files<?php echo $form->submit('Delete', array('id' => 'DeleteButton', 'disabled' => true)); ?>
 <?php echo $form->end(); ?>
 <?php //echo date_default_timezone_get(); ?>
 <?php echo $javascript->event('BackupDeleteAll', 'click', '$(\'DeleteButton\').toggleDisable()'); ?>

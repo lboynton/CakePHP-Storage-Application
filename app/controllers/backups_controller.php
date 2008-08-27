@@ -1,4 +1,6 @@
 <?php 
+uses('sanitize');
+
 class BackupsController extends AppController
 {
 	var $name = "Backups";
@@ -16,14 +18,6 @@ class BackupsController extends AppController
 		$this->helpers[] = "Number";
 		$this->pageTitle = "Restore";
 		
-		// redirect the query to named parameter
-		if(isset($this->params['url']['query'])) 
-		{
-			$this->redirect('/' . $this->params['url']['url'] . "/query:{$this->params['url']['query']}");
-			return;
-		}
-		
-		App::import('Sanitize'); 
 		if(isset($this->params['named']['query'])) $query = Sanitize::escape($this->params['named']['query']);
 		else $query = "";
 		
@@ -42,6 +36,8 @@ class BackupsController extends AppController
 		
 		if (!empty($this->data))
 		{
+			//$this->data = Sanitize::clean($this->data);
+			
 			foreach($this->data['Backup'] as $file)
 			{
 				if(is_uploaded_file($file['File']['tmp_name']))
@@ -60,7 +56,7 @@ class BackupsController extends AppController
 							
 							// date isn't automagically inserted by Cake for some reason
 							$this->data['Backup']['created'] = date('Y-m-d H:i:s');
-							
+							$this->data['Backup']['modified'] = date('Y-m-d H:i:s');
 							$this->data['Backup']['name'] = zip_entry_name($zip_entry);	
 							$this->data['Backup']['size'] = zip_entry_filesize($zip_entry);
 							$this->data['Backup']['data'] = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
@@ -77,16 +73,13 @@ class BackupsController extends AppController
 					}
 					else
 					{
-						if($file['File']['size'] <= 0) break;
-						
 						$this->Backup->create();
 						
 						// date isn't automagically inserted by Cake for some reason
 						$this->data['Backup']['created'] = date('Y-m-d H:i:s');
-						
+						$this->data['Backup']['modified'] = date('Y-m-d H:i:s');
 						$this->data['Backup']['name'] = $file['File']['name'];
-						$this->data['Backup']['size'] = $file['File']['size'];
-						$this->data['Backup']['data'] = fread(fopen($file['File']['tmp_name'], "r"), $file['File']['size']);
+						$this->data['Backup']['size'] = filesize($file['File']['tmp_name']);
 						$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 						$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 						
@@ -94,13 +87,16 @@ class BackupsController extends AppController
 						{
 							$this->_createBackupDirectory();
 							move_uploaded_file($file['File']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
+							$this->Session->setFlash('The selected files have been backed up.');
+							$this->redirect('/backups/restore');
+						}
+						else
+						{
+							$this->Session->setFlash('Err0r');
 						}
 					}
 				}
 			}
-			
-			$this->Session->setFlash('The selected files have been backed up.');
-			$this->redirect('/backups/restore');
 		}
     }
 
@@ -190,25 +186,42 @@ class BackupsController extends AppController
 			// check for POST data
 			if(isset($this->data))
 			{
+				
 				$this->Backup->id = $id;
+				$this->Backup->user_id = $this->Session->read('Auth.User.id');
 				$this->Backup->saveField('name', $this->data['Backup']['Name']);
 				
 				// if this is from an ajax call, we want to show the new file name
 				if($this->RequestHandler->isAjax()) 
 				{
+					$this->layout = 'ajax';
 					$this->set('file', $this->Backup->findById($id));
 				}
 				else
 				{
 					// this is the non-ajax form method, redirect the user
 					$this->Session->setFlash('File successfully renamed.');
-					$this->redirect('/backups/restore');
+					//$this->redirect('/backups/restore');
 				}
 			}
 			
 			$this->set('file', $this->Backup->findById($id));
 		}
 		else $this->redirect('/backups/restore');
+	}
+	
+	function add_folder()
+	{
+		print_r($this->data);
+		
+		if(isset($this->data))
+		{
+			$this->data['Backup']['type'] = 'directory';
+			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+
+			if($this->Backup->save($this->data)) echo "saved";
+			else echo "bleh";
+		}
 	}
 	
 	function test()

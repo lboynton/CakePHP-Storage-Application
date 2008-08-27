@@ -26,9 +26,14 @@ class User extends AppModel
                 'required' => true,
                 'message' => 'This username has already been taken, sorry!'
             ),
+            'alphanumeric' => array(
+                'rule' => 'alphaNumeric',
+                'required' => true,
+                'message' => 'Username must be alphanumeric'
+            ),
             'empty' => array
 			(
-				'rule' => array('minLength', '1'),
+				'rule' => array('custom', '/\S+/'),
 				'required' => true,
 				'message' => 'Please enter your username'
             )

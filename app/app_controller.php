@@ -14,6 +14,8 @@ class AppController extends Controller
 		// allow unregistered access to the homepage
 		$this->Auth->allow(array('controller' => 'pages', 'action' => 'display', 'home'));
 		// controller action access is defined on a per controller basis
+		
+		$this->_redirectToNamedParameters();
 	}
 	
 	function isAuthorized() 
@@ -25,5 +27,21 @@ class AppController extends Controller
 		}
 		return true;
     }
+	
+	/**
+	 * Checks for normal GET parameters and redirects them to the named parameter equivalent
+	 */
+	function _redirectToNamedParameters()
+	{
+		foreach($this->params['url'] as $param => $paramValue)
+		{
+			if($param != 'url') $namedParams .= $param . ":" . $paramValue . '/';
+		}
+		
+		if(isset($namedParams))
+		{
+			$this->redirect('/' . $this->params['url']['url'] . '/' . $namedParams);
+		}
+	}
 }
 ?>

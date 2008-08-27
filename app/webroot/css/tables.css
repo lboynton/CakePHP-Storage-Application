@@ -1,38 +1,45 @@
-/* CSS Document */
-
 table
 {
-	width:98%;
+	width:97.5%;
 	border-collapse:collapse;
 	margin-left:10px;
+	border-bottom:1px solid #DDD;
 }
 table th
 {
-	color:#444;
 	margin:2px;
-	background:#777;
+	background:#F3F3F3;
 	padding:2px;
-	color:#EFEFEF;
+	font-weight:normal;
+	margin:0;
+	border-bottom:2px solid #DDD;
 }
 table td
 {
 	padding:2px;
 	text-align:center;
-	border-bottom:1px solid #EEE;
 	margin:2px;
 }
-table tr:hover
+table tr
 {
-	background:#F5F5F5;
+	color:#444;
+}
+table tr p
+{
+	color:inherit;
+}
+table tr:hover td
+{
+	color:#000;
 }
 table th a
 {
-	color:#FFF;
-	text-decoration:underline;
+	color:inherit;
 }
 table th a:hover
 {
 	background-color:inherit;
+	color:inherit;
 }
 table th.checkbox
 {
@@ -42,11 +49,10 @@ table td.checkbox
 }
 table #footer td
 {
-	background:#EFEFEF;
+	background:#fff;
 	font-size:10px;
 	padding:5px;
-	border-top:2px solid #CCC;
-	border-bottom:2px solid #CCC;
+	border-top:1px solid #DDD;
 }
 table #footer input[type="checkbox"]
 {

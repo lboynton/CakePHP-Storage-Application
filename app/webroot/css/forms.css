@@ -1,24 +1,27 @@
-@charset "utf-8";
-/* CSS Document */
-
-/* fieldset styling */
 fieldset 
 {
-	margin: 1em 0; /*  space out the fieldsets a little*/
-	padding: 1em;
+	margin: 2em 0;
+	padding: 0.3em;
 	background:#f5e1c9;
 	border:0;
+	/*border-top:2px solid #F56C1E;*/
+	position:relative;
 }
-/* legend styling */
 fieldset legend 
 {
-	font-size:15px;
-	color:#F56C1E;
-	width:100%;
+	color:#FFF;
 }
 fieldset fieldset legend
 {
 	font-size:13px;
+}
+fieldset .message
+{
+	background:#f8eddf url(/img/box_bg.gif) repeat;
+	border-left:2px solid #F56C1E;
+	display:block;
+	margin-bottom:20px;
+	position:relative;
 }
 /* IE hack */
 html html fieldset
@@ -83,18 +86,35 @@ input[type="text"], textarea, input[type="password"]
 {
 	width: 200px;
 }
-input.radio, input.checkbox, input.submit 
-{
-	width: auto;
-}
 input[type="submit"]
 {
-	margin-left:2px;
-	margin-top:10px;
-	padding:3px 2px 3px 2px;
+	background:#F56C1E;
+	color:#FFF;
+	font-size:14px;
+	font-weight:bold;
+	padding:2px 4px;
+	border:2px solid #fff;
+	margin-left:173px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	background:#F56C1E;
+}
+input[type="submit"]:active
+{
+	border-width:3px;
+	padding:1px 3px;
 }
 input[type="submit"]:hover
 {
+}
+input[disabled]
+{
+	color:#777;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 2px solid #DDD;
+	background:#F3F3F3;
+	font-weight:bold;
 }
 /* style form elements on focus */
 input[type="text"]:focus, textarea:focus, input[type="password"]:focus
@@ -135,11 +155,6 @@ select
 	margin:0;
 	line-height:normal;
 }
-form .error, form .success
-{
-	padding:2px 5px 2px 5px;
-	display:inline-block;
-}
 .input
 {
 	margin-bottom:8px;
@@ -158,7 +173,7 @@ input[type="text"].form-error
 .input
 {
 	padding-left:5px;
-	color:#444;
+	color:#555;
 }
 .input label:after
 {
@@ -189,32 +204,67 @@ form .help
 	padding:0 0 0 20px;
 	display:block;
 	margin:-5px 0 0 0;
-	color:#777;
+	color:#555;
 	background:url(/img/information.png) no-repeat 0 1px;
 }
-form#compact label
+fieldset.compact a.reset
 {
-	margin-right:15px;
+	background:#F56C1E;
+	color:#FFF;
+	padding:4px 4px 2px 4px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 2px solid #FFF;
 }
-form#compact *
+fieldset.compact a.reset:active
 {
-	display:inline;
-	float:none;
+	padding:3px 3px 1px 3px;
+	border-width:3px;
 }
-form#compact input[type="submit"]
+fieldset.compact
+{
+	width:362px;
+	float:left;
+	padding:0;
+	margin-bottom:15px;
+	margin-top:5px;
+	margin-left:8px;
+}
+fieldset.compact + fieldset.compact
+{
+	margin-left:8px;
+}
+fieldset.compact label
+{
+	width:7em;
+}
+fieldset.compact input
+{
+	margin-top:3px;
+}
+fieldset.compact input[type="submit"]
 {
 	padding:2px 2px 1px 2px;
+	margin-left:7.3em;
+	display:inline;
 }
-form#compact input[type="submit"]:hover
+fieldset.compact input[type="submit"]:active
+{
+	padding:1px 1px 0 1px;
+}
+fieldset.compact .submit
+{
+	display:inline;
+}
+fieldset.compact input[type="submit"]:hover
 {
 
 }
-form#compact input[type="text"]
+fieldset.compact input[type="text"]
 {
-	width:200px;
-	margin-right:5px;
+
 }
-form#compact select
+fieldset.compact select
 {
 	padding:2px 1px 0 1px;
 }
