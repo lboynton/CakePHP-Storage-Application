@@ -40,7 +40,7 @@ class AppController extends Controller
 		
 		if(isset($namedParams))
 		{
-			$this->redirect('/' . $this->params['url']['url'] . '/' . $namedParams);
+			$this->redirect('/' . $this->params['controller'] . '/' . $this->params['action'] . '/' . $namedParams);
 		}
 	}
 }

@@ -310,7 +310,7 @@ class AuthComponent extends Object {
 				}
 				return true;
 			} else {
-				$this->Session->setFlash($this->loginError, 'default', array(), 'auth');
+				$this->Session->setFlash($this->loginError, 'messages/error', array(), 'auth');
 				$controller->data[$this->userModel][$this->fields['password']] = null;
 			}
 			return false;

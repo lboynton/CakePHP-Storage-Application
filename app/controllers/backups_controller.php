@@ -8,20 +8,31 @@ class BackupsController extends AppController
     var $paginate = array
 	(
         'limit' => 25,
-        'order' => array('name' => 'asc')
+        'order' => array('type' => 'asc', 'name' => 'asc')
     );
   	var $components = array('RequestHandler');
 		
-	function restore()
+	function index()
 	{
 		$this->helpers[] = "Time";
 		$this->helpers[] = "Number";
-		$this->pageTitle = "Restore";
+		$this->helpers[] = "File";
+		$this->pageTitle = "File Management";
 		
 		if(isset($this->params['named']['query'])) $query = Sanitize::escape($this->params['named']['query']);
 		else $query = "";
 		
 		$this->set('query', $query);
+		
+		$directoriesList[''] = '/';
+		
+		$directoriesList[] = $this->Backup->find('list', array
+		(
+			'conditions' => array('type' => 'directory', 'user_id' => $this->Session->read('Auth.User.id')),
+			'fields' => array('name', 'name')
+		));
+		
+		$this->set('directoriesList', $directoriesList);
 
 		$backups = $this->paginate('Backup', "name LIKE '%$query%' AND user_id = {$this->Session->read('Auth.User.id')}");
 		$this->set(compact('backups'));
@@ -75,6 +86,8 @@ class BackupsController extends AppController
 					{
 						$this->Backup->create();
 						
+						print_r($this->data);
+						
 						// date isn't automagically inserted by Cake for some reason
 						$this->data['Backup']['created'] = date('Y-m-d H:i:s');
 						$this->data['Backup']['modified'] = date('Y-m-d H:i:s');
@@ -82,17 +95,18 @@ class BackupsController extends AppController
 						$this->data['Backup']['size'] = filesize($file['File']['tmp_name']);
 						$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 						$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+						$this->data['Backup']['path'] = $file['path'];
 						
 						if($this->Backup->save($this->data))
 						{
 							$this->_createBackupDirectory();
 							move_uploaded_file($file['File']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
-							$this->Session->setFlash('The selected files have been backed up.');
-							$this->redirect('/backups/restore');
+							$this->Session->setFlash('The files have been uploaded.', 'messages/success');
+							$this->redirect('/backups');
 						}
 						else
 						{
-							$this->Session->setFlash('Err0r');
+							$this->Session->setFlash('There was an error uploading the file');
 						}
 					}
 				}
@@ -117,7 +131,7 @@ class BackupsController extends AppController
 		}
 		else
 		{
-			$this->redirect('/backups/restore');
+			$this->redirect('/backups');
 		}
 	}
 	
@@ -138,7 +152,7 @@ class BackupsController extends AppController
 		}
 		else
 		{
-			$this->redirect('/backups/restore');
+			$this->redirect('/backups');
 		}
 	}
 	
@@ -161,10 +175,10 @@ class BackupsController extends AppController
 				$this->log("Could not delete file: " . $absoluteFile);
 			}
 			
-			$this->Session->setFlash("The file \"{$file['Backup']['id']}\" has been deleted.");
+			$this->Session->setFlash("The file \"{$file['Backup']['name']}\" has been deleted.", 'messages/info');
 		}
 		
-		$this->redirect('/backups/restore');
+		$this->redirect('/backups');
 	}
 	
 	function deleteAll()
@@ -201,32 +215,54 @@ class BackupsController extends AppController
 				{
 					// this is the non-ajax form method, redirect the user
 					$this->Session->setFlash('File successfully renamed.');
-					//$this->redirect('/backups/restore');
+					$this->redirect('/backups');
 				}
 			}
 			
 			$this->set('file', $this->Backup->findById($id));
 		}
-		else $this->redirect('/backups/restore');
+		else $this->redirect('/backups');
 	}
 	
 	function add_folder()
 	{
-		print_r($this->data);
-		
 		if(isset($this->data))
 		{
 			$this->data['Backup']['type'] = 'directory';
 			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 
-			if($this->Backup->save($this->data)) echo "saved";
-			else echo "bleh";
+			if($this->Backup->save($this->data))
+			{
+				$this->Session->setFlash('Folder "' . $this->data['Backup']['name'] . '" added.', 'messages/success');
+			}
+			else $this->Session->setFlash('Folder could not be added');
+			
+			$this->redirect('/backups');
 		}
 	}
 	
 	function test()
 	{
-		print_r($this->data);
+		//print_r($this->data); return;
+		
+		// perform download action
+		if($this->data['Backup']['action'] == "download")
+		{
+			$this->_downloadFiles($this->data['Backup']['ids']);
+			exit;
+		}
+		
+		// perform delete action
+		foreach($this->data['Backup']['ids'] as $key => $value) 
+		{
+			if($value != 0 && $this->data['Backup']['action'] == "delete") 
+			{
+				$this->Backup->deleteAll(array('Backup.id' => $key, 'Backup.user_id' => $this->Session->read('Auth.User.id')));
+			}
+		}
+		
+		$this->Session->setFlash('The selected files have been deleted.', 'messages/info');
+		$this->redirect('/backups');
 	}
 	
 	//
@@ -258,7 +294,7 @@ class BackupsController extends AppController
 	 */
 	function _createBackupDirectory()
 	{
-		if(file_exists(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}"))
+		if(file_exists(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id')))
 		{
 			$this->log('Not creating backup store for use with ID ' . $this->Session->read('Auth.User.id') . ', directory already present.', LOG_DEBUG);
 			return true;
@@ -274,6 +310,39 @@ class BackupsController extends AppController
 			$this->log('Could not create backup store for user with ID ' . $this->Session->read('Auth.User.id'));
 			return false;
 		}
+	}
+	
+	/**
+	 *
+	 */
+	function _downloadFiles($files)
+	{
+		$zip = new ZipArchive();
+		$filename = "./test112.zip";
+		
+		if(file_exists($filename)) unlink($filename);
+
+		if ($zip->open($filename, ZIPARCHIVE::CREATE)!==TRUE) 
+		{
+			exit("cannot open <$filename>\n");
+		}
+		
+		foreach($files as $id => $value)
+		{
+			$file = $this->Backup->findById($id);
+			
+			if($value != 0) $zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $id, $file['Backup']['path'] . DS . $file['Backup']['name']);
+		}
+		
+		$zip->close();
+		
+		header('Content-type: application/zip');
+		header('Content-length: ' . filesize($filename));
+		header('Content-Disposition: attachment; filename="download.zip"');
+		$fp = fopen($filename, 'r');
+		echo fread($fp, filesize($filename));
+		fclose($fp);
+		exit();
 	}
 }
 ?>

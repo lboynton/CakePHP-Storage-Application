@@ -21,7 +21,7 @@ class MenuHelper extends AppHelper
 		
         foreach ($links as $title => $link)
         {
-            if($link == $this->here)
+            if($link == substr($this->here,0,-1) || $link == $this->here)
             {
                 $out[] = sprintf
 				(

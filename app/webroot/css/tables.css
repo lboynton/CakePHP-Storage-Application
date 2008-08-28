@@ -3,22 +3,18 @@ table
 	width:97.5%;
 	border-collapse:collapse;
 	margin-left:10px;
-	border-bottom:1px solid #DDD;
 }
 table th
 {
-	margin:2px;
-	background:#F3F3F3;
 	padding:2px;
 	font-weight:normal;
 	margin:0;
-	border-bottom:2px solid #DDD;
+	border-bottom:2px solid #F56C1E;
 }
 table td
 {
-	padding:2px;
+	padding:3px;
 	text-align:center;
-	margin:2px;
 }
 table tr
 {
@@ -31,6 +27,7 @@ table tr p
 table tr:hover td
 {
 	color:#000;
+	background:#FAFAFA;
 }
 table th a
 {
@@ -41,28 +38,35 @@ table th a:hover
 	background-color:inherit;
 	color:inherit;
 }
-table th.checkbox
+table .checkbox
 {
-}
-table td.checkbox
-{
+	padding-top:0;
+	padding-bottom:0;
 }
 table #footer td
 {
 	background:#fff;
 	font-size:10px;
 	padding:5px;
-	border-top:1px solid #DDD;
+	text-align:left;
 }
 table #footer input[type="checkbox"]
 {
 	margin:0;
 }
+table #footer input[type="submit"]
+{
+	padding:2px;
+	border:1px solid #777;
+	font-size:9px;
+	text-transform:uppercase;
+	margin:0 2px;
+}
 table #actions
 {
 	text-align:left;
 }
-table p
+#content table p
 {
 	margin:0;
 }
@@ -70,4 +74,13 @@ table form, table form *
 {
 	margin:0;
 	display:inline;
+}
+table td.name
+{
+	width:290px;
+	text-align:left;
+}
+table td.type
+{
+	width:16px;
 }

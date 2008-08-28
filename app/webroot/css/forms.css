@@ -1,3 +1,8 @@
+form
+{
+	margin:0;
+	padding:0;
+}
 fieldset 
 {
 	margin: 2em 0;
@@ -7,14 +12,6 @@ fieldset
 	/*border-top:2px solid #F56C1E;*/
 	position:relative;
 }
-fieldset legend 
-{
-	color:#FFF;
-}
-fieldset fieldset legend
-{
-	font-size:13px;
-}
 fieldset .message
 {
 	background:#f8eddf url(/img/box_bg.gif) repeat;
@@ -22,6 +19,10 @@ fieldset .message
 	display:block;
 	margin-bottom:20px;
 	position:relative;
+}
+fieldset .message .error, fieldset .message .info, fieldset .message .success
+{
+	background-color:transparent;
 }
 /* IE hack */
 html html fieldset
@@ -49,7 +50,7 @@ form p
 
 }
 /* style for  labels */
-label
+fieldset label
 {
 	float:left;
 	display:block;
@@ -86,7 +87,7 @@ input[type="text"], textarea, input[type="password"]
 {
 	width: 200px;
 }
-input[type="submit"]
+fieldset input[type="submit"]
 {
 	background:#F56C1E;
 	color:#FFF;
@@ -99,15 +100,15 @@ input[type="submit"]
 	-webkit-border-radius: 5px;
 	background:#F56C1E;
 }
-input[type="submit"]:active
+fieldset input[type="submit"]:active
 {
 	border-width:3px;
 	padding:1px 3px;
 }
-input[type="submit"]:hover
+fieldset input[type="submit"]:hover
 {
 }
-input[disabled]
+fieldset input[disabled]
 {
 	color:#777;
 	-moz-border-radius: 5px;
@@ -116,15 +117,9 @@ input[disabled]
 	background:#F3F3F3;
 	font-weight:bold;
 }
-/* style form elements on focus */
 input[type="text"]:focus, textarea:focus, input[type="password"]:focus
 {
 	font-weight:bold;
-}
-input.radio 
-{
-	float: left;
-	margin-right: 1em;
 }
 textarea 
 {
@@ -155,13 +150,6 @@ select
 	margin:0;
 	line-height:normal;
 }
-.input
-{
-	margin-bottom:8px;
-}
-input[type="text"].form-error
-{
-}
 .error-message
 {
 	display:inline;
@@ -170,10 +158,19 @@ input[type="text"].form-error
 	background:url(/img/error.png) no-repeat 0 0;
 	padding:3px 0 1px 20px;
 }
+.radio
+{
+	display:inline;
+}
+.submit
+{
+	display:inline;
+}
 .input
 {
 	padding-left:5px;
 	color:#555;
+	margin-bottom:8px;
 }
 .input label:after
 {
@@ -207,14 +204,32 @@ form .help
 	color:#555;
 	background:url(/img/information.png) no-repeat 0 1px;
 }
+fieldset.compact legend
+{
+	font-weight:bold;
+	color:#777;
+	background:#FFF;
+	text-transform:uppercase;
+	font-size:9px;
+	padding:2px 5px 0 5px;
+	border-bottom:1px solid #777;
+}
+fieldset.compact form
+{
+	margin:0;
+	padding:5px 2px 8px 2px;
+}
 fieldset.compact a.reset
 {
 	background:#F56C1E;
 	color:#FFF;
-	padding:4px 4px 2px 4px;
+	padding:3px 4px 2px 4px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border: 2px solid #FFF;
+	position:absolute;
+	bottom:8px;
+	left:122px;
 }
 fieldset.compact a.reset:active
 {
@@ -223,12 +238,13 @@ fieldset.compact a.reset:active
 }
 fieldset.compact
 {
-	width:362px;
+	width:238px;
 	float:left;
 	padding:0;
 	margin-bottom:15px;
 	margin-top:5px;
 	margin-left:8px;
+	height:105px;
 }
 fieldset.compact + fieldset.compact
 {
@@ -236,7 +252,9 @@ fieldset.compact + fieldset.compact
 }
 fieldset.compact label
 {
-	width:7em;
+	float:none;
+	margin:0;
+	padding-bottom:1px;
 }
 fieldset.compact input
 {
@@ -245,8 +263,11 @@ fieldset.compact input
 fieldset.compact input[type="submit"]
 {
 	padding:2px 2px 1px 2px;
-	margin-left:7.3em;
-	display:inline;
+	margin-left:73px;
+	position:absolute;
+	right:8px;
+	bottom:8px;
+	font-size:13px;
 }
 fieldset.compact input[type="submit"]:active
 {
@@ -260,13 +281,15 @@ fieldset.compact input[type="submit"]:hover
 {
 
 }
-fieldset.compact input[type="text"]
+fieldset.compact input[type="text"], fieldset.compact input[type="file"]
 {
-
+	width:215px;
+	margin-top:0;
 }
 fieldset.compact select
 {
-	padding:2px 1px 0 1px;
+	margin-top:0;
+	max-width:150px;
 }
 form#deleteAllFiles
 {
@@ -286,4 +309,18 @@ form#deleteAllFiles input[type="submit"]
 form#deleteAllFiles .submit
 {
 	display:inline;
+}
+.inplaceeditor-form input[type="submit"]
+{
+	padding:2px;
+	border:1px solid #777;
+	font-size:9px;
+	text-transform:uppercase;
+	margin:0 2px;
+}
+.inplaceeditor-form input[type="text"]
+{
+	padding:3px;
+	border:1px solid #777;
+	font-size:9px;
 }

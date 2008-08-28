@@ -34,6 +34,8 @@ a
 	font-weight:bold;
 	padding:1px 0 1px 0;
 	text-decoration:none;
+	-moz-border-radius:2px;
+	-webkit-border-radius: 2px;
 }
 a:hover
 {
@@ -133,6 +135,7 @@ applet
 	font-weight:bold;
 	font-size:16px;
 	position:relative;
+	-moz-border-radius:0;
 	-moz-border-radius-topright:6px;
 	-moz-border-radius-topleft:6px;
 	color:#FFF;
@@ -153,8 +156,9 @@ applet
 }
 .message, #flashMessage
 {
-	background:#EFEFEF;
-	margin-bottom:10px;
+	background:#F3F3F3;
+	margin:0 10px 5px 10px;
+	position:relative;
 }
 #subMenu
 {
@@ -206,6 +210,20 @@ applet
 	font-size:14px;
 	font-weight:bold;
 }
+#closeBox
+{
+	position:absolute;
+	top:5px;
+	right:5px;
+	font-size:9px;
+	text-transform:uppercase;
+	color:#888;
+}
+#closeBox:hover
+{
+	color:#666;
+	background:none;
+}
 /* Classes */
 #pagination .current
 {
@@ -230,7 +248,15 @@ applet
 }
 .message .error
 {
-	background:url(/img/error.png) no-repeat 8px 10px;
+	background:#f2eed4 url(/img/error.png) no-repeat 8px 10px;
+}
+.message .info
+{
+	background:#F3F3F3 url(/img/information.png) no-repeat 8px 11px;
+}
+.message .success
+{
+	background:#d8f2d4 url(/img/accept.png) no-repeat 8px 11px;
 }
 .clear
 {
@@ -267,4 +293,8 @@ applet
 	float:left;
 	margin-left:3px;
 	font-weight:bold;
+}
+.JSRequired
+{
+	display:none;
 }

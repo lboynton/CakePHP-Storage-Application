@@ -3,8 +3,7 @@
 		echo $menu->mainMenu(array
 		(
 			'Your account' => '/users',
-			'Backup' => '/backups/add',
-			'Restore' => '/backups/restore',
+			'File management' => '/backups',
 			'Logout' => '/users/logout')
 		);
     ?> 
