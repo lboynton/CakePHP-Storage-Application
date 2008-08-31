@@ -6,7 +6,7 @@ form
 fieldset 
 {
 	margin: 2em 0;
-	padding: 0.3em;
+	padding:2em 1em;
 	background:#f5e1c9;
 	border:0;
 	/*border-top:2px solid #F56C1E;*/
@@ -40,10 +40,12 @@ html fieldset
 /* End hack */
 form
 {
-	margin-bottom:15px;
-	margin-top:15px;
 	margin-left:10px;
 	margin-right:10px;
+}
+fieldset form
+{
+	margin-top:15px;
 }
 form p 
 {
@@ -204,6 +206,10 @@ form .help
 	color:#555;
 	background:url(/img/information.png) no-repeat 0 1px;
 }
+fieldset.compact
+{
+	font-size:10px;
+}
 fieldset.compact legend
 {
 	font-weight:bold;
@@ -221,20 +227,17 @@ fieldset.compact form
 }
 fieldset.compact a.reset
 {
-	background:#F56C1E;
-	color:#FFF;
-	padding:3px 4px 2px 4px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border: 2px solid #FFF;
+	font-size:9px;
+	text-transform:uppercase;
+	color:#888;
 	position:absolute;
-	bottom:8px;
-	left:122px;
+	top:5px;
+	right:5px;
 }
-fieldset.compact a.reset:active
+fieldset.compact a.reset:hover
 {
-	padding:3px 3px 1px 3px;
-	border-width:3px;
+	background:none;
+	color:#666;
 }
 fieldset.compact
 {
@@ -260,14 +263,16 @@ fieldset.compact input
 {
 	margin-top:3px;
 }
-fieldset.compact input[type="submit"]
+fieldset.compact .submit 
 {
-	padding:2px 2px 1px 2px;
-	margin-left:73px;
 	position:absolute;
 	right:8px;
 	bottom:8px;
-	font-size:13px;
+}
+fieldset.compact input[type="submit"]
+{
+	padding:2px 2px 1px 2px;
+	font-size:12px;
 }
 fieldset.compact input[type="submit"]:active
 {
@@ -323,4 +328,9 @@ form#deleteAllFiles .submit
 	padding:3px;
 	border:1px solid #777;
 	font-size:9px;
+}
+form table
+{
+	margin:0;
+	width:100%;
 }

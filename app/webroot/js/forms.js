@@ -7,6 +7,7 @@ Event.observe(window, 'load', function()
 {		
 	formHelp();	
 	focusFirstFormElement();
+	enableJSElements();
 });
 
 /**
@@ -23,6 +24,17 @@ function focusFirstFormElement()
 			item.focus();
 			throw $break;
 		}
+	});
+}
+
+/**
+ * Displays hidden elements which require JS. 
+ */
+function enableJSElements()
+{
+	$$('.JSRequired').each(function(item)
+	{
+		item.setStyle('display:block');
 	});
 }
 
@@ -54,6 +66,7 @@ function toggleCheckboxes(controller)
 {
 	$$('input[type="checkbox"]').each(function(item)
 	{
+		item.checked = $(controller).checked;
 	});
 }
 

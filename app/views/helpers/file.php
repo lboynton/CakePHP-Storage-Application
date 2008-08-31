@@ -9,11 +9,11 @@ class FileHelper extends AppHelper
         switch(strtolower($type))
 		{
 			case "directory":
-				$output = '<img src="/img/folder.png" alt="Directory">';
+				$output = '<img src="/img/folder.png" alt="Directory" />';
 				break;
 			
 			default:
-				$output = '<img src="/img/page_white.png" alt="File">';
+				$output = '<img src="/img/page_white.png" alt="File" />';
 		}
 		
 		return $this->output($output);

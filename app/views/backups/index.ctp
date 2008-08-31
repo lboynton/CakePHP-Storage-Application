@@ -9,27 +9,27 @@
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 
 <fieldset class="compact">
+	<?php if($query != ""): ?>
+		<?php echo $html->link('Reset', '/backups', array('class' => 'reset')); ?>
+    <?php endif; ?>
 	<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
         <?php echo $form->input('Search', array('name' => 'query', 'value' => $query)); ?>
         <?php echo $form->input('Show', array('name' => 'show', 'after' => ' results', 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100))); ?>
         <?php echo $form->submit('Filter'); ?>
-        <?php if($query != ""): ?>
-            <?php echo $html->link('Reset', '/backups', array('class' => 'reset')); ?>
-        <?php endif; ?>
     <?php echo $form->end(); ?>
 </fieldset>
 
 <fieldset class="compact">
     <?php echo $form->create('Backup', array('class' => 'compact', 'enctype' => 'multipart/form-data')); ?>
         <?php echo $form->input('Upload file', array('type' => 'file', 'name' => 'data[Backup][][File]')); ?>
-        <?php echo $form->input('Path', array('options' => $directoriesList, 'name' => 'data[Backup][][path]')); ?>
+        <?php echo $form->input('Path', array('options' => $directoriesList, 'name' => 'data[Backup][][path]', 'id' => null)); ?>
         <?php echo $form->submit('Upload'); ?>
     <?php echo $form->end(); ?>
 </fieldset>
 
 <fieldset class="compact">
 	<?php echo $form->create(array('action' => 'add_folder', 'class' => 'compact')); ?>
-        <?php echo $form->input('Create folder', array('name' => 'data[Backup][name]')); ?>
+        <?php echo $form->input('Create folder', array('name' => 'data[Backup][name]', 'id' => null)); ?>
         <?php echo $form->input('Path', array('options' => $directoriesList)); ?>
         <?php echo $form->submit('Add'); ?>
     <?php echo $form->end(); ?>
@@ -37,9 +37,8 @@
 <div style="clear:both;"></div>
 
 <?php if($backups): ?>
-<table>
-	<?php echo $form->create('Backup', array('action' => 'test')); ?>
-    	<input type="hidden" name="action" value="download" />
+<?php echo $form->create('Backup', array('action' => 'test')); ?>
+	<table>
         <tr>
             <th class="checkbox"><?php echo $form->checkbox('selectAllTop', array('class' => 'controller JSRequired')); ?></th>
             <th class="type"></th>
@@ -61,7 +60,7 @@
             <?php echo $ajax->editor('fileRename' . $backup['Backup']['id'], '/backups/rename/' . $backup['Backup']['id'], array('callback' => "return 'data[Backup][Name]=' + escape(value)")); ?>
         </tr>
     <?php endforeach; ?>
-        <tr id="footer">
+        <tr id="tableFooter">
         	<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller JSRequired')); ?></td>
             <td id="actions" colspan="6">
             	Perform action on selected items:
@@ -69,8 +68,8 @@
                 <?php echo $form->submit('Go'); ?>
             </td>
         </tr>
-	<?php echo $form->end(); ?>
-</table>
+	</table>
+<?php echo $form->end(); ?>
 <?php else: ?>
 	<p>There are no files to display.</p>
 <?php endif; ?>
@@ -80,5 +79,5 @@
     <span class="box">Go to page:&nbsp;<?php echo $paginator->numbers(array('separator' => '')); ?></span>
 </div>
 
-<?php echo $javascript->event('selectAllTop', 'mousedown', 'toggleCheckboxes(\'controller\');'); ?>
-<?php echo $javascript->event('selectAllBottom', 'mousedown', 'toggleCheckboxes(\'controller\');'); ?>
+<?php echo $javascript->event('BackupSelectAllTop', 'click', 'toggleCheckboxes(\'BackupSelectAllTop\');'); ?>
+<?php echo $javascript->event('BackupSelectAllBottom', 'click', 'toggleCheckboxes(\'BackupSelectAllBottom\');'); ?>

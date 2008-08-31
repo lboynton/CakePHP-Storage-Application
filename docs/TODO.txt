@@ -6,8 +6,8 @@ Backup/restore
 	- Allow for deletion of multiple files at once
 	- Prevent duplicate files
 	- Allow user to create directories
-	- Display files in tree
 	- Stop zero length filenames when renaming
+	- Move files
 	
 User interface
 	- Add help section
