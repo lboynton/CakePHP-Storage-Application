@@ -5,19 +5,22 @@ form
 }
 fieldset 
 {
-	margin: 2em 0;
+	margin: 2em -1px;
 	padding:2em 1em;
 	background:#f5e1c9;
+	background:#f0d5b6;
 	border:0;
 	/*border-top:2px solid #F56C1E;*/
 	position:relative;
+	border-top:2px solid #dcb990;
+	border-bottom:2px solid #dcb990;
 }
 fieldset .message
 {
 	background:#f8eddf url(/img/box_bg.gif) repeat;
 	border-left:2px solid #F56C1E;
 	display:block;
-	margin-bottom:20px;
+	margin:0 0 20px 0;
 	position:relative;
 }
 fieldset .message .error, fieldset .message .info, fieldset .message .success
@@ -85,9 +88,14 @@ input
 	font-size:12px;
 	padding:3px 4px 2px 3px;
 }
-input[type="text"], textarea, input[type="password"]
+.input.file
 {
-	width: 200px;
+	margin-bottom:12px;
+}
+input[type="text"], textarea, input[type="password"], input[type="file"]
+{
+	width:200px;
+	padding:2px;
 }
 fieldset input[type="submit"]
 {
@@ -206,10 +214,6 @@ form .help
 	color:#555;
 	background:url(/img/information.png) no-repeat 0 1px;
 }
-fieldset.compact
-{
-	font-size:10px;
-}
 fieldset.compact legend
 {
 	font-weight:bold;
@@ -247,7 +251,9 @@ fieldset.compact
 	margin-bottom:15px;
 	margin-top:5px;
 	margin-left:8px;
-	height:105px;
+	font-size:10px;
+	border-bottom:none;
+	height:125px;
 }
 fieldset.compact + fieldset.compact
 {

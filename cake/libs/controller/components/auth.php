@@ -317,7 +317,7 @@ class AuthComponent extends Object {
 		} else {
 			if (!$this->user()) {
 				if (!$this->RequestHandler->isAjax()) {
-					$this->Session->setFlash($this->authError, 'default', array(), 'auth');
+					$this->Session->setFlash($this->authError, 'messages/error', array(), 'auth');
 					$this->Session->write('Auth.redirect', $url);
 					$controller->redirect($loginAction, null, true);
 					return false;

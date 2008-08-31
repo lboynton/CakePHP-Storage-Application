@@ -1,7 +1,7 @@
 body
 {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
-	font-size:13px;
+	font-size:12px;
 	background:#EFEFEF;
 }
 h2
@@ -11,7 +11,7 @@ h2
 	font-weight:normal;
 	padding:16px 8px 4px 8px;
 	border-bottom:3px solid #DDD;
-	margin:0 0 10px 0;
+	margin:0 -1px 10px -1px;
 	background:#F3F3F3;
 }
 p, strong
@@ -109,7 +109,7 @@ applet
 #header
 {
 	background:#777 url(/img/header-bg.gif) no-repeat;
-	padding-top:40px;
+	padding-top:35px;
 }
 #menu
 {
@@ -252,7 +252,7 @@ applet
 }
 .message .info
 {
-	background:#F3F3F3 url(/img/information.png) no-repeat 8px 11px;
+	background:#EEE url(/img/information.png) no-repeat 8px 11px;
 }
 .message .success
 {

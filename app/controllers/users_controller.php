@@ -26,14 +26,14 @@ class UsersController extends AppController
 			'all',
 			array
 			(
-				'conditions' => array('user_id' => $this->Session->read('Auth.User.id')),
+				'conditions' => array('user_id' => $this->Session->read('Auth.User.id'), 'type' => 'file'),
 				'fields' => array('created'),
 				'limit' => 1,
 				'order' => 'Backup.id DESC'
 			)
 		));
 		
-		$this->set('backupCount', $this->Backup->find('count', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
+		$this->set('backupCount', $this->Backup->find('count', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id'), 'type' => 'file'))));
 
 		$this->set('backupSum', $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
     }
@@ -81,7 +81,7 @@ class UsersController extends AppController
 				// clear POST data
 				$this->data = null;
 				
-				$this->Session->setFlash('Thank you for registering, please login below.');
+				$this->Session->setFlash('Thank you for registering, please login below.'. 'messages/success');
 				$this->redirect(array('action' => 'login'));
 			}
 			else

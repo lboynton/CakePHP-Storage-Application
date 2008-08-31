@@ -43,8 +43,6 @@ class BackupsController extends AppController
 	 */
 	 function add() 
 	 {
-	 	$this->pageTitle = "Backup";
-		
 		if (!empty($this->data))
 		{
 			//$this->data = Sanitize::clean($this->data);
@@ -188,8 +186,10 @@ class BackupsController extends AppController
 			$this->Backup->deleteAll(array('Backup.user_id' => $this->Session->read('Auth.User.id')));
 			$this->_unlinkWildcard(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . "*");
 			$this->Session->setFlash("All files in the backup have been deleted.");
-			$this->redirect('/users');
 		}
+		else $this->Session->setFlash("No files have been deleted, please select the checkbox to delete all files.", 'messages/info');
+		
+		$this->redirect('/users');
 	}
 	
 	function rename($id)
@@ -300,7 +300,7 @@ class BackupsController extends AppController
 			return true;
 		}
 		
-		if(mkdir(BACKUP_ROOT_DIR . "{$this->Session->read('Auth.User.id')}", 0777, true))
+		if(mkdir(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id'), 0777, true))
 		{
 			$this->log('Created backup store for user with ID ' . $this->Session->read('Auth.User.id'), LOG_DEBUG);
 			return true;
@@ -318,7 +318,7 @@ class BackupsController extends AppController
 	function _downloadFiles($files)
 	{
 		$zip = new ZipArchive();
-		$filename = "./test112.zip";
+		$filename = BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . "download.zip";
 		
 		if(file_exists($filename)) unlink($filename);
 
