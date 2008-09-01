@@ -28,6 +28,11 @@ class AppController extends Controller
 		return true;
     }
 	
+	function beforeRender()
+	{
+        $this->_persistValidation();
+    } 
+	
 	/**
 	 * Checks for normal GET parameters and redirects them to the named parameter equivalent
 	 */
@@ -41,6 +46,55 @@ class AppController extends Controller
 		if(isset($namedParams))
 		{
 			$this->redirect('/' . $this->params['controller'] . '/' . $this->params['action'] . '/' . $namedParams);
+		}
+	}
+	
+	/**
+	 * Called with some arguments (name of default model, or model from var $uses),
+	 * models with invalid data will populate data and validation errors into the session.
+	 *
+	 * Called without arguments, it will try to load data and validation errors from session 
+	 * and attach them to proper models. Also merges $data to $this->data in controller.
+	 * 
+	 * @author poLK
+	 * @author drayen aka Alex McFadyen
+	 * 
+	 * Licensed under The MIT License
+	 * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+	 */
+	function _persistValidation() {
+		$args = func_get_args();
+		
+		if (empty($args)) {
+			if ($this->Session->check('Validation')) {
+				$validation = $this->Session->read('Validation');
+				$this->Session->del('Validation');
+				foreach ($validation as $modelName => $sessData) {
+					if ($this->name != $sessData['controller']){
+						if (in_array($modelName, $this->modelNames)) {
+							$Model =& $this->{$modelName};
+						} elseif (ClassRegistry::isKeySet($modelName)) {
+							$Model =& ClassRegistry::getObject($modelName);
+						} else {
+							continue;
+						}
+		
+						$Model->data = $sessData['data'];
+						$Model->validationErrors = $sessData['validationErrors'];
+						$this->data = Set::merge($sessData['data'],$this->data);
+					}
+				}
+			}
+		} else {
+			foreach($args as $modelName) {
+				if (in_array($modelName, $this->modelNames) && !empty($this->{$modelName}->validationErrors)) {
+						$this->Session->write('Validation.'.$modelName, array(
+														'controller'			=>	$this->name,
+														'data' 					=> $this->{$modelName}->data,
+														'validationErrors' 	=> $this->{$modelName}->validationErrors
+						));
+				}
+			}
 		}
 	}
 }

@@ -24,8 +24,10 @@ class BackupsController extends AppController
 		
 		$this->set('query', $query);
 		
+		// add root directory
 		$directoriesList[''] = '/';
 		
+		// add user defined directories
 		$directoriesList[] = $this->Backup->find('list', array
 		(
 			'conditions' => array('type' => 'directory', 'user_id' => $this->Session->read('Auth.User.id')),
@@ -33,8 +35,11 @@ class BackupsController extends AppController
 		));
 		
 		$this->set('directoriesList', $directoriesList);
+		
+		if(isset($this->params['named']['dir'])) $dir = Sanitize::escape($this->params['named']['dir']);
+		else $dir = "";
 
-		$backups = $this->paginate('Backup', "name LIKE '%$query%' AND user_id = {$this->Session->read('Auth.User.id')}");
+		$backups = $this->paginate('Backup', "name LIKE '%$query%' AND user_id = {$this->Session->read('Auth.User.id')} AND path = '$dir'");
 		$this->set(compact('backups'));
 	}
 	
@@ -47,68 +52,70 @@ class BackupsController extends AppController
 		{
 			//$this->data = Sanitize::clean($this->data);
 			
-			foreach($this->data['Backup'] as $file)
+			//print_r($this->data); return;
+			
+			$zip = zip_open($this->data['Backup']['file']['tmp_name']);
+			
+			if(is_resource($zip))
 			{
-				if(is_uploaded_file($file['File']['tmp_name']))
+				while ($zip_entry = zip_read($zip))
 				{
-					$zip = zip_open($file['File']['tmp_name']);
+					if(zip_entry_filesize($zip_entry) <= 0) break;
 					
-					if(is_resource($zip))
+					$this->_createBackupDirectory();
+					
+					$this->Backup->create();
+					
+					// date isn't automagically inserted by Cake for some reason
+					$this->data['Backup']['created'] = date('Y-m-d H:i:s');
+					$this->data['Backup']['modified'] = date('Y-m-d H:i:s');
+					$this->data['Backup']['name'] = zip_entry_name($zip_entry);	
+					$this->data['Backup']['size'] = zip_entry_filesize($zip_entry);
+					$this->data['Backup']['data'] = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+					$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
+					$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+					
+					if($this->Backup->save($this->data))
 					{
-						while ($zip_entry = zip_read($zip))
-						{
-							if(zip_entry_filesize($zip_entry) <= 0) break;
-							
-							$this->_createBackupDirectory();
-							
-							$this->Backup->create();
-							
-							// date isn't automagically inserted by Cake for some reason
-							$this->data['Backup']['created'] = date('Y-m-d H:i:s');
-							$this->data['Backup']['modified'] = date('Y-m-d H:i:s');
-							$this->data['Backup']['name'] = zip_entry_name($zip_entry);	
-							$this->data['Backup']['size'] = zip_entry_filesize($zip_entry);
-							$this->data['Backup']['data'] = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-							$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
-							$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
-							
-							if($this->Backup->save($this->data))
-							{
-								$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id, 'wb');
-								fwrite($fp, $this->data['Backup']['data']);
-								fclose($fp);
-							}
-						}
+						$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id, 'wb');
+						fwrite($fp, $this->data['Backup']['data']);
+						fclose($fp);
+						
+						$this->Session->setFlash('The files have been uploaded.', 'messages/success');
 					}
 					else
 					{
-						$this->Backup->create();
-						
-						print_r($this->data);
-						
-						// date isn't automagically inserted by Cake for some reason
-						$this->data['Backup']['created'] = date('Y-m-d H:i:s');
-						$this->data['Backup']['modified'] = date('Y-m-d H:i:s');
-						$this->data['Backup']['name'] = $file['File']['name'];
-						$this->data['Backup']['size'] = filesize($file['File']['tmp_name']);
-						$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
-						$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
-						$this->data['Backup']['path'] = $file['path'];
-						
-						if($this->Backup->save($this->data))
-						{
-							$this->_createBackupDirectory();
-							move_uploaded_file($file['File']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
-							$this->Session->setFlash('The files have been uploaded.', 'messages/success');
-							$this->redirect('/backups');
-						}
-						else
-						{
-							$this->Session->setFlash('There was an error uploading the file');
-						}
+						$this->Session->setFlash('There was an error uploading the file.', 'messages/error');
 					}
 				}
 			}
+			else
+			{
+				$this->Backup->create();
+								
+				// date isn't automagically inserted by Cake for some reason
+				$this->data['Backup']['created'] = date('Y-m-d H:i:s');
+				$this->data['Backup']['modified'] = date('Y-m-d H:i:s');
+				$this->data['Backup']['name'] = $this->data['Backup']['file']['name'];
+				$this->data['Backup']['size'] = filesize($this->data['Backup']['file']['tmp_name']);
+				$this->data['Backup']['hash'] = md5(file_get_contents($this->data['Backup']['file']['tmp_name']));
+				$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+				
+				if($this->Backup->save($this->data))
+				{
+					$this->_createBackupDirectory();
+					move_uploaded_file($this->data['Backup']['file']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
+					$this->Session->setFlash('The file has been uploaded.', 'messages/success');
+				}
+				else
+				{
+					$this->_persistValidation('Backup'); 
+					$this->Session->write('validation', 'error');
+					$this->Session->setFlash('There was an error uploading the file.', 'messages/error');
+				}
+			}
+			
+			$this->redirect('/backups');
 		}
     }
 
@@ -137,11 +144,18 @@ class BackupsController extends AppController
 	{
 		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
 		{
-			Configure::write('debug', 0);
 			$file = $this->Backup->findById($id);
+
+			if($file['Backup']['type'] == 'directory')
+			{
+				$this->redirect('/backups/index/dir:' . $file['Backup']['name']);
+				return;
+			}
+			
+			Configure::write('debug', 0);
 			$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'], 'r');
 		
-			header('Content-type: ' . $file['Backup']['type']);
+			header('Content-type: file');
 			header('Content-length: ' . $file['Backup']['size']);
 			header('Content-Disposition: inline; filename="'.$file['Backup']['name'].'"');
 			echo fread($fp, $file['Backup']['size']);
@@ -185,7 +199,7 @@ class BackupsController extends AppController
 		{
 			$this->Backup->deleteAll(array('Backup.user_id' => $this->Session->read('Auth.User.id')));
 			$this->_unlinkWildcard(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . "*");
-			$this->Session->setFlash("All files in the backup have been deleted.");
+			$this->Session->setFlash("All files in the backup have been deleted.", 'messages/info');
 		}
 		else $this->Session->setFlash("No files have been deleted, please select the checkbox to delete all files.", 'messages/info');
 		
@@ -200,10 +214,14 @@ class BackupsController extends AppController
 			// check for POST data
 			if(isset($this->data))
 			{
-				
 				$this->Backup->id = $id;
 				$this->Backup->user_id = $this->Session->read('Auth.User.id');
-				$this->Backup->saveField('name', $this->data['Backup']['Name']);
+				
+				if($this->Backup->saveField('name', $this->data['Backup']['name'], true))
+				{
+					$this->Session->setFlash('File successfully renamed.', 'messages/info');
+				}
+				else $this->Session->setFlash('The file could not be renamed', 'messages/error');
 				
 				// if this is from an ajax call, we want to show the new file name
 				if($this->RequestHandler->isAjax()) 
@@ -214,7 +232,6 @@ class BackupsController extends AppController
 				else
 				{
 					// this is the non-ajax form method, redirect the user
-					$this->Session->setFlash('File successfully renamed.');
 					$this->redirect('/backups');
 				}
 			}
@@ -235,9 +252,14 @@ class BackupsController extends AppController
 			{
 				$this->Session->setFlash('Folder "' . $this->data['Backup']['name'] . '" added.', 'messages/success');
 			}
-			else $this->Session->setFlash('Folder could not be added');
+			else 
+			{
+				$this->_persistValidation('Backup'); 
+				$this->Session->setFlash('The folder could not be created.', 'messages/error');
+			}
 			
-			$this->redirect('/backups');
+			$this->redirect($this->referer(), null, true); 
+			//$this->redirect('/backups');
 		}
 	}
 	
@@ -245,23 +267,27 @@ class BackupsController extends AppController
 	{
 		//print_r($this->data); return;
 		
-		// perform download action
-		if($this->data['Backup']['action'] == "download")
+		if(isset($this->data))
 		{
-			$this->_downloadFiles($this->data['Backup']['ids']);
-			exit;
-		}
-		
-		// perform delete action
-		foreach($this->data['Backup']['ids'] as $key => $value) 
-		{
-			if($value != 0 && $this->data['Backup']['action'] == "delete") 
+			// perform download action
+			if($this->data['Backup']['action'] == "download")
 			{
-				$this->Backup->deleteAll(array('Backup.id' => $key, 'Backup.user_id' => $this->Session->read('Auth.User.id')));
+				$this->_downloadFiles($this->data['Backup']['ids']);
+				exit;
 			}
+			
+			// perform delete action
+			foreach($this->data['Backup']['ids'] as $key => $value) 
+			{
+				if($value != 0 && $this->data['Backup']['action'] == "delete") 
+				{
+					$this->Backup->deleteAll(array('Backup.id' => $key, 'Backup.user_id' => $this->Session->read('Auth.User.id')));
+				}
+			}
+			
+			$this->Session->setFlash('The selected files have been deleted.', 'messages/info');
 		}
 		
-		$this->Session->setFlash('The selected files have been deleted.', 'messages/info');
 		$this->redirect('/backups');
 	}
 	

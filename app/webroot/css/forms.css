@@ -210,7 +210,7 @@ form .help
 	font-size:9px;
 	padding:0 0 0 20px;
 	display:block;
-	margin:-5px 0 0 0;
+	margin:-4px 0 0 0;
 	color:#555;
 	background:url(/img/information.png) no-repeat 0 1px;
 }
@@ -252,7 +252,7 @@ fieldset.compact
 	margin-top:5px;
 	margin-left:8px;
 	font-size:10px;
-	border-bottom:none;
+	border:none;
 	height:125px;
 }
 fieldset.compact + fieldset.compact

@@ -6,7 +6,7 @@
     <fieldset>
 		<?php echo $form->create(null, array('url' => '/backups/rename/' . $this->params['pass'][0])); ?>
         	<?php if($session->check('Message.flash')) $session->flash(); ?>
-        	<?php echo $form->input('Name', array('value' => $file['Backup']['name'])); ?>
+        	<?php echo $form->input('name', array('value' => $file['Backup']['name'])); ?>
         <?php echo $form->end('Rename'); ?>
     </fieldset>
 <?php endif; ?>
