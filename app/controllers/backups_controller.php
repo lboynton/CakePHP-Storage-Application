@@ -14,6 +14,8 @@ class BackupsController extends AppController
 		
 	function index()
 	{
+		pr($this->Backup->schema()); return;
+		
 		$this->helpers[] = "Time";
 		$this->helpers[] = "Number";
 		$this->helpers[] = "File";
