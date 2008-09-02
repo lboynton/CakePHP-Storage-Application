@@ -10,4 +10,3 @@
         <?php echo $form->end('Rename'); ?>
     </fieldset>
 <?php endif; ?>
-<?php pr($this->validationErrors); ?>

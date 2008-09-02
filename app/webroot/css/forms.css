@@ -315,7 +315,7 @@ form#deleteAllFiles .submit
 }
 .inplaceeditor-form input[type="submit"]
 {
-	padding:2px;
+	padding:1px;
 	border:1px solid #777;
 	font-size:9px;
 	text-transform:uppercase;
@@ -323,9 +323,9 @@ form#deleteAllFiles .submit
 }
 .inplaceeditor-form input[type="text"]
 {
-	padding:3px;
+	padding:2px 3px;
 	border:1px solid #777;
-	font-size:9px;
+	font-size:10px;
 }
 form table
 {

@@ -330,7 +330,20 @@ class BackupsController extends AppController
 		{
 			$file = $this->Backup->findById($id);
 			
-			if($value != 0) $zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $id, $file['Backup']['path'] . DS . $file['Backup']['name']);
+			if($file['Backup']['backup_folder_id'] == null) $path = "";
+			else
+			{
+				// get the path of the file
+				$folders = $this->Backup->BackupFolder->getpath($file['Backup']['backup_folder_id']);
+				$path = "";
+				
+				foreach($folders as $folder)
+				{
+					$path .= $folder['BackupFolder']['name'] . DS;
+				}
+			}
+			
+			if($value != 0) $zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $id, $path . $file['Backup']['name']);
 		}
 		
 		$zip->close();

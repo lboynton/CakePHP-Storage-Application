@@ -43,7 +43,7 @@
 <?php echo $form->create('Backup', array('action' => 'perform_action')); ?>
 	<table>
         <tr>
-            <th class="checkbox"><?php echo $form->checkbox('selectAllTop', array('class' => 'controller JSRequired')); ?></th>
+            <th class="checkbox"><?php echo $form->checkbox('selectAllTop', array('class' => 'controller')); ?></th>
             <th class="type"></th>
             <th class="name"><?php echo $paginator->sort('Name', 'name'); ?></th>
             <th><?php echo $paginator->sort('Size', 'size'); ?></th>
@@ -85,7 +85,7 @@
         </tr>
 <?php else: ?>
         <tr id="tableFooter">
-        	<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller JSRequired')); ?></td>
+        	<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller')); ?></td>
             <td id="actions" colspan="7">
             	Perform action on selected items:
                 <?php echo $form->input('action', array('type' => 'radio', 'options' => array('download' => 'Download', 'delete' => 'Delete'), 'value' => 'download', 'legend' => false)); ?>
