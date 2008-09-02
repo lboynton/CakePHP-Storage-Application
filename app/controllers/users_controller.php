@@ -19,23 +19,22 @@ class UsersController extends AppController
 		$this->helpers[] = "Number";
 		$this->helpers[] = "Javascript";
 		$this->pageTitle = "Account Summary";
-		$this->Backup = &new Backup();
 		
-		$this->set('lastBackup', $this->Backup->find
+		$this->set('lastBackup', $this->User->Backup->find
 		(
 			'all',
 			array
 			(
-				'conditions' => array('user_id' => $this->Session->read('Auth.User.id'), 'type' => 'file'),
+				'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'), 'type' => 'file'),
 				'fields' => array('created'),
 				'limit' => 1,
 				'order' => 'Backup.id DESC'
 			)
 		));
 		
-		$this->set('backupCount', $this->Backup->find('count', array('conditions' => array('user_id' => $this->Session->read('Auth.User.id'), 'type' => 'file'))));
+		$this->set('backupCount', $this->User->Backup->find('count', array('conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'), 'type' => 'file'))));
 
-		$this->set('backupSum', $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('user_id' => $this->Session->read('Auth.User.id')))));
+		$this->set('backupSum', $this->User->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id')))));
     }
     
     function login()

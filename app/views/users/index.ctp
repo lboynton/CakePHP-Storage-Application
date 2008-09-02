@@ -24,7 +24,7 @@
     </dd>
 </dl>
 <?php echo $form->create('Backup', array('action' => 'deleteAll', 'id' => 'deleteAllFiles')); ?>
-	<?php echo $form->checkbox('deleteAll'); ?>Delete all files<?php echo $form->submit('Delete', array('id' => 'DeleteButton')); ?>
+	<?php echo $form->checkbox('deleteAll'); ?>Delete all files and folders<?php echo $form->submit('Delete', array('id' => 'DeleteButton')); ?>
 <?php echo $form->end(); ?>
 <?php //echo date_default_timezone_get(); ?>
 

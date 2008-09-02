@@ -8,14 +8,12 @@ class BackupsController extends AppController
     var $paginate = array
 	(
         'limit' => 25,
-        'order' => array('type' => 'asc', 'name' => 'asc')
+        'order' => array('type' => 'asc', 'Backup.name' => 'asc')
     );
   	var $components = array('RequestHandler');
 		
 	function index()
-	{
-		pr($this->Backup->schema()); return;
-		
+	{	
 		$this->helpers[] = "Time";
 		$this->helpers[] = "Number";
 		$this->helpers[] = "File";
@@ -26,22 +24,33 @@ class BackupsController extends AppController
 		
 		$this->set('query', $query);
 		
-		// add root directory
-		$directoriesList[''] = '/';
+		if(isset($this->params['named']['folder'])) $folder = Sanitize::escape($this->params['named']['folder']);
 		
-		// add user defined directories
-		$directoriesList[] = $this->Backup->find('list', array
-		(
-			'conditions' => array('type' => 'directory', 'user_id' => $this->Session->read('Auth.User.id')),
-			'fields' => array('name', 'name')
-		));
+		// get a list of all the directories for the select boxes
+		$directoriesList = $this->Backup->BackupFolder->find('list', array('conditions' => array('BackupFolder.user_id' => $this->Session->read('Auth.User.id'))));
+		// add root folder with null folder id
+		$directoriesList[''] = 'filestorage';
+		
+		ksort($directoriesList);
 		
 		$this->set('directoriesList', $directoriesList);
 		
-		if(isset($this->params['named']['dir'])) $dir = Sanitize::escape($this->params['named']['dir']);
-		else $dir = "";
-
-		$backups = $this->paginate('Backup', "name LIKE '%$query%' AND user_id = {$this->Session->read('Auth.User.id')} AND path = '$dir'");
+		// get all backups and folders to display in the table
+		if(isset($folder))
+		{
+			// only get files and folder which are in the specified folder
+			$backups = $this->paginate('Backup', "Backup.name LIKE '%$query%' AND Backup.user_id = {$this->Session->read('Auth.User.id')} AND backup_folder_id = '$folder'");
+			$this->set('directories', $this->Backup->BackupFolder->find('all', array('conditions' => array('BackupFolder.user_id' => $this->Session->read('Auth.User.id'), 'parent_id' => '$folder'))));
+			
+			// get the path of the current folder
+			$this->set('path', $this->Backup->BackupFolder->getpath($folder));
+		}
+		else
+		{
+			// get the files and folders which are in the root folder (ie folder ID is null)
+			$backups = $this->paginate('Backup', "Backup.name LIKE '%$query%' AND Backup.user_id = {$this->Session->read('Auth.User.id')} AND backup_folder_id IS NULL");
+			$this->set('directories', $this->Backup->BackupFolder->find('all', array('conditions' => array('BackupFolder.user_id' => $this->Session->read('Auth.User.id')))));
+		}
 		$this->set(compact('backups'));
 	}
 	
@@ -56,8 +65,12 @@ class BackupsController extends AppController
 			
 			//print_r($this->data); return;
 			
+			// folder id will be empty to indicate the root folder
+			if(empty($this->data['Backup']['backup_folder_id'])) $this->data['Backup']['backup_folder_id'] = null;
+			
 			$zip = zip_open($this->data['Backup']['file']['tmp_name']);
 			
+			// see if the file is a zip
 			if(is_resource($zip))
 			{
 				while ($zip_entry = zip_read($zip))
@@ -112,7 +125,6 @@ class BackupsController extends AppController
 				else
 				{
 					$this->_persistValidation('Backup'); 
-					$this->Session->write('validation', 'error');
 					$this->Session->setFlash('There was an error uploading the file.', 'messages/error');
 				}
 			}
@@ -146,14 +158,7 @@ class BackupsController extends AppController
 	{
 		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
 		{
-			$file = $this->Backup->findById($id);
-
-			if($file['Backup']['type'] == 'directory')
-			{
-				$this->redirect('/backups/index/dir:' . $file['Backup']['name']);
-				return;
-			}
-			
+			$file = $this->Backup->findById($id);		
 			Configure::write('debug', 0);
 			$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'], 'r');
 		
@@ -170,37 +175,22 @@ class BackupsController extends AppController
 		}
 	}
 	
-	function delete($id)
-	{
-		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
-		{
-			$file = $this->Backup->findById($id);
-			
-			$this->Backup->del($id);
-			
-			$absoluteFile = BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'];
-			
-			if(unlink(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id']))
-			{
-				$this->log('Deleted file: ' . $absoluteFile, LOG_DEBUG);
-			}
-			else
-			{
-				$this->log("Could not delete file: " . $absoluteFile);
-			}
-			
-			$this->Session->setFlash("The file \"{$file['Backup']['name']}\" has been deleted.", 'messages/info');
-		}
-		
-		$this->redirect('/backups');
-	}
-	
+	/**
+	 * Deletes all files and folders for this user
+	 */
 	function deleteAll()
 	{
 		if($this->data['Backup']['deleteAll'] == 1)
 		{
+			// delete all file metadata from the database
 			$this->Backup->deleteAll(array('Backup.user_id' => $this->Session->read('Auth.User.id')));
+			
+			// delete all folders
+			$this->Backup->BackupFolder->deleteAll(array('BackupFolder.user_id' => $this->Session->read('Auth.User.id')));
+			
+			// delete all files in this user's file storage
 			$this->_unlinkWildcard(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . "*");
+			
 			$this->Session->setFlash("All files in the backup have been deleted.", 'messages/info');
 		}
 		else $this->Session->setFlash("No files have been deleted, please select the checkbox to delete all files.", 'messages/info');
@@ -217,77 +207,58 @@ class BackupsController extends AppController
 			if(isset($this->data))
 			{
 				$this->Backup->id = $id;
-				$this->Backup->user_id = $this->Session->read('Auth.User.id');
-				
-				if($this->Backup->saveField('name', $this->data['Backup']['name'], true))
-				{
-					$this->Session->setFlash('File successfully renamed.', 'messages/info');
-				}
-				else $this->Session->setFlash('The file could not be renamed', 'messages/error');
 				
 				// if this is from an ajax call, we want to show the new file name
 				if($this->RequestHandler->isAjax()) 
 				{
+					$this->Backup->saveField('name', $this->data['Backup']['name'], true);
 					$this->layout = 'ajax';
-					$this->set('file', $this->Backup->findById($id));
 				}
 				else
 				{
-					// this is the non-ajax form method, redirect the user
-					$this->redirect('/backups');
+					if($this->Backup->save(array('name' => $this->data['Backup']['name']), true))
+					{
+						$this->Session->setFlash('File successfully renamed.', 'messages/info');
+						
+						// this is the non-ajax form method, redirect the user
+						$this->redirect('/backups');
+					}
+					else $this->Session->setFlash('The file could not be renamed', 'messages/error');
 				}
 			}
 			
+			// get the file name
 			$this->set('file', $this->Backup->findById($id));
 		}
 		else $this->redirect('/backups');
 	}
 	
-	function add_folder()
-	{
-		if(isset($this->data))
-		{
-			$this->data['Backup']['type'] = 'directory';
-			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
-
-			if($this->Backup->save($this->data))
-			{
-				$this->Session->setFlash('Folder "' . $this->data['Backup']['name'] . '" added.', 'messages/success');
-			}
-			else 
-			{
-				$this->_persistValidation('Backup'); 
-				$this->Session->setFlash('The folder could not be created.', 'messages/error');
-			}
-			
-			$this->redirect($this->referer(), null, true); 
-			//$this->redirect('/backups');
-		}
-	}
-	
-	function test()
+	/**
+	 * Called when the user selects multiple files/folders
+	 */
+	function perform_action()
 	{
 		//print_r($this->data); return;
 		
 		if(isset($this->data))
 		{
-			// perform download action
-			if($this->data['Backup']['action'] == "download")
-			{
-				$this->_downloadFiles($this->data['Backup']['ids']);
-				exit;
-			}
+			if(!isset($this->data['Backup']['ids'])) $this->data['Backup']['ids'] = array();
+			if(!isset($this->data['BackupFolder']['ids'])) $this->data['BackupFolder']['ids'] = array();
 			
-			// perform delete action
-			foreach($this->data['Backup']['ids'] as $key => $value) 
+			// perform appropriate action
+			switch($this->data['Backup']['action'])
 			{
-				if($value != 0 && $this->data['Backup']['action'] == "delete") 
-				{
-					$this->Backup->deleteAll(array('Backup.id' => $key, 'Backup.user_id' => $this->Session->read('Auth.User.id')));
-				}
+				case "download":
+					// perform download action
+					$this->_downloadFiles($this->data['Backup']['ids'], $this->data['BackupFolder']['ids']);
+					exit;
+					break;
+					
+				case "delete":
+					// perform delete action
+					$this->_deleteFiles($this->data['Backup']['ids'], $this->data['BackupFolder']['ids']);
+					break;
 			}
-			
-			$this->Session->setFlash('The selected files have been deleted.', 'messages/info');
 		}
 		
 		$this->redirect('/backups');
@@ -371,6 +342,46 @@ class BackupsController extends AppController
 		echo fread($fp, filesize($filename));
 		fclose($fp);
 		exit();
+	}
+	
+	function _deleteFiles($files, $folders)
+	{
+		foreach($files as $id => $value) 
+		{
+			if($value == 1) 
+			{
+				$this->Backup->deleteAll(array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')));
+				
+				$absoluteFile = BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $id;
+			
+				if(unlink($absoluteFile))
+				{
+					$this->log('Deleted file: ' . $absoluteFile, LOG_DEBUG);
+				}
+				else
+				{
+					$this->log("Could not delete file: " . $absoluteFile);
+				}
+			}
+		}
+		
+		foreach($folders as $id => $value) 
+		{
+			if($value == 1) 
+			{
+				// delete all files in this folder
+				//$this->BackupFolder->Backup->deleteAll(array('backup_folder_id' => $id));
+				$this->Backup->BackupFolder->id = $id;
+				$this->Backup->BackupFolder->delete();
+				
+				/**
+				 * Need to check the user_id here
+				 *
+				 */
+			}
+		}
+		
+		$this->Session->setFlash('The selected folders/files have been deleted.', 'messages/info');
 	}
 }
 ?>

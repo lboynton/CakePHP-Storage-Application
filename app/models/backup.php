@@ -9,25 +9,25 @@ class Backup extends AppModel
 						'conditions' => '',
 						'fields' => '',
 						'order' => ''
-		)
+		),
+		'BackupFolder'
 	);
 	var $validate = array 
 	(
-		'file' => array 
-		(
-			'valid_data' => array 
-			(
-				'rule' => array('validateUploadedFile', true),
-				'message' => 'An error occurred whilst uploading'
-			)
-		),
 		'name' => array
 		(
 			'empty' => array
 			(
 				'rule' => array('custom', '/\S+/'),
 				'message' => 'Please enter a name',
-				'required' => true
+			)
+		),
+		'file' => array 
+		(
+			'valid_data' => array 
+			(
+				'rule' => array('validateUploadedFile', true),
+				'message' => 'An error occurred whilst uploading',
 			)
 		)
 	); 

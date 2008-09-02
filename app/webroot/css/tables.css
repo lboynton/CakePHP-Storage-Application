@@ -74,7 +74,7 @@ table form, table form *
 	margin:0;
 	display:inline;
 }
-table td.name
+table .name
 {
 	width:290px;
 	text-align:left;
