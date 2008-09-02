@@ -13,7 +13,6 @@ class BackupFolder extends AppModel
 			(
 				'rule' => array('custom', '/\S+/'),
 				'message' => 'Please enter a name for the folder',
-				'required' => true
 			)
 		)
 	);
