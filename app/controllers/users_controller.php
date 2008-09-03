@@ -18,6 +18,7 @@ class UsersController extends AppController
 		$this->helpers[] = "Time";
 		$this->helpers[] = "Number";
 		$this->helpers[] = "Javascript";
+		$this->helpers[] = "Percentage";
 		$this->pageTitle = "Account Summary";
 		
 		$this->set('lastBackup', $this->User->Backup->find

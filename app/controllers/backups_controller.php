@@ -40,7 +40,15 @@ class BackupsController extends AppController
 		{
 			// only get files and folder which are in the specified folder
 			$backups = $this->paginate('Backup', "Backup.name LIKE '%$query%' AND Backup.user_id = {$this->Session->read('Auth.User.id')} AND backup_folder_id = '$folder'", array('recursive'=>2));
-			$this->set('directories', $this->Backup->BackupFolder->find('all', array('conditions' => array('BackupFolder.user_id' => $this->Session->read('Auth.User.id'), 'parent_id' => $folder))));
+			$this->set('directories', $this->Backup->BackupFolder->find('all', array
+			(
+				'conditions' => array
+				(
+					'BackupFolder.user_id' => $this->Session->read('Auth.User.id'),
+					'parent_id' => $folder
+				),
+				'order' => 'name'
+			)));
 			
 			// get the path of the current folder
 			$this->set('path', $this->Backup->BackupFolder->getpath($folder));
@@ -49,7 +57,15 @@ class BackupsController extends AppController
 		{
 			// get the files and folders which are in the root folder (ie folder ID is null)
 			$backups = $this->paginate('Backup', "Backup.name LIKE '%$query%' AND Backup.user_id = {$this->Session->read('Auth.User.id')} AND backup_folder_id IS NULL");
-			$this->set('directories', $this->Backup->BackupFolder->find('all', array('conditions' => array('BackupFolder.user_id' => $this->Session->read('Auth.User.id'), 'parent_id' => null))));
+			$this->set('directories', $this->Backup->BackupFolder->find('all', array
+			(
+				'conditions' => array
+				(
+					'BackupFolder.user_id' => $this->Session->read('Auth.User.id'),
+					'parent_id' => null
+				),
+				'order' => 'BackupFolder.name'
+			)));
 		}
 		$this->set(compact('backups'));
 	}

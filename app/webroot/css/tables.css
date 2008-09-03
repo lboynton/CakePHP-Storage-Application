@@ -60,6 +60,7 @@ table #tableFooter input[type="submit"]
 	font-size:9px;
 	text-transform:uppercase;
 	margin:0 2px;
+	background:#F0F0F0;
 }
 table #actions
 {
