@@ -4,7 +4,6 @@ Admin section
 Backup/restore
 	- User quotas
 	- Prevent duplicate files
-	- Stop zero length filenames when renaming
 	- Move files
 	- Set correct content-type
 	

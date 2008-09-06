@@ -112,6 +112,17 @@ class BackupsController extends AppController
 					$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
 					$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 					
+					// check if file can be stored within the quota limit
+					$quota = $this->Session->read('Auth.User.quota');
+					$usage = $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'))));
+					
+					if($usage[0][0]['size'] + $this->data['Backup']['size'] > $quota)
+					{
+						$this->Session->setFlash('Sorry, not all files could be uploaded as one or more were too big.', 'messages/error');
+						$this->redirect($this->referer());
+						return;
+					}
+					
 					if($this->Backup->save($this->data))
 					{
 						$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id, 'wb');
@@ -138,6 +149,17 @@ class BackupsController extends AppController
 				$this->data['Backup']['hash'] = md5(file_get_contents($this->data['Backup']['file']['tmp_name']));
 				$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 				
+				// check if file can be stored within the quota limit
+				$quota = $this->Session->read('Auth.User.quota');
+				$usage = $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'))));
+				
+				if($usage[0][0]['size'] + $this->data['Backup']['size'] > $quota)
+				{
+					$this->Session->setFlash('Sorry, there is not enough space to store this file.', 'messages/error');
+					$this->redirect($this->referer());
+					return;
+				}
+				
 				if($this->Backup->save($this->data))
 				{
 					$this->_createBackupDirectory();
@@ -151,7 +173,7 @@ class BackupsController extends AppController
 				}
 			}
 			
-			$this->redirect('/backups');
+			$this->redirect($this->referer());
 		}
     }
 
@@ -243,7 +265,7 @@ class BackupsController extends AppController
 						$this->Session->setFlash('File successfully renamed.', 'messages/info');
 						
 						// this is the non-ajax form method, redirect the user
-						$this->redirect('/backups');
+						$this->redirect($this->referer());
 					}
 					else $this->Session->setFlash('The file could not be renamed', 'messages/error');
 				}
@@ -283,7 +305,7 @@ class BackupsController extends AppController
 			}
 		}
 		
-		$this->redirect('/backups');
+		$this->redirect($this->referer());
 	}
 	
 	//

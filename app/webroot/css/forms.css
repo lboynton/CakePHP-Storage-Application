@@ -56,6 +56,14 @@ select
 input[type="text"]:focus, textarea:focus, input[type="password"]:focus
 {
 	font-weight:bold;
+	border:1px solid #444;
+}
+input[type="text"], textarea, input[type="password"]
+{
+	padding:3px 4px;
+	-moz-border-radius: 3px;
+	border:1px solid #999;
+	-webkit-border-radius:3px;
 }
 input[disabled]
 {
@@ -165,7 +173,6 @@ form .help
 .fieldset1 input[type="text"], textarea, input[type="password"], input[type="file"]
 {
 	width:200px;
-	padding:2px;
 }
 .fieldset1 input[type="submit"]
 {
@@ -179,13 +186,13 @@ form .help
 	border-width:3px;
 	padding:1px 3px;
 }
-.fieldset1.compact .error-message
+fieldset.compact .error-message
 {
 	position:absolute;
 	top:0;
 	right:0;
 }
-.fieldset1.compact legend
+fieldset.compact legend
 {
 	font-weight:bold;
 	color:#777;
@@ -195,28 +202,28 @@ form .help
 	padding:2px 5px 0 5px;
 	border-bottom:1px solid #777;
 }
-.fieldset1.compact form
+fieldset.compact form
 {
 	margin:0;
 	padding:5px 2px 8px 2px;
 }
-.fieldset1.compact a.reset
+fieldset.compact a.reset
 {
 	font-size:9px;
 	text-transform:uppercase;
 	color:#888;
 	position:absolute;
-	top:5px;
-	right:5px;
+	top:0;
+	right:8px;
 }
-.fieldset1.compact a.reset:hover
+fieldset.compact a.reset:hover
 {
 	background:none;
 	color:#666;
 }
-.fieldset1.compact
+fieldset.compact
 {
-	width:238px;
+	width:235px;
 	float:left;
 	padding:0;
 	margin-bottom:15px;
@@ -226,40 +233,41 @@ form .help
 	border:none;
 	height:125px;
 }
-.fieldset1.compact + .fieldset1.compact
+fieldset.compact + fieldset.compact
 {
-	margin-left:8px;
+	margin-left:2px;
 }
-.fieldset1.compact label
+fieldset.compact label
 {
 	float:none;
-	margin:0;
+	margin:0 4px 0 0;
 	padding-bottom:1px;
 }
-.fieldset1.compact input
+fieldset.compact input
 {
 	margin-top:3px;
 }
-.fieldset1.compact input[type="submit"]
+fieldset.compact input[type="submit"]
 {
 	padding:2px 2px 1px 2px;
-	font-size:12px;
+	font-size:10px;
 	margin:0 0 0 5px;
 }
-.fieldset1.compact input[type="submit"]:active
+fieldset.compact input[type="submit"]:active
 {
 	padding:1px 1px 0 1px;
 }
-.fieldset1.compact input[type="text"], .fieldset1.compact input[type="file"]
+fieldset.compact input[type="text"], fieldset.compact input[type="file"]
 {
 	width:215px;
 	margin-top:0;
+	font-size:10px;
 }
-.fieldset1.compact select
+fieldset.compact select
 {
 	max-width:150px;
 }
-.fieldset1.compact p
+fieldset.compact p
 {
 	font-size:14px;
 	margin:10px -2px;

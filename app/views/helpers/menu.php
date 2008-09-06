@@ -13,37 +13,37 @@ class MenuHelper extends AppHelper
 		);
     }
 	
-    function mainMenu($links = array(), $htmlAttributes = array())
-    {
-		$out = array();
-		
+	function mainMenu($links = array(), $htmlAttributes = array())
+	{
 		$out[] = "<ul>";
 		
-        foreach ($links as $title => $link)
-        {
-            if($link == substr($this->here,0,-1) || $link == $this->here)
-            {
-                $out[] = sprintf
+		foreach ($links as $title => $link)
+		{
+			$parsedLink = Router::parse($link);
+			
+			if($parsedLink['controller'] == $this->params['controller'] && $parsedLink['action'] == $this->params['action'])
+			{
+				$out[] = sprintf
 				(
 					"<li%s><a href=\"%s\" class=\"active\"><span class=\"topLeft\"></span>%s<span class=\"topRight\"></span></a></li>", 
 					$this->_parseAttributes($htmlAttributes), $link, $title
 				);
-            }
-            else
-            {
-                $out[] = sprintf
+			}
+			else
+			{
+				$out[] = sprintf
 				(
 					"<li%s><a href=\"%s\"><span class=\"topLeft\"></span>%s<span class=\"topRight\"></span></a></li>", 
 					$this->_parseAttributes($htmlAttributes), $link, $title
 				);
-            }
-        }
+			}
+		}
 		
 		$out[] = "</ul>";
 		
 		$tmp = join("\n", $out);
         return $this->output($tmp);
-    } 
+	}
 	
     function menu2($links = array(),$htmlAttributes = array(),$type = 'ul')
     {      
