@@ -313,7 +313,7 @@ applet
 {
 	color:#00CC00;
 }
-#chartBG
+.chartBG
 {
 	width:120px;
 	border:1px solid #777;
@@ -323,36 +323,33 @@ applet
 	background:#F0D5B6;
 	position:relative;
 }
-#chartFG
+.chartFG
 {
 	display:inline-block;
 	background:#F56C1E;
-	position:relative;
 	height:16px;
-	-moz-border-radius-topleft:4px;
-	-moz-border-radius-bottomleft:4px;
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
+	-moz-border-radius:4px;
+	-webkit-border-radius: 4px;
 }
-#chartBG p
-{
-	margin:0;
-	color:#000;
-	line-height:10px;
-	font-size:10px;
-	position:absolute;
-	left:5px;
-	top:3px;
-	z-index:1;
-}
-#chartFG p
+#content .chartBG p
 {
 	margin:0;
 	color:#FFF;
 	line-height:10px;
 	font-size:10px;
 	position:absolute;
+	left:6px;
+	top:3px;
+	display:none;
+}
+#content .chartFG p
+{
+	margin:0;
+	color:#333;
+	line-height:10px;
+	font-size:10px;
+	position:absolute;
 	left:5px;
 	top:3px;
-	z-index:2;
+	display:block;
 }

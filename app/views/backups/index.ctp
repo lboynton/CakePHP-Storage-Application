@@ -8,7 +8,7 @@
 
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 
-<fieldset class="compact">
+<fieldset id="search" class="compact">
 	<?php if($query != ""): ?>
 		<?php echo $html->link('Reset', '/backups', array('class' => 'reset')); ?>
     <?php endif; ?>
@@ -18,21 +18,18 @@
     <?php echo $form->end(); ?>
 </fieldset>
 
-<fieldset class="compact">
+<fieldset id="upload" class="compact">
     <?php echo $form->create('Backup', array('class' => 'compact', 'enctype' => 'multipart/form-data')); ?>
-        <?php echo $form->input('file', array('type' => 'file', 'label' => 'Upload file')); ?>
-        <?php echo $form->input('backup_folder_id', array('label' => 'Folder', 'options' => $directoriesList, 'after' => $form->submit('Upload'))); ?>
+        <?php echo $form->input('file', array('type' => 'file', 'label' => 'File', 'after' => $form->submit('Upload'))); ?>
+        <?php echo $form->hidden('backup_folder_id', array('value' => $folder_id)); ?>
     <?php echo $form->end(); ?>
-</fieldset>
-
-<fieldset class="compact">
 	<?php echo $form->create('BackupFolder', array('class' => 'compact')); ?>
-        <?php echo $form->input('name', array('label' => 'Create folder')); ?>
-        <?php echo $form->input('parent_id', array('label' => 'Folder', 'options' => $directoriesList, 'after' => $form->submit('Add'))); ?>
+        <?php echo $form->input('name', array('label' => 'Folder', 'after' => $form->submit('Add'))); ?>
+        <?php echo $form->hidden('parent_id', array('value' => $folder_id)); ?>
     <?php echo $form->end(); ?>
 </fieldset>
 <div style="clear:both;"></div>
-<p>Folder: <?php echo $html->link('filestorage', '/backups'); ?>
+<p>Folder: <?php echo $html->link('Storage', '/backups'); ?>
 <?php if(isset($path)): ?>
     <?php foreach($path as $folder): ?>
     &raquo; <?php echo $html->link($folder['BackupFolder']['name'], '/backups/index/folder:' . $folder['BackupFolder']['id']); ?>

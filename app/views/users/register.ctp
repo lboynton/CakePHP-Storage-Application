@@ -1,6 +1,6 @@
 <h2>Register</h2>
 <p>Please enter your details below to register a new account.</p>
-<fieldset>
+<fieldset class="fieldset1">
 <?php echo $form->create(array('action' => 'register')); ?>
 	<?php $session->flash(); ?>
 	<?php $session->flash('auth'); ?>

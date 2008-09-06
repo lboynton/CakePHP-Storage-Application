@@ -1,33 +1,10 @@
+/* Generic form related styles */
 form
 {
-	margin:0;
+	margin:0 10px;
 	padding:0;
 }
-fieldset 
-{
-	margin: 2em -1px;
-	padding:2em 1em;
-	background:#f5e1c9;
-	background:#f0d5b6;
-	border:0;
-	/*border-top:2px solid #F56C1E;*/
-	position:relative;
-	border-top:2px solid #dcb990;
-	border-bottom:2px solid #dcb990;
-}
-fieldset .message
-{
-	background:#f8eddf url(/img/box_bg.gif) repeat;
-	border-left:2px solid #F56C1E;
-	display:block;
-	margin:0 0 20px 0;
-	position:relative;
-}
-fieldset .message .error, fieldset .message .info, fieldset .message .success
-{
-	background-color:transparent;
-}
-/* IE hack */
+/* IE hack to position the legend correctly */
 html html fieldset
 { 
 	position: relative; 
@@ -41,35 +18,6 @@ html fieldset
 	position: relative; margin-top:1em; padding-top:.75em; 
 }
 /* End hack */
-form
-{
-	margin-left:10px;
-	margin-right:10px;
-}
-fieldset form
-{
-	margin-top:15px;
-}
-form p 
-{
-
-}
-/* style for  labels */
-fieldset label
-{
-	float:left;
-	display:block;
-	width: 12em;
-	padding-top:3px;
-	padding-bottom:3px;
-	margin-top:1px;
-	font-size:14px;
-	font-weight:bold;
-}
-/* style for required labels */
-label.required 
-{
-}
 /* style for optional labels */
 label.optional:after
 {
@@ -77,58 +25,19 @@ label.optional:after
 	color:#666;
 	content:"(optional)";
 }
-/* :KLUDGE: Explicitly set the width for IE6- */
-* html.feedback
-{
-	width: 10em;
-}
 input 
 {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	font-size:12px;
 	padding:3px 4px 2px 3px;
 }
-.input.file
-{
-	margin-bottom:12px;
-}
-input[type="text"], textarea, input[type="password"], input[type="file"]
-{
-	width:200px;
-	padding:2px;
-}
-fieldset input[type="submit"]
+input[type="submit"]
 {
 	background:#F56C1E;
 	color:#FFF;
-	font-size:14px;
-	font-weight:bold;
-	padding:2px 4px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
 	border:2px solid #fff;
-	margin-left:173px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	background:#F56C1E;
-}
-fieldset input[type="submit"]:active
-{
-	border-width:3px;
-	padding:1px 3px;
-}
-fieldset input[type="submit"]:hover
-{
-}
-fieldset input[disabled]
-{
-	color:#777;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border: 2px solid #DDD;
-	background:#F3F3F3;
-	font-weight:bold;
-}
-input[type="text"]:focus, textarea:focus, input[type="password"]:focus
-{
 	font-weight:bold;
 }
 textarea 
@@ -144,21 +53,18 @@ select
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	font-size:12px;
 }
-.helpBox
+input[type="text"]:focus, textarea:focus, input[type="password"]:focus
 {
-	width:200px;
-	background:#93CBEC;
-	padding:3px;
-	position:absolute;
-	left:200px;
-	margin-top:-35px;
+	font-weight:bold;
 }
-.helpBox p
+input[disabled]
 {
-	color:#FFF;
-	font-size:11px;
-	margin:0;
-	line-height:normal;
+	color:#777;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 2px solid #DDD;
+	background:#F3F3F3;
+	font-weight:bold;
 }
 .error-message
 {
@@ -214,13 +120,72 @@ form .help
 	color:#555;
 	background:url(/img/information.png) no-repeat 0 1px;
 }
-fieldset.compact .error-message
+/* End of generic form related styles */
+
+/* Specific form related styles */
+.fieldset1
+{
+	margin: 2em -1px;
+	padding:2em 1em;
+	background:#f5e1c9;
+	background:#f0d5b6;
+	border:0;
+	/*border-top:2px solid #F56C1E;*/
+	position:relative;
+	border-top:2px solid #dcb990;
+	border-bottom:2px solid #dcb990;
+}
+.fieldset1 form
+{
+	margin-top:15px;
+}
+.fieldset1 .message
+{
+	background:#f8eddf url(/img/box_bg.gif) repeat;
+	border-left:2px solid #F56C1E;
+	display:block;
+	margin:0 0 20px 0;
+	position:relative;
+}
+.fieldset1 .message .error, .fieldset1 .message .info, .fieldset1 .message .success
+{
+	background-color:transparent;
+}
+.fieldset1 label
+{
+	float:left;
+	display:block;
+	width: 12em;
+	padding-top:3px;
+	padding-bottom:3px;
+	margin-top:1px;
+	font-size:14px;
+	font-weight:bold;
+}
+.fieldset1 input[type="text"], textarea, input[type="password"], input[type="file"]
+{
+	width:200px;
+	padding:2px;
+}
+.fieldset1 input[type="submit"]
+{
+	font-size:14px;
+	font-weight:bold;
+	padding:2px 4px;
+	margin-left:173px;
+}
+.fieldset1 input[type="submit"]:active
+{
+	border-width:3px;
+	padding:1px 3px;
+}
+.fieldset1.compact .error-message
 {
 	position:absolute;
 	top:0;
 	right:0;
 }
-fieldset.compact legend
+.fieldset1.compact legend
 {
 	font-weight:bold;
 	color:#777;
@@ -230,12 +195,12 @@ fieldset.compact legend
 	padding:2px 5px 0 5px;
 	border-bottom:1px solid #777;
 }
-fieldset.compact form
+.fieldset1.compact form
 {
 	margin:0;
 	padding:5px 2px 8px 2px;
 }
-fieldset.compact a.reset
+.fieldset1.compact a.reset
 {
 	font-size:9px;
 	text-transform:uppercase;
@@ -244,12 +209,12 @@ fieldset.compact a.reset
 	top:5px;
 	right:5px;
 }
-fieldset.compact a.reset:hover
+.fieldset1.compact a.reset:hover
 {
 	background:none;
 	color:#666;
 }
-fieldset.compact
+.fieldset1.compact
 {
 	width:238px;
 	float:left;
@@ -261,38 +226,43 @@ fieldset.compact
 	border:none;
 	height:125px;
 }
-fieldset.compact + fieldset.compact
+.fieldset1.compact + .fieldset1.compact
 {
 	margin-left:8px;
 }
-fieldset.compact label
+.fieldset1.compact label
 {
 	float:none;
 	margin:0;
 	padding-bottom:1px;
 }
-fieldset.compact input
+.fieldset1.compact input
 {
 	margin-top:3px;
 }
-fieldset.compact input[type="submit"]
+.fieldset1.compact input[type="submit"]
 {
 	padding:2px 2px 1px 2px;
 	font-size:12px;
 	margin:0 0 0 5px;
 }
-fieldset.compact input[type="submit"]:active
+.fieldset1.compact input[type="submit"]:active
 {
 	padding:1px 1px 0 1px;
 }
-fieldset.compact input[type="text"], fieldset.compact input[type="file"]
+.fieldset1.compact input[type="text"], .fieldset1.compact input[type="file"]
 {
 	width:215px;
 	margin-top:0;
 }
-fieldset.compact select
+.fieldset1.compact select
 {
 	max-width:150px;
+}
+.fieldset1.compact p
+{
+	font-size:14px;
+	margin:10px -2px;
 }
 form#deleteAllFiles
 {
@@ -321,6 +291,7 @@ form#deleteAllFiles .submit
 	text-transform:uppercase;
 	margin:0 2px;
 	background:#F0F0F0;
+	color:#333;
 }
 .inplaceeditor-form input[type="text"]
 {
@@ -332,4 +303,40 @@ form table
 {
 	margin:0;
 	width:100%;
+}
+fieldset.compact
+{
+	height:75px;
+	border:0;
+	margin-bottom:5px;
+	padding:3px;
+	background:#f0d5b6;
+}
+fieldset#search
+{
+	width:300px;
+	float:left;
+	margin-left:10px;
+}
+fieldset#upload
+{
+	width:405px;
+	float:right;
+	margin-right:10px;
+}
+fieldset#search input[type="text"], fieldset#upload input[type="text"]
+{
+	width:193px;
+}
+fieldset#upload label, fieldset#search label
+{
+	width:5em;
+	margin-bottom:0;
+	margin-top:0;
+}
+fieldset#upload input[type="submit"], fieldset#search input[type="submit"]
+{
+	margin:0 0 0 5px;
+	font-size:10px;
+	width:65px;
 }

@@ -61,6 +61,7 @@ table #tableFooter input[type="submit"]
 	text-transform:uppercase;
 	margin:0 2px;
 	background:#F0F0F0;
+	color:#222;
 }
 table #actions
 {

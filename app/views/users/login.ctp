@@ -1,6 +1,6 @@
 <h2>Login</h2>
 <p>Please enter your username and password below to login.</p>
-<fieldset>
+<fieldset class="fieldset1">
 	<?php echo $form->create('User', array('action' => 'login'));?>
         <?php if($session->check('Message.flash')) $session->flash(); ?>
         <?php if($session->check('Message.auth')) $session->flash('auth'); ?>

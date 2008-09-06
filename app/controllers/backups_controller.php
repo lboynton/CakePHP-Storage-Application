@@ -29,7 +29,7 @@ class BackupsController extends AppController
 		// get a list of all the directories for the select boxes
 		$directoriesList = $this->Backup->BackupFolder->find('list', array('conditions' => array('BackupFolder.user_id' => $this->Session->read('Auth.User.id'))));
 		// add root folder with null folder id
-		$directoriesList[''] = 'filestorage';
+		$directoriesList[''] = 'Storage';
 		
 		ksort($directoriesList);
 		
@@ -52,6 +52,9 @@ class BackupsController extends AppController
 			
 			// get the path of the current folder
 			$this->set('path', $this->Backup->BackupFolder->getpath($folder));
+			
+			// pass the folder_id to the view
+			$this->set('folder_id', $folder);
 		}
 		else
 		{
@@ -66,6 +69,9 @@ class BackupsController extends AppController
 				),
 				'order' => 'BackupFolder.name'
 			)));
+			
+			// set the folder_id to empty string to indicate root folder, and pass this to the view
+			$this->set('folder_id', '');
 		}
 		$this->set(compact('backups'));
 	}
@@ -328,9 +334,9 @@ class BackupsController extends AppController
 	}
 	
 	/**
-	 *
+	 * Downloads multiple files and folders by placing them into a zip archive
 	 */
-	function _downloadFiles($files)
+	function _downloadFiles($selectedFiles, $folders)
 	{
 		$zip = new ZipArchive();
 		$filename = BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . "download.zip";
@@ -342,11 +348,83 @@ class BackupsController extends AppController
 			exit("cannot open <$filename>\n");
 		}
 		
-		foreach($files as $id => $value)
+		// add selected folders to zip
+		foreach($folders as $id => $value)
 		{
+			// skip any unselected folders
+			if($value == 0) continue;
+			
+			// add files in the folder
+			$files = $this->Backup->find('all', array
+			(
+				'conditions' => array
+				(
+					'backup_folder_id' => $id,
+					'user_id' => $this->Session->read('Auth.User.id')
+				),
+				'recursive' => -1
+			));
+			
+			// get path
+			$paths = $this->Backup->BackupFolder->getpath($id);
+			$path = "";
+			
+			foreach($paths as $patha)
+			{
+				$path .= $patha['BackupFolder']['name'] . DS;
+			}
+			
+			foreach($files as $file)
+			{
+				$zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'], $path . $file['Backup']['name']);
+			}
+			
+			// add files in the folder's child folders
+			$childFolders = $this->Backup->BackupFolder->children($id);
+			
+			foreach($childFolders as $childFolder)
+			{
+				// add files in each child folder
+				$files = $this->Backup->find('all', array
+				(
+					'conditions' => array
+					(
+						'backup_folder_id' => $childFolder['BackupFolder']['id'],
+						'user_id' => $this->Session->read('Auth.User.id')
+					),
+					'recursive' => -1
+				));
+				
+				//print_r($files); return;
+				
+				// get path
+				$paths = $this->Backup->BackupFolder->getpath($childFolder['BackupFolder']['id']);
+				$path = "";
+				
+				//print_r($paths); return;
+				
+				foreach($paths as $patha)
+				{
+					$path .= $patha['BackupFolder']['name'] . DS;
+				}
+				
+				foreach($files as $file)
+				{
+					$zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'], $path . $file['Backup']['name']);
+				}
+			}
+		}
+		
+		// add selected files to zip
+		foreach($selectedFiles as $id => $value)
+		{
+			// skip unselected files
+			if($value == 0) continue;
+			
 			$file = $this->Backup->findById($id);
 			
-			if($file['Backup']['backup_folder_id'] == null) $path = "";
+			// work out the path to the file
+			if($file['Backup']['backup_folder_id'] == null) $path = ""; // root folder
 			else
 			{
 				// get the path of the file
@@ -359,7 +437,7 @@ class BackupsController extends AppController
 				}
 			}
 			
-			if($value != 0) $zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $id, $path . $file['Backup']['name']);
+			$zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $id, $path . $file['Backup']['name']);
 		}
 		
 		$zip->close();
