@@ -36,7 +36,7 @@ CREATE TABLE `backup_folders` (
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 
 --
 -- Definition of table `backups`
@@ -55,7 +55,7 @@ CREATE TABLE `backups` (
   `path` varchar(255) NOT NULL default '',
   `backup_folder_id` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
 
 --
 -- Definition of table `users`
@@ -70,6 +70,7 @@ CREATE TABLE `users` (
   `created` datetime default NULL,
   `real_name` varchar(45) default NULL,
   `admin` tinyint(1) NOT NULL default '0',
+  `quota` bigint(20) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `UNIQUE` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
@@ -77,14 +78,8 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
-
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`,`username`,`password`,`email`,`created`,`real_name`,`admin`) VALUES 
- (0,'lee','d3521f0f4841ff1a777252f1d0ed1671236ae505','lee@lboynton.com','2008-07-22 22:50:55','Lee Boynton',1),
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-
-
-
+INSERT INTO `users` (`id`,`username`,`password`,`email`,`created`,`real_name`,`admin`,`quota`) VALUES 
+  (0,'lee','d3521f0f4841ff1a777252f1d0ed1671236ae505','lee@lboynton.com','2008-07-22 22:50:55','Lee Boynton',1,5242880);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
