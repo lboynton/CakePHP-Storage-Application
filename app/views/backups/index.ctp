@@ -86,7 +86,7 @@
 <?php else: ?>
         <tr id="tableFooter">
         	<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller')); ?></td>
-            <td id="actions" colspan="7">
+            <td id="actions" colspan="6">
             	Perform action on selected items:
                 <?php echo $form->input('action', array('type' => 'radio', 'options' => array('download' => 'Download', 'delete' => 'Delete'), 'value' => 'download', 'legend' => false)); ?>
                 <?php echo $form->submit('Go'); ?>
