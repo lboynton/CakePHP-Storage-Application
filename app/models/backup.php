@@ -2,16 +2,8 @@
 class Backup extends AppModel 
 {
 	var $name = 'Backup';
-	var $belongsTo = array
-	(
-		'User' => array('className' => 'User',
-						'foreignKey' => 'user_id',
-						'conditions' => '',
-						'fields' => '',
-						'order' => ''
-		),
-		'BackupFolder'
-	);
+	var $belongsTo = array('User');
+	var $actsAs = array('Tree');
 	var $validate = array 
 	(
 		'name' => array

@@ -81,7 +81,7 @@ class UsersController extends AppController
 				// clear POST data
 				$this->data = null;
 				
-				$this->Session->setFlash('Thank you for registering, please login below.'. 'messages/success');
+				$this->Session->setFlash('Thank you for registering, please login below.', 'messages/success');
 				$this->redirect(array('action' => 'login'));
 			}
 			else

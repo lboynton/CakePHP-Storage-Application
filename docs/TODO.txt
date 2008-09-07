@@ -2,11 +2,11 @@ Admin section
 	- Allow user to change default quota and per user quota
 	
 Backup/restore
-	- User quotas
 	- Prevent duplicate files
 	- Move files
 	- Set correct content-type
+	- Create directories in uploaded zip files
 	
 User interface
 	- Add help section
-	- Test on other browsers
+	- Test on different browsers

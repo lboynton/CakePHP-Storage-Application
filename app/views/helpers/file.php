@@ -8,7 +8,7 @@ class FileHelper extends AppHelper
 	{
         switch(strtolower($type))
 		{
-			case "directory":
+			case "folder":
 				$output = '<img src="/img/folder.png" alt="Directory" />';
 				break;
 			

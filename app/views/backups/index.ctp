@@ -21,21 +21,21 @@
 <fieldset class="compact">
     <?php echo $form->create('Backup', array('class' => 'compact', 'enctype' => 'multipart/form-data')); ?>
         <?php echo $form->input('file', array('type' => 'file', 'label' => 'Upload file')); ?>
-        <?php echo $form->hidden('backup_folder_id', array('value' => $folder_id)); ?>
+        <?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
     <?php echo $form->end('Upload'); ?>
 </fieldset>
 
 <fieldset class="compact">
-	<?php echo $form->create('BackupFolder', array('class' => 'compact')); ?>
+	<?php echo $form->create('Backup', array('class' => 'compact', 'action' => 'add_folder')); ?>
         <?php echo $form->input('name', array('label' => 'Create folder')); ?>
-        <?php echo $form->hidden('parent_id', array('value' => $folder_id)); ?>
+        <?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
     <?php echo $form->end('Add'); ?>
 </fieldset>
 <div style="clear:both;"></div>
 <p>Folder: <?php echo $html->link('Storage', '/backups'); ?>
 <?php if(isset($path)): ?>
     <?php foreach($path as $folder): ?>
-    &raquo; <?php echo $html->link($folder['BackupFolder']['name'], '/backups/index/folder:' . $folder['BackupFolder']['id']); ?>
+    &raquo; <?php echo $html->link($folder['Backup']['name'], '/backups/index/view:' . $folder['Backup']['id']); ?>
     <?php endforeach; ?>
 <?php endif; ?>
 </p>
@@ -51,20 +51,6 @@
             <th><?php echo $paginator->sort('Modified', 'modified'); ?></th>
             <th>Actions</th>
         </tr>
-<?php if($directories): ?>
-    <?php foreach($directories as $directory): ?>
-    	<tr>
-        	<td class="checkbox"><?php echo $form->checkbox('BackupFolder.ids.'.$directory['BackupFolder']['id']); ?></td>
-            <td class="type"><?php echo $file->icon('directory'); ?></td>
-            <td class="name"><p id="<?php echo 'folderRename' . $directory['BackupFolder']['id'] ?>"><?php echo $directory['BackupFolder']['name']; ?></p></td>
-            <td></td>
-            <td><?php echo $time->niceShort($directory['BackupFolder']['created']); ?></td>
-            <td><?php echo $time->niceShort($directory['BackupFolder']['modified']); ?></td>
-            <td><?php echo $html->link('View', '/backups/index/folder:' . $directory['BackupFolder']['id']); ?> <noscript>| <?php echo $html->link('Rename', '/backup_folders/rename/' . $directory['BackupFolder']['id']) ?></noscript></td>
-            <?php echo $ajax->editor('folderRename' . $directory['BackupFolder']['id'], '/backup_folders/rename/' . $directory['BackupFolder']['id'], array('callback' => "return 'data[BackupFolder][name]=' + escape(value)")); ?>
-        </tr>
-    <?php endforeach; ?>
-<?php endif; ?>
 <?php if($backups): ?>
     <?php foreach($backups as $backup): ?>
         <tr>
@@ -74,16 +60,10 @@
             <td><?php echo $number->toReadableSize($backup['Backup']['size']); ?></td>
             <td><?php echo $time->niceShort($backup['Backup']['created']); ?></td>
             <td><?php echo $time->niceShort($backup['Backup']['modified']); ?></td>
-            <td><?php echo $html->link('View', '/backups/view/' . $backup['Backup']['id']) ?> <noscript>| <?php echo $html->link('Rename', '/backups/rename/' . $backup['Backup']['id']) ?></noscript></td>
+            <td><?php echo $html->link('View', '/backups/index/view:' . $backup['Backup']['id']) ?> <noscript>| <?php echo $html->link('Rename', '/backups/rename/' . $backup['Backup']['id']) ?></noscript></td>
             <?php echo $ajax->editor('fileRename' . $backup['Backup']['id'], '/backups/rename/' . $backup['Backup']['id'], array('callback' => "return 'data[Backup][name]=' + escape(value)")); ?>
         </tr>
     <?php endforeach; ?>
-<?php endif; ?>
-<?php if(!($directories) && !($backups)): ?>
-        <tr>
-            <td colspan="7"><p>There are no files to display.</p></td>
-        </tr>
-<?php else: ?>
         <tr id="tableFooter">
         	<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller')); ?></td>
             <td id="actions" colspan="6">
@@ -91,6 +71,10 @@
                 <?php echo $form->input('action', array('type' => 'radio', 'options' => array('download' => 'Download', 'delete' => 'Delete'), 'value' => 'download', 'legend' => false)); ?>
                 <?php echo $form->submit('Go'); ?>
             </td>
+        </tr>
+<?php else: ?>
+        <tr>
+            <td colspan="7"><p>There are no files or folders to display.</p></td>
         </tr>
 <?php endif; ?>
 	</table>
