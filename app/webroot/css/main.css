@@ -14,6 +14,14 @@ h2
 	margin:0 -1px 10px -1px;
 	background:#EFEFEF;
 }
+h3
+{
+	color:#F56C1E;
+	margin:15px 10px 5px 10px;
+	border-bottom:1px solid #999;
+	padding-bottom:3px;
+	font-size:16px;
+}
 p, strong
 {
 	color:#444;
@@ -160,8 +168,16 @@ applet
 .message, #flashMessage
 {
 	background:#F3F3F3;
-	margin:0 10px 5px 10px;
+	margin:0 8px 5px 8px;
 	position:relative;
+	font-size:15px;
+	font-weight:bold;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+}
+.message p
+{
+	color:#333;
 }
 #subMenu
 {
@@ -252,14 +268,20 @@ applet
 .message .error
 {
 	background:#f2eed4 url(/img/error.png) no-repeat 8px 10px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
 }
 .message .info
 {
 	background:#EEE url(/img/information.png) no-repeat 8px 11px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
 }
 .message .success
 {
 	background:#d8f2d4 url(/img/accept.png) no-repeat 8px 11px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
 }
 .clear
 {

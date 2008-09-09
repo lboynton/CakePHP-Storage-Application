@@ -162,7 +162,7 @@ class BackupsController extends AppController
 				else
 				{
 					$this->_persistValidation('Backup'); 
-					$this->Session->setFlash('There was an error uploading the file.', 'messages/error');
+					$this->Session->setFlash(join('', $this->Backup->invalidFields()), 'messages/error');
 				}
 			}
 			
@@ -181,6 +181,16 @@ class BackupsController extends AppController
 		// set parent_id to null for the root folder
 		if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
 		
+		// set the data to the model to check if the data is valid
+		$this->Backup->set($this->data);
+		
+		// as there is only one validation rule for the folder, set the flash message to indicate that validation failed
+		if (!$this->Backup->validates()) 
+		{
+			$this->Session->setFlash('Please enter a name for the folder.', 'messages/error');
+			$this->redirect($this->referer());
+		}
+		
 		if($this->Backup->save($this->data))
 		{
 			// create folder on the file system
@@ -191,7 +201,6 @@ class BackupsController extends AppController
 		}
 		else 
 		{
-			$this->_persistValidation('Backup'); 
 			$this->Session->setFlash('The folder could not be created.', 'messages/error');
 		}
 		
@@ -278,7 +287,7 @@ class BackupsController extends AppController
 			}
 		}
 		
-		//$this->redirect($this->referer());
+		$this->redirect($this->referer());
 	}
 	
 	//
@@ -468,7 +477,7 @@ class BackupsController extends AppController
 			}
 		}
 		
-		$this->Session->setFlash('The selected folders/files have been deleted.', 'messages/info');
+		$this->Session->setFlash('The selected files and folders have been deleted.', 'messages/info');
 	}
 	
 	function _createFolder($folder)

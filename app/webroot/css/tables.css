@@ -46,6 +46,10 @@ table .checkbox
 	padding-bottom:0;
 	width:20px;
 }
+table input[type="checkbox"]
+{
+	top:0;
+}
 table #tableFooter td
 {
 	background:#fff;

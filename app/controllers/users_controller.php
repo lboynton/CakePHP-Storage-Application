@@ -11,7 +11,7 @@ class UsersController extends AppController
 		$this->Auth->allow('register');
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 		$this->Auth->autoRedirect = false;
-	}
+	} 
 	
     function index()
     {
@@ -19,7 +19,13 @@ class UsersController extends AppController
 		$this->helpers[] = "Number";
 		$this->helpers[] = "Javascript";
 		$this->helpers[] = "Percentage";
-		$this->pageTitle = "Account Summary";
+		$this->pageTitle = "Your Account";
+		
+		if(!empty($this->data))
+		{
+			if($this->data['User']['action'] == 'updateDetails') $this->_update_details();
+			elseif($this->data['User']['action'] == 'changePassword') $this->_change_password();
+		}
 		
 		$this->set('lastBackup', $this->User->Backup->find
 		(
@@ -91,10 +97,50 @@ class UsersController extends AppController
 			}
 		}
 	}
+	
+	function _update_details()
+	{
+		$this->User->id = $this->Session->read('Auth.User.id');
+		
+		if($this->User->save($this->data, true))
+		{
+			$this->Session->setFlash('Your details have been updated.', 'messages/success');
+			
+			// update the session data
+			$this->Session->write('Auth.User.real_name', $this->data['User']['real_name']);
+			$this->Session->write('Auth.User.email', $this->data['User']['email']);
+		}
+		else 
+		{
+			$this->Session->setFlash('Your details could not be updated.', 'messages/error');
+		}
+	}
+	
+	function _change_password()
+	{
+		$this->User->id = $this->Session->read('Auth.User.id');
+		
+		// hash password here becuase beforeSave doesn't seem to get the correct data array
+		$this->data['User']['password'] = AuthComponent::password($this->data['User']['new_password']);
+		
+		if($this->User->saveField('password', $this->data['User']['password'], true))
+		{
+			$this->Session->setFlash('Your password has been updated.', 'messages/success');
+		}
+		else 
+		{
+			$this->Session->setFlash('Your password could not be updated.', 'messages/error');
+		}
+	}
 
 	function admin_index()
 	{
 		$this->pageTitle = "Admin index";
+	}
+	
+	function admin_login()
+	{
+		$this->pageTitle = "Login";
 	}
 }
 ?>

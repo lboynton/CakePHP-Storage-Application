@@ -19,7 +19,7 @@
 --
 
 /*CREATE DATABASE IF NOT EXISTS `backup`;*/
-USE `backup`;
+USE `lee_backup`;
 
 --
 -- Definition of table `backups`
