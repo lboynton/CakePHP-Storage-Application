@@ -8,6 +8,8 @@
 
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 
+<p>Upload files here. They can be uploaded individually or as part of a zip archive.</p>
+
 <fieldset class="compact">
 	<?php if($query != ""): ?>
 		<?php echo $html->link('Reset', '/backups', array('class' => 'reset')); ?>

@@ -24,7 +24,7 @@
     <dt>Usage percentage</dt>
     <dd><?php echo $percentage->chart(@($backupSum[0][0]['size'] / $session->read("Auth.User.quota") * 100), true); ?></dd>
 </dl>
-<?php //pr($this->validationErrors); ?>
+
 <h3>Account details</h3>
 <fieldset class="fieldset2">
 <?php echo $form->create(null, array('action' => 'index')); ?>

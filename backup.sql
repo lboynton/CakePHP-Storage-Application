@@ -57,22 +57,16 @@ CREATE TABLE `users` (
   `created` datetime default NULL,
   `real_name` varchar(45) default NULL,
   `admin` tinyint(1) NOT NULL default '0',
-  `quota` bigint(20) unsigned NOT NULL,
+  `quota` bigint(20) unsigned default '5242880',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 INSERT INTO `users` (`id`,`username`,`password`,`email`,`created`,`real_name`,`admin`,`quota`) VALUES 
-  (0,'lee','d3521f0f4841ff1a777252f1d0ed1671236ae505','lee@lboynton.com','2008-07-22 22:50:55','Lee Boynton',1,5242880);
-INSERT INTO `users` (`id`,`username`,`password`,`email`,`created`,`real_name`,`admin`,`quota`) VALUES 
-  (1,'test','b71c2c45c6d44c21c4048be035f6c0118188f0fe','test@test.com','2008-07-28 10:09:05','',0,5242880);
-INSERT INTO `users` (`id`,`username`,`password`,`email`,`created`,`real_name`,`admin`,`quota`) VALUES 
-  (2,'meh','2319165f114f19a1019bfb412f4bc3dc3e498215','mehhy@meh.meh','2008-07-31 22:16:08','Mehhy M. Meh the Mehhyist',0,5242880);
-INSERT INTO `users` (`id`,`username`,`password`,`email`,`created`,`real_name`,`admin`,`quota`) VALUES 
-  (3,'kjhkjhljkh','d3521f0f4841ff1a777252f1d0ed1671236ae505','dffgsd@fdggfdfdg.com','2008-08-18 12:22:24','dfsfgdfg',0,5242880);
+  (1,'lee','d3521f0f4841ff1a777252f1d0ed1671236ae505','lee@lboynton.com','2008-09-12 17:17:27','Lee Boynton',1,5242880);
 
 
 

@@ -2,6 +2,7 @@
 class User extends AppModel
 {
     var $name = 'User';
+	var $actsAs = array('MultipleValidatable');
 	var $hasMany = array
 	(
         'Backup' => array
@@ -10,24 +11,15 @@ class User extends AppModel
             'foreignKey'    => 'user_id',
         )
     );  
+	
+	// default validation rules
 	var $validate = array
 	(
 		'email' => array
 		(
-			'create' => array
-			(
-				'rule' => 'email',
-				'required' => true,
-				'message' => 'Please enter a valid email address',
-				'on' => 'create'
-			),
-			'update' => array
-			(
-				'rule' => 'email',
-				'required' => false,
-				'message' => 'Please enter a valid email address',
-				'on' => 'update'
-			)
+			'rule' => 'email',
+			'required' => true,
+			'message' => 'Please enter a valid email address',
 		),
         'username' => array
 		(
@@ -36,20 +28,17 @@ class User extends AppModel
                 'rule' => 'isUnique',
                 'required' => true,
                 'message' => 'This username has already been taken, sorry!',
-				'on' => 'create'
             ),
             'alphanumeric' => array(
                 'rule' => 'alphaNumeric',
                 'required' => true,
                 'message' => 'Username must be alphanumeric',
-				'on' => 'create'
             ),
             'empty' => array
 			(
 				'rule' => array('custom', '/\S+/'),
 				'required' => true,
 				'message' => 'Please enter your username',
-				'on' => 'create'
             )
         ),
 		'new_password' => array
@@ -61,29 +50,50 @@ class User extends AppModel
 		'confirm_password' => array
 		(
 			'rule' => array('identicalFieldValues', 'new_password' ),
-			'message' => 'Please re-enter your password twice so that the values match',
+			'message' => 'Please enter your password again',
 			'required' => true,
-			'on' => 'create'
         ),
-		'old_password' => array
-		(
-			'required' => true,
-			'message' => 'Does not match your old password',
-			'rule' => 'matchOldPassword',
-			'on' => 'update'
-		),
 		'password' => array // required when logging in
 		(
 			'required' => true,
 			'message' => 'Please enter your password',
 			'rule' => array('custom', '/\S+/'),
-			'on' => 'create'
+			'on' => 'update'
 		)
 	);
 	
+	// validation set for editing user profile
+	var $validateEditDetails = array
+	(
+		'email' => array
+		(
+			'rule' => 'email',
+			'required' => true,
+			'message' => 'Please enter a valid email address'
+		)
+	);
+	
+	// validation set for changing the password
 	var $validateChangePassword = array
 	(
-
+		'old_password' => array
+		(
+			'rule' => 'matchOldPassword',
+			'required' => true,
+			'message' => 'Does not match your old password'
+		),
+		'new_password' => array
+		(
+			'rule' => array('minLength', '6'),
+			'message' => 'Password must be at least 6 characters long',
+			'required' => true
+        ),
+		'confirm_password' => array
+		(
+			'rule' => array('identicalFieldValues', 'new_password'),
+			'message' => 'Please re-enter your password twice so that the values match',
+			'required' => true
+        ),
 	);
 	
 	/**
@@ -115,15 +125,9 @@ class User extends AppModel
 	 */
 	function matchOldPassword($data)
 	{
-		//$this->User->recursive = -1; 
-		//$user = $this->User->findById($this->Auth->User('id')); 
+		$user = $this->find('first', array('conditions' => array('id' => 3), 'recursive' => -1));
 		
-		debug();
-		die();
-		
-		//return $this->Auth->password($this->data['User']['old_password']) == $user['User']['password'];
-		
-		return true;
+		return AuthComponent::password($this->data['User']['old_password']) == $user['User']['password'];
 	}
 }
 ?>

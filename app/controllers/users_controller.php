@@ -74,7 +74,7 @@ class UsersController extends AppController
 			$this->User->create();
 
 			// try to store the data
-			if($this->User->save($this->data))
+			if($this->User->save($this->data, true, array('real_name', 'email', 'username', 'password')))
 			{
 				// passed validation
 				
@@ -102,7 +102,10 @@ class UsersController extends AppController
 	{
 		$this->User->id = $this->Session->read('Auth.User.id');
 		
-		if($this->User->save($this->data, true))
+		// use the validation set for editing user details instead of the default validation set
+		$this->User->useValidationRules('EditDetails');
+		
+		if($this->User->save($this->data, true, array('real_name', 'email')))
 		{
 			$this->Session->setFlash('Your details have been updated.', 'messages/success');
 			
@@ -120,12 +123,16 @@ class UsersController extends AppController
 	{
 		$this->User->id = $this->Session->read('Auth.User.id');
 		
-		// hash password here becuase beforeSave doesn't seem to get the correct data array
-		$this->data['User']['password'] = AuthComponent::password($this->data['User']['new_password']);
+		// use the change password validation set instead of default
+		$this->User->useValidationRules('ChangePassword');
 		
-		if($this->User->saveField('password', $this->data['User']['password'], true))
+		// use save() instead of saveField() which seems to bugger validation up
+		if($this->User->save($this->data, true, array('password')))
 		{
 			$this->Session->setFlash('Your password has been updated.', 'messages/success');
+			
+			// clear POST data
+			$this->data = null;
 		}
 		else 
 		{
