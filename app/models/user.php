@@ -49,9 +49,18 @@ class User extends AppModel
         ),
 		'confirm_password' => array
 		(
-			'rule' => array('identicalFieldValues', 'new_password' ),
-			'message' => 'Please enter your password again',
-			'required' => true,
+			'empty' => array
+			(
+				'rule' => array('minLength', '6'),
+				'message' => 'Password must be at least 6 characters long',
+				'required' => true,
+			),
+			'identical' => array
+			(
+				'rule' => array('identicalFieldValues', 'new_password'),
+				'message' => 'Passwords do not match',
+				'required' => true,
+			)
         ),
 		'password' => array // required when logging in
 		(
@@ -90,9 +99,18 @@ class User extends AppModel
         ),
 		'confirm_password' => array
 		(
-			'rule' => array('identicalFieldValues', 'new_password'),
-			'message' => 'Please re-enter your password twice so that the values match',
-			'required' => true
+			'empty' => array
+			(
+				'rule' => array('minLength', '6'),
+				'message' => 'Password must be at least 6 characters long',
+				'required' => true,
+			),
+			'identical' => array
+			(
+				'rule' => array('identicalFieldValues', 'new_password'),
+				'message' => 'Passwords do not match',
+				'required' => true,
+			)
         ),
 	);
 	

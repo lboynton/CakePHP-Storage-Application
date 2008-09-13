@@ -21,6 +21,12 @@ class MenuHelper extends AppHelper
 		{
 			$parsedLink = Router::parse($link);
 			
+			// append prefix to action if prefix is set
+			if(isset($parsedLink['prefix'])) 
+			{
+				$parsedLink['action'] = $parsedLink['prefix'] . '_' . $parsedLink['action'];
+			}
+			
 			if($parsedLink['controller'] == $this->params['controller'] && $parsedLink['action'] == $this->params['action'])
 			{
 				$out[] = sprintf

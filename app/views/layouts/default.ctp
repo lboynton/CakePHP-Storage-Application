@@ -23,8 +23,14 @@
 <div id="container">
     <div id="header">
 		<?php 
-        if($session->check('Auth.User')) echo $this->element('authenticatedMenu');
-		elseif($session->check('Auth.Admin')) echo $this->element('adminMenu');
+        if($session->check('Auth.User'))
+		{
+			if($session->read('Auth.User.admin'))
+			{
+				echo $this->element('adminMenu');
+			}
+			else echo $this->element('authenticatedMenu');
+		}
         else echo $this->element('unauthenticatedMenu');
         ?> 
     </div>

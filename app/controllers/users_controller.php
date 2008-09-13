@@ -4,6 +4,13 @@ class UsersController extends AppController
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
 	
+	// pagination defaults
+	var $paginate = array
+	(
+		'limit' => 50,
+		'order' => array('username' => 'asc')
+	);
+	
 	function beforeFilter()
 	{
 		parent::beforeFilter();
@@ -142,7 +149,11 @@ class UsersController extends AppController
 
 	function admin_index()
 	{
-		$this->pageTitle = "Admin index";
+		$this->pageTitle = "Users";
+		$this->helpers[] = "Number";
+
+		$users = $this->paginate('User');
+		$this->set(compact('users'));
 	}
 	
 	function admin_login()
