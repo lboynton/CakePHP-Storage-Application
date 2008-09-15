@@ -71,7 +71,7 @@ function toggleCheckboxes(controller)
 }
 
 /**
- * Toggles a form item between disabled and not disabled
+ * Toggles a form item between disabled and enabled
  */
 Element.Methods.toggleDisable = function(element) 
 {

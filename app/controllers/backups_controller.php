@@ -147,7 +147,7 @@ class BackupsController extends AppController
 					
 					if($this->Backup->save($this->data))
 					{
-						$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->_getRealPath($this->data['Backup']['parent_id']) . $this->Backup->id, 'wb');
+						$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id, 'wb');
 						fwrite($fp, $this->data['Backup']['data']);
 						fclose($fp);
 						
@@ -182,7 +182,7 @@ class BackupsController extends AppController
 				if($this->Backup->save($this->data))
 				{
 					$this->_createBackupDirectory();
-					move_uploaded_file($this->data['Backup']['file']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->_getRealPath($this->data['Backup']['parent_id']) . $this->Backup->id);
+					move_uploaded_file($this->data['Backup']['file']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
 					$this->Session->setFlash('The file has been uploaded.', 'messages/success');
 				}
 				else
@@ -219,10 +219,6 @@ class BackupsController extends AppController
 		
 		if($this->Backup->save($this->data))
 		{
-			// create folder on the file system
-			$this->data['Backup']['id'] = $this->Backup->id;
-			$this->_createFolder($this->data['Backup']);
-			
 			$this->Session->setFlash('Folder "' . $this->data['Backup']['name'] . '" added.', 'messages/success');
 		}
 		else 
@@ -476,12 +472,12 @@ class BackupsController extends AppController
 				
 				foreach($folderChildren as $child)
 				{
-					$zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->_getRealPath($child['Backup']['parent_id']) . $child['Backup']['id'], $this->_getVirtualPath($child['Backup']['parent_id']) . $child['Backup']['name']);
+					$zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $child['Backup']['id'], $this->_getVirtualPath($child['Backup']['parent_id']) . $child['Backup']['name']);
 				}
 			}
 			else
 			{
-				$zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->_getRealPath($file['Backup']['parent_id']) . $id, $this->_getVirtualPath($file['Backup']['parent_id']) . $file['Backup']['name']);
+				$zip->addFile(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $id, $this->_getVirtualPath($file['Backup']['parent_id']) . $file['Backup']['name']);
 			}
 		}
 		
@@ -503,8 +499,30 @@ class BackupsController extends AppController
 			if($value == 1 && $this->_userOwnsFile($id)) 
 			{
 				$this->Backup->id = $id;
+				$file = $this->Backup->findById($id);
+				
+				// if the id belongs to a folder, delete all the child files
+				if($file['Backup']['type'] == 'folder')
+				{
+					$children = $this->Backup->children();
+					
+					foreach($children as $child)
+					{
+						if($child['Backup']['type'] != 'folder')
+						{
+							// delete child file from file system
+							unlink(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $child['Backup']['id']);
+						}
+					}
+				}
+				else
+				{
+					// delete the file from file system
+					unlink(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $id);			
+				}
+
+				// delete file or folder from database			
 				$this->Backup->delete();
-				$this->_rmRecursive(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->_getRealPath($id) . $id);
 			}
 		}
 		
@@ -534,11 +552,6 @@ class BackupsController extends AppController
 		
 		if($error) $this->Session->setFlash('Not all files or folders could be moved.', 'messages/error');
 		else $this->Session->setFlash('The selected files and folders have been moved.', 'messages/info');		
-	}
-	
-	function _createFolder($folder)
-	{
-		mkdir(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->_getRealPath($folder['id']), 0777);
 	}
 
 	/**
@@ -587,7 +600,7 @@ class BackupsController extends AppController
 	function _viewFile($file)
 	{
 		Configure::write('debug', 0);
-		$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->_getRealPath($file['Backup']['parent_id']) . $file['Backup']['id'], 'r');
+		$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'], 'r');
 	
 		header('Content-type: unkown');
 		header('Content-length: ' . $file['Backup']['size']);
