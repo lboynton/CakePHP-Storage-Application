@@ -34,11 +34,14 @@
     <?php echo $form->end('Add'); ?>
 </fieldset>
 <div style="clear:both;"></div>
-<p>Folder: <?php echo $html->link('Storage', '/backups'); ?>
-<?php if(isset($path)): ?>
-    <?php foreach($path as $folder): ?>
-    &raquo; <?php echo $html->link($folder['Backup']['name'], '/backups/index/view:' . $folder['Backup']['id']); ?>
-    <?php endforeach; ?>
+<p>Folder: 
+<?php if($query == ""): ?>	
+	<?php echo $html->link('Storage', '/backups'); ?>
+    <?php if(isset($path)): ?>
+        <?php foreach($path as $folder): ?>
+        &raquo; <?php echo $html->link($folder['Backup']['name'], '/backups/index/view:' . $folder['Backup']['id']); ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
 <?php endif; ?>
 </p>
 
@@ -59,7 +62,7 @@
             <td class="checkbox"><?php echo $form->checkbox('Backup.ids.'.$backup['Backup']['id']); ?></td>
             <td class="type"><?php echo $file->icon($backup['Backup']['type']); ?></td>
             <td class="name"><p id="<?php echo 'fileRename' . $backup['Backup']['id'] ?>"><?php echo $backup['Backup']['name']; ?></p></td>
-            <td><?php echo $number->toReadableSize($backup['Backup']['size']); ?></td>
+            <td><?php if($backup['Backup']['type'] != 'folder') echo $number->toReadableSize($backup['Backup']['size']); ?></td>
             <td><?php echo $time->niceShort($backup['Backup']['created']); ?></td>
             <td><?php echo $time->niceShort($backup['Backup']['modified']); ?></td>
             <td><?php echo $html->link('View', '/backups/index/view:' . $backup['Backup']['id']) ?> <noscript>| <?php echo $html->link('Rename', '/backups/rename/' . $backup['Backup']['id']) ?></noscript></td>
@@ -70,7 +73,8 @@
         	<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller')); ?></td>
             <td id="actions" colspan="6">
             	Perform action on selected items:
-                <?php echo $form->input('action', array('type' => 'radio', 'options' => array('download' => 'Download', 'delete' => 'Delete'), 'value' => 'download', 'legend' => false)); ?>
+                <?php echo $form->input('action', array('type' => 'radio', 'options' => array('download' => 'Download', 'delete' => 'Delete', 'move' => 'Move to'), 'value' => 'download', 'legend' => false, 'div' => false)); ?>
+                <?php echo $form->input('folder', array('options' => $folders, 'div' => false, 'label' => 'folder')); ?>
                 <?php echo $form->submit('Go'); ?>
             </td>
         </tr>

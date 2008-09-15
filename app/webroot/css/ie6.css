@@ -21,3 +21,19 @@
 	background-position:3px 0;
 	margin-bottom:-5px;
 }
+h2
+{
+	padding-top:5px;
+}
+.fieldset1 input[type="submit"]
+{
+	margin-left:176px;
+}
+#subMenu
+{
+	position:absolute;
+	top:70px;
+	right:7px;
+	font-size:12px;
+	color:#F56C1E;
+}

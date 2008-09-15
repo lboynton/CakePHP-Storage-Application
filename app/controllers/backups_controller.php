@@ -56,6 +56,8 @@ class BackupsController extends AppController
 			}
 		}
 		
+		
+		
 		// get all files and folders to display in the table
 		if(isset($folder))
 		{
@@ -67,6 +69,17 @@ class BackupsController extends AppController
 			
 			// pass the folder_id to the view
 			$this->set('folder_id', $folder);
+			
+			// get the folders in this folder
+			$folders = $this->Backup->find('list', array
+			(
+				'conditions' => array
+				(
+					'type' => 'folder',
+					'user_id' => $this->Session->read('Auth.User.id'),
+					'parent_id' => $folder
+				)
+			));
 		}
 		else
 		{
@@ -75,7 +88,20 @@ class BackupsController extends AppController
 			
 			// set the folder_id to empty string to indicate root folder, and pass this to the view
 			$this->set('folder_id', '');
+			
+			// get the folders in the root folder
+			$folders = $this->Backup->find('list', array
+			(
+				'conditions' => array
+				(
+					'type' => 'folder',
+					'user_id' => $this->Session->read('Auth.User.id'),
+					'parent_id' => null
+				)
+			));
 		}
+		$folders[''] = 'Storage';
+		$this->set('folders', $folders);
 		$this->set(compact('backups'));
 	}
 	
@@ -284,6 +310,11 @@ class BackupsController extends AppController
 					// perform delete action
 					$this->_deleteFiles($this->data['Backup']['ids']);
 					break;
+					
+				case "move":
+					// perform move file action
+					$this->_moveFiles($this->data['Backup']['ids'], $this->data['Backup']['folder']);
+					break;
 			}
 		}
 		
@@ -478,6 +509,31 @@ class BackupsController extends AppController
 		}
 		
 		$this->Session->setFlash('The selected files and folders have been deleted.', 'messages/info');
+	}
+	
+	function _moveFiles($files, $folder_id)
+	{
+		$error = false;
+		
+		foreach($files as $id => $value)
+		{
+			if($value == 1 && $this->_userOwnsFile($id)) 
+			{
+				$this->Backup->id = $id;
+				
+				// check user owns the folder, or, that the user is moving it to the root folder
+				if($folder_id != "" && !$this->_userOwnsFile($folder_id)) continue;
+				
+				// try to move the file. This will fail if a folder is moved into itself.
+				if(!$this->Backup->save(array('parent_id' => $folder_id)))
+				{
+					$error = true;
+				}
+			}
+		}
+		
+		if($error) $this->Session->setFlash('Not all files or folders could be moved.', 'messages/error');
+		else $this->Session->setFlash('The selected files and folders have been moved.', 'messages/info');		
 	}
 	
 	function _createFolder($folder)

@@ -68,6 +68,15 @@ table #tableFooter input[type="submit"]
 	background:#F0F0F0;
 	color:#222;
 }
+table #tableFooter select
+{
+	margin-left:5px;
+}
+table #tableFooter input[type="radio"]
+{
+	position:relative;
+	top:2px;
+}
 table #actions
 {
 	text-align:left;
