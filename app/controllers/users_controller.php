@@ -3,6 +3,7 @@ class UsersController extends AppController
 {
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
+	var $components = array('Number');
 	
 	// pagination defaults
 	var $paginate = array
@@ -62,6 +63,8 @@ class UsersController extends AppController
 		// redirect if the user is logged in
 		if ($this->Auth->user()) 
 		{
+		    $this->User->id = $this->Auth->user('id');
+			$this->User->saveField('last_login', date("Y-m-d H:i:s"));
 			$this->redirect('/users');
 			return;
 		}
@@ -151,6 +154,7 @@ class UsersController extends AppController
 	{
 		$this->pageTitle = "Users";
 		$this->helpers[] = "Number";
+		$this->helpers[] = "Time";
 
 		$users = $this->paginate('User');
 		$this->set(compact('users'));
@@ -159,6 +163,48 @@ class UsersController extends AppController
 	function admin_login()
 	{
 		$this->pageTitle = "Login";
+	}
+	
+	function admin_view($id)
+	{
+		$this->User->useValidationRules('AdminUserView');
+		
+		if(!empty($this->data))
+		{
+			$this->User->id = $id;
+
+			// convert quota to bytes
+			$this->data['User']['quota'] = $this->Number->convert($this->data['User']['quota'], $this->data['User']['unit'], 'b');
+			
+			if($this->User->save($this->data, true, array('quota')))
+			{
+				$this->Session->setFlash('User settings updated.', 'messages/success');
+				$this->redirect('/admin/users');
+			}
+			else $this->Session->setFlash('User settings could not be updated.', 'messages/error');
+		}
+		
+		$this->helpers[] = "Number";
+		$this->helpers[] = "Time";
+		$this->helpers[] = "UserDetails";
+		
+		$this->User->recursive = -1;
+		$user = $this->User->findById($id);
+		$this->set('user', $user);
+		$this->set('quota', $this->Number->convert($user['User']['quota'], 'b', 'mb'));
+	}
+	
+	function admin_user_level($id)
+	{
+		if(!empty($this->data))
+		{
+			$this->User->id = $id;
+			
+			if($this->User->save($this->data)) $this->Session->setFlash('User level changed.', 'messages/success');
+			else $this->Session->setFlash('Could not change user level, incorrect user level supplied.', 'messages/error');
+		}
+		
+		$this->redirect('/admin/users/view/' . $id);
 	}
 }
 ?>

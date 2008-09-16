@@ -3,7 +3,6 @@ Admin section
 	
 Backup/restore
 	- Prevent duplicate files
-	- Move files
 	- Set correct content-type in header when viewing files
 	- Create directories in uploaded zip files
 	- Intelligent metadata processing of more file formats (such as MS Office, image, email archives)

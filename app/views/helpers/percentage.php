@@ -23,6 +23,9 @@ class PercentageHelper extends AppHelper
 	
 	function chart($n, $showNumber = false)
 	{
+		// prevent chart from overflowing if user if over quota limit
+		if($n > 100) $n = 100;
+		
 		$output = '<div class="chartBG">';
 		
 		if($showNumber) $output .= '<p>' . $this->Number->toPercentage($n) . '</p>';

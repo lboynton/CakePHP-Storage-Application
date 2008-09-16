@@ -114,6 +114,28 @@ class User extends AppModel
         ),
 	);
 	
+	// validation rules for admin edit user
+	var $validateAdminUserView = array
+	(
+		'unit' => array
+		(
+			'rule' => array('inList', array('b', 'kb', 'mb', 'gb')),
+			'message' => 'Unsupported unit specified',
+			'required' => true
+		)
+	);
+	
+	// validation rules for admin user level change
+	var $validateAdminUserLevel = array
+	(
+		'admin' => array
+		(
+			'rule' => array('inList', array('0', '1')),
+			'message' => 'Incorrect value supplied',
+			'required' => true
+		)
+	);
+	
 	/**
 	 * Called after validation, before data is stored in the database
 	 */

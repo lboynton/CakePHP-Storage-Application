@@ -363,7 +363,7 @@ class AuthComponent extends Object {
 			return true;
 		}
 
-		$this->Session->setFlash($this->authError, 'default', array(), 'auth');
+		$this->Session->setFlash($this->authError, 'messages/error', array(), 'auth');
 		$controller->redirect($controller->referer(), null, true);
 		return false;
 	}
