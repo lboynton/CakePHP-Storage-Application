@@ -156,8 +156,20 @@ class UsersController extends AppController
 		$this->helpers[] = "Number";
 		$this->helpers[] = "Time";
 		$this->helpers[] = "UserDetails";
-
-		$users = $this->paginate('User');
+		
+		if(!empty($this->data))
+		{
+			// filter  applied
+			$users = $this->paginate('User', array
+			(
+				'User.real_name LIKE' => $this->data('query')
+			));
+		}
+		else
+		{
+			$users = $this->paginate('User');
+		}
+		
 		$this->set(compact('users'));
 	}
 	

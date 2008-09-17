@@ -3,8 +3,23 @@
 	<?php echo $paginator->prev('&laquo; Previous page', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
 	<?php echo $paginator->next('Next page &raquo;', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
 </div>
+
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 <p>To view a user, and to change a user's quota or administrator status, click on the user's username.
+
+<fieldset class="fieldset2">
+	<?php //if($query != ""): ?>
+		<?php //echo $html->link('Reset', '/backups', array('class' => 'reset')); ?>
+    <?php //endif; ?>
+	<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
+        <?php echo $form->input('Keywords', array('name' => 'query')); ?>
+		<?php echo $form->input('SearchIn', array('label' => 'Search in these fields', 'options' => array('name' => 'Real name', 'username' => 'Username', 'email' => 'Email address'), 'multiple' => true, 'selected' => 'name', 'after' => ' Control + click select for multiple selections')); ?>
+        <?php echo $form->input('Show', array('name' => 'show', 'after' => ' users per page ', 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100), 'selected' => 25)); ?>
+		<?php echo $form->input('UserLevel', array('label' => 'Show users who are', 'options' => array('all' => 'Administrators and normal users', 'admin' => 'Administrators', 'normal' => 'Normal users'))); ?>
+		<?php echo $form->input('DateRegistered', array('type' => 'date', 'dateFormat' => 'DMY', 'minYear' => 2008, 'maxYear' => date('Y'), 'empty' => '---', 'selected' => 'any')); ?>
+    <?php echo $form->end('Filter'); ?>
+</fieldset>
+
 <table>
     <tr>
     	<th></th><th>Name</th><th>Username</th><th>Quota</th><th>Registered</th><th>Last login</th>

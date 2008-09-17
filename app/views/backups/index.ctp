@@ -16,7 +16,7 @@
     <?php endif; ?>
 	<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
         <?php echo $form->input('Search', array('name' => 'query', 'value' => $query)); ?>
-        <?php echo $form->input('Show', array('name' => 'show', 'after' => ' results ' . $form->submit('Filter'), 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100))); ?>
+        <?php echo $form->input('Show', array('name' => 'show', 'after' => ' results ' . $form->submit('Filter'), 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100), 'selected' => 25)); ?>
     <?php echo $form->end(); ?>
 </fieldset>
 

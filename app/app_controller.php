@@ -38,6 +38,8 @@ class AppController extends Controller
 	 */
 	function _redirectToNamedParameters()
 	{
+		$namedParams = null;
+		
 		foreach($this->params['url'] as $param => $paramValue)
 		{
 			if($param != 'url') $namedParams .= $param . ":" . $paramValue . '/';
@@ -45,7 +47,16 @@ class AppController extends Controller
 		
 		if(isset($namedParams))
 		{
-			$this->redirect('/' . $this->params['controller'] . '/' . $this->params['action'] . '/' . $namedParams);
+			if(isset($this->params['prefix']))
+			{
+				$this->params['action'] = substr($this->params['action'], strlen($this->params['prefix']) + 1);
+				
+				$this->redirect('/' . $this->params['prefix'] . '/' . $this->params['controller'] . '/' . $this->params['action'] . '/' . $namedParams);
+			}
+			else
+			{
+				$this->redirect('/' . $this->params['controller'] . '/' . $this->params['action'] . '/' . $namedParams);
+			}
 		}
 	}
 	
