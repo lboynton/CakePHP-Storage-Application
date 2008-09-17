@@ -1,15 +1,22 @@
 <h2>View User</h2>
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 
-<h3>User Details</h3>
+<h3>User details</h3>
 <dl>
 	<dt>Username</dt><dd><?php echo $user['User']['username']; ?></dd>
 	<dt>Real name</dt><dd><?php echo $user['User']['real_name']; ?></dd>
 	<dt>Email</dt><dd><?php echo $html->link($user['User']['email'], 'mailto:' . $user['User']['email']); ?></dd>
 	<dt>Registered</dt><dd><?php echo $time->niceShort($user['User']['created']); ?></dd>
 	<dt>Last login</dt><dd><?php echo $time->niceShort($user['User']['last_login']); ?></dd>
-	<dt>Quota</dt><dd><?php echo $number->toReadableSize($user['User']['quota']); ?></dd>
 	<dt>User level</dt><dd><?php echo $userDetails->userLevel($user['User']['admin']); ?></dd>
+</dl>
+
+<h3>Storage statistics</h3>
+<dl>
+    <dt>Files in storage</dt><dd><?php echo $backupCount; ?></dd>
+	<dt>Quota</dt><dd><?php echo $number->toReadableSize($user['User']['quota']); ?></dd>
+	<dt>Usage</dt><dd><?php echo $number->toReadableSize($backupSum[0][0]['size']); ?></dd>
+    <dt>Usage percentage</dt><dd><?php echo $percentage->chart(@($backupSum[0][0]['size'] / $user['User']['quota'] * 100), true); ?></dd>
 </dl>
 
 <h3>User quota</h3>

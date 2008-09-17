@@ -155,6 +155,7 @@ class UsersController extends AppController
 		$this->pageTitle = "Users";
 		$this->helpers[] = "Number";
 		$this->helpers[] = "Time";
+		$this->helpers[] = "UserDetails";
 
 		$users = $this->paginate('User');
 		$this->set(compact('users'));
@@ -162,7 +163,7 @@ class UsersController extends AppController
 	
 	function admin_login()
 	{
-		$this->pageTitle = "Login";
+		$this->redirect('/users/login');
 	}
 	
 	function admin_view($id)
@@ -187,11 +188,15 @@ class UsersController extends AppController
 		$this->helpers[] = "Number";
 		$this->helpers[] = "Time";
 		$this->helpers[] = "UserDetails";
+		$this->helpers[] = "Percentage";
 		
+		$this->User->id = $id;
 		$this->User->recursive = -1;
 		$user = $this->User->findById($id);
 		$this->set('user', $user);
 		$this->set('quota', $this->Number->convert($user['User']['quota'], 'b', 'mb'));
+		$this->set('backupCount', $this->User->Backup->find('count', array('conditions' => array('type' => 'file', 'user_id' => $id))));
+		$this->set('backupSum', $this->User->Backup->find('all', array('fields' => 'SUM(size) as size', 'conditions' => array('user_id' => $id))));
 	}
 	
 	function admin_user_level($id)

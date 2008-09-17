@@ -7,11 +7,12 @@
 <p>To view a user, and to change a user's quota or administrator status, click on the user's username.
 <table>
     <tr>
-    	<th>Name</th><th>Username</th><th>Quota</th><th>Registered</th><th>Last login</th>
+    	<th></th><th>Name</th><th>Username</th><th>Quota</th><th>Registered</th><th>Last login</th>
     </tr>
     <?php if(isset($users)): ?>
     	<?php foreach($users as $user): ?>
         <tr>
+			<td><?php echo $userDetails->icon($user['User']['admin']); ?></td>
         	<td><?php echo $user['User']['real_name'] ?></td>
             <td><?php echo $html->link($user['User']['username'], '/admin/users/view/' . $user['User']['id']) ?></td>
             <td><?php echo $number->toReadableSize($user['User']['quota']); ?></td>
