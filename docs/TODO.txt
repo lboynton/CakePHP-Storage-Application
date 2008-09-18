@@ -7,12 +7,10 @@ Admin section
 	- Perhaps use ACL for different groups like student, staff, admin. The default quota could then be changed for each group.
 	
 Backup/restore
-	- Prevent duplicate files
 	- Set correct content-type in header when viewing files
 	- Create directories in uploaded zip files
 	- Intelligent metadata processing of more file formats (such as MS Office, image, email archives)
 	- Fix the file/folder search problem regarding symbols
-	- Move view link to file/folder icon
 	- Consider displaying files/folders as a tree
 	- Rename duplicate files if two files occur with the same name but different hash
 	- Delete duplicate files for files with duplicate hashes

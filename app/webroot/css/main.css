@@ -50,6 +50,14 @@ a:hover
 	background:#F56C1E;
 	color:#FFF;
 }
+a img
+{
+	border:0;
+}
+a.img:hover
+{
+	background:none;
+}
 dl
 {
 	display: block;

@@ -92,8 +92,8 @@ table form, table form *
 }
 table .name
 {
-	width:320px;
-	max-width:320px;
+	width:375px;
+	max-width:375px;
 	overflow:hidden;
 	text-align:left;
 	font-size:12px;

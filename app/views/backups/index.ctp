@@ -54,18 +54,18 @@
             <th><?php echo $paginator->sort('Size', 'size'); ?></th>
             <th><?php echo $paginator->sort('Created', 'created'); ?></th>
             <th><?php echo $paginator->sort('Modified', 'modified'); ?></th>
-            <th>Actions</th>
+            <noscript><th>Actions</th></noscript>
         </tr>
 <?php if($backups): ?>
     <?php foreach($backups as $backup): ?>
         <tr>
             <td class="checkbox"><?php echo $form->checkbox('Backup.ids.'.$backup['Backup']['id']); ?></td>
-            <td class="type"><?php echo $file->icon($backup['Backup']['type']); ?></td>
+            <td class="type"><?php echo $file->icon($backup['Backup']['type'], '/backups/index/view:' . $backup['Backup']['id']); ?></td>
             <td class="name"><p id="<?php echo 'fileRename' . $backup['Backup']['id'] ?>"><?php echo $backup['Backup']['name']; ?></p></td>
             <td><?php if($backup['Backup']['type'] != 'folder') echo $number->toReadableSize($backup['Backup']['size']); ?></td>
             <td><?php echo $time->niceShort($backup['Backup']['created']); ?></td>
             <td><?php echo $time->niceShort($backup['Backup']['modified']); ?></td>
-            <td><?php echo $html->link('View', '/backups/index/view:' . $backup['Backup']['id']) ?> <noscript>| <?php echo $html->link('Rename', '/backups/rename/' . $backup['Backup']['id']) ?></noscript></td>
+            <noscript><td><?php echo $html->link('Rename', '/backups/rename/' . $backup['Backup']['id']) ?></td></noscript>
             <?php echo $ajax->editor('fileRename' . $backup['Backup']['id'], '/backups/rename/' . $backup['Backup']['id'], array('callback' => "return 'data[Backup][name]=' + escape(value)")); ?>
         </tr>
     <?php endforeach; ?>
