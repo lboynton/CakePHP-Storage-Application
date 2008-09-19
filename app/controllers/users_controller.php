@@ -223,5 +223,26 @@ class UsersController extends AppController
 		
 		$this->redirect('/admin/users/view/' . $id);
 	}
+	
+	function admin_delete()
+	{	
+		if(!empty($this->data))
+		{
+			if($this->data['User']['deleteAccount'] == 1)
+			{
+				$this->User->id = $this->data['User']['id'];
+				$this->User->Backup->emptyStore($this->data['User']['id']);
+				$this->User->delete();
+				$this->Session->setFlash('The user has been successfully deleted.', 'messages/success');
+			}
+			else 
+			{
+				$this->Session->setFlash('Please select the checkbox if you wish to delete the user.', 'messages/error');
+				$this->redirect($this->referer());
+			}
+		}
+		
+		$this->redirect('/admin/users');
+	}
 }
 ?>

@@ -31,3 +31,14 @@
 <?php echo $form->label('admin', 'Administrator', array('class' => 'input')); ?>
 <?php echo $form->input('admin', array('label' => false, 'checked' => (boolean)$user['User']['admin'], 'class' => 'input checkbox')); ?>
 <?php echo $form->end('Update'); ?>
+
+<h3>Delete user</h3>
+<p><strong>Warning:</strong> User account and all related files will be removed. This action can not be undone.</p>
+<?php echo $form->create(null, array('action' => 'delete')); ?>
+    <?php echo $form->input('deleteAccount', array('type' => 'checkbox', 'label' => 'Delete all files and folders')); ?>
+    <?php echo $form->submit('Delete', array('id' => 'DeleteButton')); ?>
+	<?php echo $form->hidden('id', array('value' => $user['User']['id'])); ?>
+<?php echo $form->end(); ?>
+
+<?php echo $javascript->event('window', 'load', '$(\'DeleteButton\').disable()'); ?>
+<?php echo $javascript->event('UserDeleteAccount', 'click', '$(\'DeleteButton\').toggleDisable()'); ?>

@@ -236,11 +236,8 @@ class BackupsController extends AppController
 	{
 		if($this->data['Backup']['deleteAll'] == 1)
 		{
-			// delete all files and folders from the database
-			$this->Backup->deleteAll(array('Backup.user_id' => $this->Session->read('Auth.User.id')));
-			
-			// delete all files in this user's file storage
-			$this->_emptyStore();
+			// delete all files in this user's file storage and database
+			$this->Backup->emptyStore($this->Session->read('Auth.User.id'));
 			
 			$this->Session->setFlash("All files in the backup have been deleted.", 'messages/info');
 		}
@@ -339,15 +336,6 @@ class BackupsController extends AppController
 				$this->log("Could not delete file: " . $absoluteFile);
 			}
 		} 
-	}
-	
-	/**
-	 * Recursively deletes all the files and folders in the user's file store from the file system. The storage folder will have to be recreated
-	 * after calling this function.
-	 */
-	function _emptyStore()
-	{
-		$this->_rmRecursive(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id'));
 	}
 	
 	/**
@@ -608,31 +596,6 @@ class BackupsController extends AppController
 		echo fread($fp, $file['Backup']['size']);
 		fclose($fp);
 		exit();
-	}
-	
-	/**
-	 * @description Remove recursively. (Like `rm -r`)
-	 * @see Comment by davedx at gmail dot com on { http://us2.php.net/manual/en/function.rmdir.php }
-	 * @param file {String} The file or folder to be deleted.
-	 **/
-	function _rmRecursive($file) 
-	{
-		if (is_dir($file) && !is_link($file)) 
-		{
-			foreach(glob($file.'/*') as $sf) 
-			{
-				if ( !$this->_rmRecursive($sf) ) 
-				{
-					$this->log("Failed to remove $sf\n");
-					return false;
-				}
-			}
-			return rmdir($file);
-		} 
-		else 
-		{
-			return unlink($file);
-		}
 	}
 
 	/**

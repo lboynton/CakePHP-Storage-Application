@@ -52,11 +52,12 @@ table input[type="checkbox"]
 }
 table #tableFooter td
 {
-	background:#fff;
 	font-size:10px;
 	text-align:left;
-	/*border-top:2px solid #F56C1E;*/
-	/*background:#F5E1C9;*/
+	background:#FFF;
+	color:#000;
+	/*border-top:1px solid #f0d5b6;*/
+	/*background:#f0d5b6;*/
 }
 table #tableFooter input[type="submit"]
 {

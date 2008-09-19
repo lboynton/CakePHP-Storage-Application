@@ -72,5 +72,44 @@ class Backup extends AppModel
 		
 		return true;
 	}
+	
+	/**
+	 * Recursively deletes all the files and folders in the user's file store from the file system. The storage folder will have to be recreated
+	 * after calling this function.
+	 * @param $id The id of the user who's store should be deleted
+	 */
+	function emptyStore($id)
+	{
+		// delete all files and folders from the database
+		$this->deleteAll(array('Backup.user_id' => $id));
+		
+		// delete files from filesystem
+		$this->rmRecursive(BACKUP_ROOT_DIR . $id);
+	}
+	
+	/**
+	 * @description Remove recursively. (Like `rm -r`)
+	 * @see Comment by davedx at gmail dot com on { http://us2.php.net/manual/en/function.rmdir.php }
+	 * @param file {String} The file or folder to be deleted.
+	 **/
+	function rmRecursive($file) 
+	{
+		if (is_dir($file) && !is_link($file)) 
+		{
+			foreach(glob($file.'/*') as $sf) 
+			{
+				if ( !$this->rmRecursive($sf) ) 
+				{
+					$this->log("Failed to remove $sf\n");
+					return false;
+				}
+			}
+			return rmdir($file);
+		} 
+		else 
+		{
+			return unlink($file);
+		}
+	}
 }
 ?>
