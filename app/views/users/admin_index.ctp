@@ -5,7 +5,7 @@
 </div>
 
 <?php if($session->check('Message.flash')) $session->flash(); ?>
-<p>To view a user, and to change a user's quota or administrator status, click on the user's username.
+<p>To view a user, and to change a user's quota or administrator status, click on the user's username or icon.
 
 <fieldset class="fieldset2">
 	<?php //if($query != ""): ?>
@@ -27,7 +27,7 @@
     <?php if(isset($users)): ?>
     	<?php foreach($users as $user): ?>
         <tr>
-			<td><?php echo $userDetails->icon($user['User']['admin']); ?></td>
+			<td><?php echo $userDetails->icon($user['User']['admin'], $user['User']['username'], '/admin/users/view/' . $user['User']['id']); ?></td>
         	<td><?php echo $user['User']['real_name'] ?></td>
             <td><?php echo $html->link($user['User']['username'], '/admin/users/view/' . $user['User']['id']) ?></td>
             <td><?php echo $number->toReadableSize($user['User']['quota']); ?></td>
