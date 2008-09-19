@@ -27,7 +27,7 @@
     <?php if(isset($users)): ?>
     	<?php foreach($users as $user): ?>
         <tr>
-			<td><?php echo $userDetails->icon($user['User']['admin'], $user['User']['username'], '/admin/users/view/' . $user['User']['id']); ?></td>
+			<td><?php echo $userDetails->icon($user['User']['admin'], '/admin/users/view/' . $user['User']['id']); ?></td>
         	<td><?php echo $user['User']['real_name'] ?></td>
             <td><?php echo $html->link($user['User']['username'], '/admin/users/view/' . $user['User']['id']) ?></td>
             <td><?php echo $number->toReadableSize($user['User']['quota']); ?></td>
