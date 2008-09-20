@@ -25,6 +25,11 @@ class Backup extends AppModel
 			(
 				'rule' => 'validateUploadedFile',
 				'message' => 'Sorry, an error occurred whilst uploading.',
+			),
+			'duplicate' => array
+			(
+				'rule' => 'isDuplicateFile',
+				'message' => 'The selected file was skipped as it is already present in this folder.',
 			)
 		)
 	); 
@@ -110,6 +115,19 @@ class Backup extends AppModel
 		{
 			return unlink($file);
 		}
+	}
+	
+	function isDuplicateFile($data)
+	{
+		return !$this->find('first', array
+		(
+			'conditions' => array
+			(
+				'Backup.parent_id' => $this->data['Backup']['parent_id'],
+				'Backup.hash' => $this->data['Backup']['hash'],
+				'Backup.user_id' => $this->Auth->user('id'),
+			)
+		));
 	}
 }
 ?>
