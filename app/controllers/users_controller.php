@@ -4,6 +4,7 @@ class UsersController extends AppController
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
 	var $components = array('Number');
+	var $uses = array('User', 'SiteParameter');
 	
 	// pagination defaults
 	var $paginate = array
@@ -90,9 +91,10 @@ class UsersController extends AppController
 		{
 			// create user with defaults
 			$this->User->create();
+			$this->data['User']['quota'] = $this->SiteParameter->getParam('default_quota');
 
 			// try to store the data
-			if($this->User->save($this->data, true, array('real_name', 'email', 'username', 'password')))
+			if($this->User->save($this->data, true, array('real_name', 'email', 'username', 'password', 'quota')))
 			{
 				// passed validation
 				

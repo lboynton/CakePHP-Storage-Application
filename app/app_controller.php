@@ -33,11 +33,6 @@ class AppController extends Controller
         $this->_persistValidation();
     }
 	
-	function test()
-	{
-		echo "hello";
-	}
-	
 	/**
 	 * Checks for normal GET parameters and redirects them to the named parameter equivalent
 	 */

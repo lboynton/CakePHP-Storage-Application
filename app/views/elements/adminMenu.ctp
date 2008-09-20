@@ -5,6 +5,7 @@
 			'Your account' => '/users',
 			'File management' => '/backups',
 			'User management' => '/admin/users',
+			'Settings' => '/admin/site_parameters',
 			'Logout' => '/users/logout')
 		);
     ?> 
