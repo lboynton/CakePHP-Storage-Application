@@ -169,5 +169,18 @@ class User extends AppModel
 		
 		return AuthComponent::password($this->data['User']['old_password']) == $user['User']['password'];
 	}
+	
+	/**
+	 * Method to check if the logged in user's account has been disabled
+	 * @return True if disabled, false if not
+	 */
+	function isAccountDisabled($id)
+	{
+		$this->recursive = -1;
+		
+		$user = $this->findById($id, array('fields' => 'disabled'));
+		
+		return (boolean) $user['User']['disabled'];
+	}
 }
 ?>

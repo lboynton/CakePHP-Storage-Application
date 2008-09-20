@@ -63,10 +63,18 @@ class UsersController extends AppController
 		// redirect if the user is logged in
 		if ($this->Auth->user()) 
 		{
-		    $this->User->id = $this->Auth->user('id');
-			$this->User->saveField('last_login', date("Y-m-d H:i:s"));
-			$this->redirect('/users');
-			return;
+			// check if account has been disabled
+			if($this->User->isAccountDisabled($this->Auth->user('id')))
+			{
+				$this->Session->setFlash('Sorry, your account has been disabled.', 'messages/error');
+				$this->redirect($this->Auth->logout());
+			}
+			else
+			{
+				$this->User->id = $this->Auth->user('id');
+				$this->User->saveField('last_login', date("Y-m-d H:i:s"));
+				$this->redirect('/users');
+			}
 		}
     }
     
@@ -222,6 +230,27 @@ class UsersController extends AppController
 		}
 		
 		$this->redirect('/admin/users/view/' . $id);
+	}
+	
+	function admin_disable()
+	{
+		if(!empty($this->data))
+		{
+			if($this->data['User']['disableAccount'] == 1)
+			{
+				$this->User->id = $this->data['User']['id'];
+				$this->User->saveField('disabled', 1);
+				$this->Session->setFlash('The user account has been disabled.', 'messages/success');
+			}
+			else 
+			{
+				$this->User->id = $this->data['User']['id'];
+				$this->User->saveField('disabled', 0);
+				$this->Session->setFlash('The user account has been enabled.', 'messages/success');
+			}
+		}
+		
+		$this->redirect('/admin/users');
 	}
 	
 	function admin_delete()

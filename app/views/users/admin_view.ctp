@@ -28,14 +28,23 @@
 <h3>User level</h3>
 <p>Make this user an administrator. Administrators can view all other users, and make changes to those users' quota and administrator status.</p>
 <?php echo $form->create(null, array('action' => 'user_level/' . $user['User']['id'], 'class' => 'fieldset2')); ?>
-<?php echo $form->label('admin', 'Administrator', array('class' => 'input')); ?>
-<?php echo $form->input('admin', array('label' => false, 'checked' => (boolean)$user['User']['admin'], 'class' => 'input checkbox')); ?>
+	<?php echo $form->label('admin', 'Administrator', array('class' => 'input')); ?>
+	<?php echo $form->input('admin', array('label' => false, 'checked' => (boolean)$user['User']['admin'], 'class' => 'input checkbox')); ?>
+<?php echo $form->end('Update'); ?>
+
+<h3>Disable user account</h3>
+<p>Disable the user account, preventing the user from logging in.</p>
+<?php echo $form->create(null, array('action' => 'disable', 'class' => 'fieldset2')); ?>
+	<?php echo $form->label('disableAccount', 'Disable account', array('class' => 'input')); ?>
+    <?php echo $form->input('disableAccount', array('type' => 'checkbox', 'checked' => (boolean)$user['User']['disabled'], 'label' => false, 'class' => 'input checkbox')); ?>
+	<?php echo $form->hidden('id', array('value' => $user['User']['id'])); ?>
 <?php echo $form->end('Update'); ?>
 
 <h3>Delete user</h3>
 <p><strong>Warning:</strong> User account and all related files will be removed. This action can not be undone.</p>
-<?php echo $form->create(null, array('action' => 'delete')); ?>
-    <?php echo $form->input('deleteAccount', array('type' => 'checkbox', 'label' => 'Delete all files and folders')); ?>
+<?php echo $form->create(null, array('action' => 'delete', 'class' => 'fieldset2')); ?>
+	<?php echo $form->label('deleteAccount', 'Delete user', array('class' => 'input')); ?>
+    <?php echo $form->input('deleteAccount', array('type' => 'checkbox', 'label' => false, 'class' => 'input checkbox')); ?>
     <?php echo $form->submit('Delete', array('id' => 'DeleteButton')); ?>
 	<?php echo $form->hidden('id', array('value' => $user['User']['id'])); ?>
 <?php echo $form->end(); ?>
