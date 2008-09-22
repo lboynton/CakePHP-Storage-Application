@@ -3,17 +3,11 @@ class Backup extends AppModel
 {
 	var $name = 'Backup';
 	var $belongsTo = array('User');
-	var $actsAs = array('Tree');
+	var $actsAs = array('Tree', 'MultipleValidatable');
+	
+	// default validation applies when uploading files
 	var $validate = array 
 	(
-		'name' => array
-		(
-			'empty' => array
-			(
-				'rule' => array('custom', '/\S+/'),
-				'message' => '', // we do not need this to display when uploading files or creating folders
-			)
-		),
 		'file' => array 
 		(
 			'file_size' => array
@@ -29,10 +23,44 @@ class Backup extends AppModel
 			'duplicate' => array
 			(
 				'rule' => 'isDuplicateFile',
-				'message' => 'The selected file was skipped as it is already present in this folder.',
+				'message' => 'The selected file was skipped as it is already present in this folder.'
 			)
 		)
 	); 
+	
+	// validation set for renaming files and folders
+	var $validateRename = array
+	(
+		'name' => array
+		(
+			'empty' => array
+			(
+				'rule' => array('custom', '/\S+/'),
+				'message' => 'Please enter a name for the file',
+				'required' => true
+			),
+			'uniqueName' => array
+			(
+				'rule' => 'validateRename',
+				'message' => 'The filename is already present in this folder.',
+			)
+		)
+	);
+	
+	// validation set for moving files or folders
+	var $validateMove = array
+	(
+		// the folder the file or folder is being moved to must not contain a file or folder of the same name
+		'parent_id' => array
+		(
+			'uniqueName' => array
+			(
+				'rule' => 'validateMove',
+				'message' => '',
+				'required' => true
+			)
+		)
+	);
 	
 	/**
 	 * Custom validation rule for uploaded files.
@@ -117,6 +145,10 @@ class Backup extends AppModel
 		}
 	}
 	
+	/**
+	 * Checks if the uploaded file is already present in the given folder. It checks for matching file name, hash and folder.
+	 * @return True if the file is already present and is unchanged. Returns false otherwise.
+	 */	
 	function isDuplicateFile($data)
 	{
 		return !$this->find('first', array
@@ -125,9 +157,63 @@ class Backup extends AppModel
 			(
 				'Backup.parent_id' => $this->data['Backup']['parent_id'],
 				'Backup.hash' => $this->data['Backup']['hash'],
-				'Backup.user_id' => $this->Auth->user('id'),
+				'Backup.name' => $this->data['Backup']['name']
 			)
 		));
+	}
+	
+	/**
+	 * Checks if a rename is valid by checking if the file name is unique in the given folder
+	 */
+	function validateRename($data)
+	{
+		$this->recursive = -1;
+		$file = $this->findById($this->id);
+		
+		return !(boolean) $this->find('count', array
+		(
+			'conditions' => array
+			(
+				'Backup.parent_id' => $file['Backup']['parent_id'],
+				'Backup.name' => $data['name'],
+				'Backup.id <>' => $this->id,
+				'Backup.user_id' => $file['Backup']['user_id']
+			)	
+		));
+	}
+	
+	/**
+	 * Checks if moving a file or folder is valid by checking if a file or folder is already present in the destination folder
+	 */
+	function validateMove($data)
+	{
+		$this->recursive = -1;
+		
+		// get the file that is to be moved
+		$file = $this->findById($this->id);
+				
+		if(empty($data['parent_id'])) $data['parent_id'] = null;
+
+		// see if there are any files in the destination folder with the same name
+		// if so, we want to return false to indicate validation failed
+		return !(boolean) $this->find('count', array
+		(
+			'conditions' => array
+			(
+				'Backup.parent_id' => $data['parent_id'],
+				'Backup.name' => $file['Backup']['name'],
+				'Backup.user_id' => $file['Backup']['user_id']
+			)	
+		));
+	}
+	
+	/**
+	 * Checks if the file fits within the quota
+	 * @return True if the file is too big
+	 */
+	function isTooBig($data)
+	{
+	
 	}
 }
 ?>

@@ -93,4 +93,4 @@
 
 <?php echo $javascript->event('BackupSelectAllTop', 'click', 'toggleCheckboxes(\'BackupSelectAllTop\');'); ?>
 <?php echo $javascript->event('BackupSelectAllBottom', 'click', 'toggleCheckboxes(\'BackupSelectAllBottom\');'); ?>
-<?php echo $javascript->event('BackupFolder', 'click', '$(\'BackupActionMove\').checked = true;'); ?>
+<?php echo $javascript->event('BackupFolder', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>

@@ -188,7 +188,7 @@ class BackupsController extends AppController
 				else
 				{
 					$this->_persistValidation('Backup'); 
-					$this->Session->setFlash(join('', $this->Backup->invalidFields()), 'messages/error');
+					$this->Session->setFlash(join(' ', $this->Backup->invalidFields()), 'messages/error');
 				}
 			}
 			
@@ -248,6 +248,9 @@ class BackupsController extends AppController
 	
 	function rename($id)
 	{
+		// apply the appropriate validation set so the view is updated with any required fields
+		$this->Backup->setValidate();
+		
 		// check user owns this file and it exists, if not redirect them
 		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
 		{
@@ -255,6 +258,7 @@ class BackupsController extends AppController
 			if(isset($this->data))
 			{
 				$this->Backup->id = $id;
+				$this->Backup->useValidationRules('Rename');
 				
 				// if this is from an ajax call, we want to show the new file name
 				if($this->RequestHandler->isAjax()) 
@@ -271,7 +275,7 @@ class BackupsController extends AppController
 						// this is the non-ajax form method, redirect the user
 						$this->redirect($this->referer());
 					}
-					else $this->Session->setFlash('The file could not be renamed', 'messages/error');
+					else $this->Session->setFlash('The file could not be renamed.', 'messages/error');
 				}
 			}
 			
@@ -527,6 +531,8 @@ class BackupsController extends AppController
 			{
 				$this->Backup->id = $id;
 				
+				$this->Backup->useValidationRules('Move');
+				
 				// check user owns the folder, or, that the user is moving it to the root folder
 				if($folder_id != "" && !$this->_userOwnsFile($folder_id)) continue;
 				
@@ -538,7 +544,7 @@ class BackupsController extends AppController
 			}
 		}
 		
-		if($error) $this->Session->setFlash('Not all files or folders could be moved.', 'messages/error');
+		if($error) $this->Session->setFlash('Some files or folders could not be moved, please check there are no files with the same name in the destination folder.', 'messages/error');
 		else $this->Session->setFlash('The selected files and folders have been moved.', 'messages/info');		
 	}
 
