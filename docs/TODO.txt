@@ -10,12 +10,14 @@ Backup/restore
 	- Set correct content-type in header when viewing files
 	- Create directories in uploaded zip files
 	- Intelligent metadata processing of more file formats (such as MS Office, image, email archives)
-	- Fix the file/folder search problem regarding symbols
 	- Consider displaying files/folders as a tree
 	- Rename duplicate files if two files occur with the same name but different hash
-	- Delete duplicate files for files with duplicate hashes
 	
 User interface
 	- Add help section
 	- Test on different browsers
 	- IE6 specific bugs
+	
+General
+	- Tidy up code, especially backups controller.
+	- Consider moving some controller functions to the model

@@ -41,7 +41,9 @@
         <?php foreach($path as $folder): ?>
         &raquo; <?php echo $html->link($folder['Backup']['name'], '/backups/index/view:' . $folder['Backup']['id']); ?>
         <?php endforeach; ?>
-    <?php endif; ?>
+	<?php endif; ?>
+<?php else: ?>
+	Showing files in all folders
 <?php endif; ?>
 </p>
 
@@ -52,6 +54,7 @@
             <th class="type"></th>
             <th class="name"><?php echo $paginator->sort('Name', 'name'); ?></th>
             <th><?php echo $paginator->sort('Size', 'size'); ?></th>
+			<?php if(!empty($query)): ?><th>Folder</th><?php endif; ?>
             <th><?php echo $paginator->sort('Created', 'created'); ?></th>
             <th><?php echo $paginator->sort('Modified', 'modified'); ?></th>
             <noscript><th>Actions</th></noscript>

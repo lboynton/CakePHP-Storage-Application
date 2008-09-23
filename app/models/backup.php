@@ -5,9 +5,17 @@ class Backup extends AppModel
 	var $belongsTo = array('User');
 	var $actsAs = array('Tree', 'MultipleValidatable');
 	
-	// default validation applies when uploading files
+	// default validation applies when uploading files and creating folders
 	var $validate = array 
 	(
+		'name' => array
+		(
+			'empty' => array
+			(
+				'rule' => array('custom', '/\S+/'),
+				'message' => 'Please enter a name for the file',
+			),
+		),
 		'file' => array 
 		(
 			'file_size' => array
@@ -20,9 +28,9 @@ class Backup extends AppModel
 				'rule' => 'validateUploadedFile',
 				'message' => 'Sorry, an error occurred whilst uploading.',
 			),
-			'duplicate' => array
+			'duplicates' => array
 			(
-				'rule' => 'isDuplicateFile',
+				'rule' => 'checkForDuplicates',
 				'message' => 'The selected file was skipped as it is already present in this folder.'
 			)
 		)
@@ -145,20 +153,66 @@ class Backup extends AppModel
 		}
 	}
 	
+	function checkForDuplicates($data)
+	{		
+		// fail validation if the file is already there
+		if($this->isDuplicateFile($this->data['Backup']['name'], $this->data['Backup']['parent_id'], $this->data['Backup']['hash'])) return false;
+		
+		$extension = getFileExtension($this->data['Backup']['name']);
+		$name = stripFileExtension($this->data['Backup']['name'], $extension);
+		$suffix = "";
+		$counter = 1;
+		$newName = $name . '.' . $extension;
+		
+		// check if the filename is there with a different hash	
+		while(!$this->uniqueFilename($newName, $this->data['Backup']['parent_id']))
+		{
+			$suffix = '(' . $counter . ')';
+			$newName = $name . $suffix . '.' . $extension;
+			if($this->isDuplicateFile($newName, $this->data['Backup']['parent_id'], $this->data['Backup']['hash'])) return false;
+			$counter++;
+		}
+		
+		$this->data['Backup']['name'] = $newName;
+		
+		return true;
+	}
+	
+	function incrementFilename()
+	{
+		$this->data['Backup']['name'] .= 'a';
+	}
+	
 	/**
-	 * Checks if the uploaded file is already present in the given folder. It checks for matching file name, hash and folder.
+	 * @return True if filename is unique
+	 */
+	function uniqueFilename($name, $parent_id)
+	{
+		return !(boolean) $this->find('first', array
+		(
+			'conditions' => array
+			(
+				'Backup.parent_id' => $parent_id,
+				'Backup.name' => $name
+			)
+		));
+	}
+	
+	/**
+	 * Checks if the uploaded file is already present in the given folder. It checks for matching file name, hash and parent folder.
 	 * @return True if the file is already present and is unchanged. Returns false otherwise.
 	 */	
-	function isDuplicateFile($data)
+	function isDuplicateFile($name, $parent_id, $hash)
 	{
-		return !$this->find('first', array
+		return (boolean) $this->find('first', array
 		(
 			'conditions' => array
 			(
 				'Backup.parent_id' => $this->data['Backup']['parent_id'],
 				'Backup.hash' => $this->data['Backup']['hash'],
-				'Backup.name' => $this->data['Backup']['name']
-			)
+				'Backup.name' => $name
+			),
+			'recursive' => false
 		));
 	}
 	

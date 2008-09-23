@@ -43,4 +43,23 @@
  *
  */
 define('BACKUP_ROOT_DIR', $_SERVER['DOCUMENT_ROOT'] . DS . 'backups' . DS);
+
+/**
+ * Function for getting the file extension of a filename
+ * @param filename The name of the file with the extension
+ * @return The extension of the filename
+ */
+function getFileExtension($filename)
+{
+	$filename = strtolower($filename);
+	$exts = split("[/\\.]", $filename);
+	$n = count($exts)-1;
+	$exts = $exts[$n];
+	return $exts;
+}
+
+function stripFileExtension($filename, $extension)
+{
+	return substr($filename, 0, strlen($filename) - strlen($extension) - 1);
+}
 ?>

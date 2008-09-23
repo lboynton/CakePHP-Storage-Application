@@ -145,76 +145,11 @@ class BackupsController extends AppController
 			// see if the file is a zip
 			if(is_resource($zip))
 			{
-				while ($zip_entry = zip_read($zip))
-				{
-					if(zip_entry_filesize($zip_entry) <= 0) continue;
-					
-					$this->_createBackupDirectory();
-					
-					$this->Backup->create();
-					$this->data['Backup']['name'] = Sanitize::escape(basename(zip_entry_name($zip_entry)));
-					$this->data['Backup']['size'] = zip_entry_filesize($zip_entry);
-					$this->data['Backup']['data'] = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-					$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
-					$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
-					$this->data['Backup']['type'] = 'file';
-					
-					// check if file can be stored within the quota limit
-					$quota = $this->Session->read('Auth.User.quota');
-					$usage = $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'))));
-					
-					if($usage[0][0]['size'] + $this->data['Backup']['size'] > $quota)
-					{
-						$this->Session->setFlash('Sorry, not all files could be uploaded as one or more were too big.', 'messages/error');
-						$this->redirect($this->referer());
-						return;
-					}
-					
-					if($this->Backup->save($this->data))
-					{
-						$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id, 'wb');
-						fwrite($fp, $this->data['Backup']['data']);
-						fclose($fp);
-						
-						$this->Session->setFlash('The files have been uploaded.', 'messages/success');
-					}
-					else
-					{
-						$this->Session->setFlash('There was an error uploading the file.', 'messages/error');
-					}
-				}
+				$this->_uploadArchive($zip);
 			}
 			else
 			{
-				$this->Backup->create();
-				$this->data['Backup']['name'] = Sanitize::escape($this->data['Backup']['file']['name']);
-				$this->data['Backup']['size'] = filesize($this->data['Backup']['file']['tmp_name']);
-				$this->data['Backup']['hash'] = md5(file_get_contents($this->data['Backup']['file']['tmp_name']));
-				$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
-				$this->data['Backup']['type'] = 'file';
-				
-				// check if file can be stored within the quota limit
-				$quota = $this->Session->read('Auth.User.quota');
-				$usage = $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'))));
-				
-				if($usage[0][0]['size'] + $this->data['Backup']['size'] > $quota)
-				{
-					$this->Session->setFlash('Sorry, there is not enough space to store this file.', 'messages/error');
-					$this->redirect($this->referer());
-					return;
-				}
-				
-				if($this->Backup->save($this->data))
-				{
-					$this->_createBackupDirectory();
-					move_uploaded_file($this->data['Backup']['file']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
-					$this->Session->setFlash('The file has been uploaded.', 'messages/success');
-				}
-				else
-				{
-					$this->_persistValidation('Backup'); 
-					$this->Session->setFlash(join(' ', $this->Backup->invalidFields()), 'messages/error');
-				}
+				$this->_uploadFile();
 			}
 			
 			$this->redirect($this->referer());
@@ -346,6 +281,81 @@ class BackupsController extends AppController
 	//
 	// Private functions
 	//
+	
+	function _uploadFile() 
+	{
+		$this->Backup->create();
+		$this->data['Backup']['name'] = Sanitize::escape($this->data['Backup']['file']['name']);
+		$this->data['Backup']['size'] = filesize($this->data['Backup']['file']['tmp_name']);
+		$this->data['Backup']['hash'] = md5(file_get_contents($this->data['Backup']['file']['tmp_name']));
+		$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+		$this->data['Backup']['type'] = 'file';
+		
+		// check if file can be stored within the quota limit
+		$quota = $this->Session->read('Auth.User.quota');
+		$usage = $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'))));
+		
+		if($usage[0][0]['size'] + $this->data['Backup']['size'] > $quota)
+		{
+			$this->Session->setFlash('Sorry, there is not enough space to store this file.', 'messages/error');
+			$this->redirect($this->referer());
+			return;
+		}
+		
+		if($this->Backup->save($this->data))
+		{
+			$this->_createBackupDirectory();
+			move_uploaded_file($this->data['Backup']['file']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
+			$this->Session->setFlash('The file has been uploaded.', 'messages/success');
+		}
+		else
+		{
+			$this->_persistValidation('Backup'); 
+			$this->Session->setFlash(join(' ', $this->Backup->invalidFields()), 'messages/error');
+		}
+	}
+	
+	function _uploadArchive($zip) 
+	{
+		while ($zip_entry = zip_read($zip))
+		{
+			if(zip_entry_filesize($zip_entry) <= 0) continue;
+			
+			$this->_createBackupDirectory();
+			
+			$this->Backup->create();
+			$this->data['Backup']['name'] = Sanitize::escape(basename(zip_entry_name($zip_entry)));
+			$this->data['Backup']['size'] = zip_entry_filesize($zip_entry);
+			$this->data['Backup']['data'] = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+			$this->data['Backup']['hash'] = md5($this->data['Backup']['data']);
+			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+			$this->data['Backup']['type'] = 'file';
+			
+			// check if file can be stored within the quota limit
+			$quota = $this->Session->read('Auth.User.quota');
+			$usage = $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'))));
+			
+			if($usage[0][0]['size'] + $this->data['Backup']['size'] > $quota)
+			{
+				$this->Session->setFlash('Sorry, not all files could be uploaded as one or more were too big.', 'messages/error');
+				$this->redirect($this->referer());
+				return;
+			}
+			
+			if($this->Backup->save($this->data))
+			{
+				$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id, 'wb');
+				fwrite($fp, $this->data['Backup']['data']);
+				fclose($fp);
+				
+				$this->Session->setFlash('The files have been uploaded.', 'messages/success');
+			}
+			else
+			{
+				$this->Session->setFlash('There was an error uploading the file.', 'messages/error');
+			}
+		}
+	}
 	 
 	/**
 	 * Provides deletion of files using wildcards
