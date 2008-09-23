@@ -11,7 +11,8 @@ class BackupsController extends AppController
 	var $paginate = array
 	(
 		'limit' => 25,
-		'order' => array('Backup.type' => 'desc', 'Backup.name' => 'asc') // order by type and name
+		'order' => array('Backup.type' => 'desc', 'Backup.name' => 'asc'), // order by type and name
+		'recursive' => -1
 	);
 	
 	/**
@@ -56,13 +57,36 @@ class BackupsController extends AppController
 			}
 		}
 		
-		
+		if(!empty($query))
+		{
+			$conditions = array
+			(
+				'Backup.name LIKE' => '%' . $query . '%',
+				'Backup.user_id' => $this->Auth->user('id')
+			);
+		}
+		elseif(isset($folder))
+		{
+			$conditions = array
+			(
+				'Backup.user_id' => $this->Auth->user('id'),
+				'Backup.parent_id' => $folder
+			);
+		}
+		else
+		{
+			$conditions = array
+			(
+				'Backup.user_id' => $this->Auth->user('id'),
+				'Backup.parent_id' => null
+			);
+		}
 		
 		// get all files and folders to display in the table
 		if(isset($folder))
 		{
 			// only get files and folder which are in the specified folder
-			$backups = $this->paginate('Backup', "Backup.name LIKE '%$query%' AND Backup.user_id = {$this->Session->read('Auth.User.id')} AND parent_id = '$folder'");
+			$backups = $this->paginate('Backup', $conditions);
 			
 			// get the path of the current folder
 			$this->set('path', $this->Backup->getpath($folder));
@@ -80,11 +104,12 @@ class BackupsController extends AppController
 					'parent_id' => $folder
 				)
 			));
+			$folders[''] = 'Storage';
 		}
 		else
 		{
 			// get the files and folders which are in the root folder (ie folder ID is null)
-			$backups = $this->paginate('Backup', "Backup.name LIKE '%$query%' AND Backup.user_id = {$this->Session->read('Auth.User.id')} AND parent_id IS NULL");
+			$backups = $this->paginate('Backup', $conditions);
 			
 			// set the folder_id to empty string to indicate root folder, and pass this to the view
 			$this->set('folder_id', '');
@@ -100,7 +125,7 @@ class BackupsController extends AppController
 				)
 			));
 		}
-		$folders[''] = 'Storage';
+		
 		$this->set('folders', $folders);
 		$this->set(compact('backups'));
 	}

@@ -209,11 +209,21 @@ class Backup extends AppModel
 	
 	/**
 	 * Checks if the file fits within the quota
-	 * @return True if the file is too big
+	 * @return False if the file is too big to fit in the quota
 	 */
-	function isTooBig($data)
+	function checkQuota($data)
 	{
-	
+		// check if file can be stored within the quota limit
+		/*
+		$quota = $this->Session->read('Auth.User.quota');
+		$usage = $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'))));
+		
+		if($usage[0][0]['size'] + $this->data['Backup']['size'] > $quota)
+		{
+			$this->Session->setFlash('Sorry, there is not enough space to store this file.', 'messages/error');
+			$this->redirect($this->referer());
+			return;
+		}*/
 	}
 }
 ?>

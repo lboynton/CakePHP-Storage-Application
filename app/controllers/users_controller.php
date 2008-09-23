@@ -10,7 +10,8 @@ class UsersController extends AppController
 	var $paginate = array
 	(
 		'limit' => 50,
-		'order' => array('username' => 'asc')
+		'order' => array('username' => 'asc'),
+		'recursive' => -1
 	);
 	
 	function beforeFilter()

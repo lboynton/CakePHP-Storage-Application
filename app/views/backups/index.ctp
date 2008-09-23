@@ -12,7 +12,7 @@
 
 <fieldset class="compact">
 	<?php if($query != ""): ?>
-		<?php echo $html->link('Reset', '/backups', array('class' => 'reset')); ?>
+		<?php echo $html->link('Reset search', '/backups', array('class' => 'reset')); ?>
     <?php endif; ?>
 	<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
         <?php echo $form->input('Search', array('name' => 'query', 'value' => $query)); ?>
