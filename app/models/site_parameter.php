@@ -15,15 +15,37 @@ class SiteParameter extends AppModel
 		)
 	);
 	
+	/**
+	 * Sets a site parameter. If the supplied key is already present in the table it will be overwritten, else a new record will be created.
+	 * @param key The name of the parameter to set
+	 * @param value The value to give to the parameter
+	 * @return True if the parameter and value could be saved, false if for some reason it could not be saved (usually because it failed validation).
+	 */
 	function setParam($key, $value)
 	{
-		$this->id = $key;
-		return $this->saveField('value', $value, true);
+		return $this->save(array
+		(
+			'SiteParameter' => array
+			(
+				'key' => $key,
+				'value' => $value
+			)
+		));
 	}
 	
+	/**
+	 * Gets the parameter for the given key.
+	 * @param key The name of the parameter to retrieve
+	 * @return The parameter, or false if the key is not present.
+	 */
 	function getParam($key)
 	{
-		return array_shift(array_shift($this->findByKey($key, array('fields' => 'value'))));
+		$param = $this->findByKey($key, array('fields' => 'value'));
+		
+		if($param)
+			return array_shift(array_shift($param));
+		else
+			return false;
 	}
 }
 ?>

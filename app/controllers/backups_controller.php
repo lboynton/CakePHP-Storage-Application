@@ -131,8 +131,6 @@ class BackupsController extends AppController
 		
 		if(!empty($query))
 		{
-			//pr($backups);
-			
 			// get the folder name of all the files
 			for($i = 0; $i < count($backups); $i++)
 			{
