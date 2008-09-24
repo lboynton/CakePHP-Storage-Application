@@ -1,7 +1,7 @@
 Admin section
-	- Allow user to change default quota
 	- Change multiple users' quota
-	- Delete users
+	- Delete multiple user accounts at a time
+	- Disable multiple user accounts at a time
 	- Message users
 	- Disable users
 	- Perhaps use ACL for different groups like student, staff, admin. The default quota could then be changed for each group.
@@ -11,7 +11,7 @@ Backup/restore
 	- Create directories in uploaded zip files
 	- Intelligent metadata processing of more file formats (such as MS Office, image, email archives)
 	- Consider displaying files/folders as a tree
-	- Rename duplicate files if two files occur with the same name but different hash
+	- Prevent duplicate folder names
 	
 User interface
 	- Add help section

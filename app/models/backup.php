@@ -125,50 +125,32 @@ class Backup extends AppModel
 		$this->deleteAll(array('Backup.user_id' => $id));
 		
 		// delete files from filesystem
-		$this->rmRecursive(BACKUP_ROOT_DIR . $id);
+		rmRecursive(BACKUP_ROOT_DIR . $id);
 	}
 	
 	/**
-	 * @description Remove recursively. (Like `rm -r`)
-	 * @see Comment by davedx at gmail dot com on { http://us2.php.net/manual/en/function.rmdir.php }
-	 * @param file {String} The file or folder to be deleted.
-	 **/
-	function rmRecursive($file) 
-	{
-		if (is_dir($file) && !is_link($file)) 
-		{
-			foreach(glob($file.'/*') as $sf) 
-			{
-				if ( !$this->rmRecursive($sf) ) 
-				{
-					$this->log("Failed to remove $sf\n");
-					return false;
-				}
-			}
-			return rmdir($file);
-		} 
-		else 
-		{
-			return unlink($file);
-		}
-	}
-	
+	 * Method for checking for duplicate files and renaming files appropriately. It will first check to see if there is already a file in the folder present 
+	 * that has the same hash. If not, it will check if the filename is unique in the folder. If the filename is not unique, the filename is changed, which is
+	 * then checked for uniqueness. This process will continue until a unique name is found.
+	 */
 	function checkForDuplicates($data)
 	{		
 		// fail validation if the file is already there
 		if($this->isDuplicateFile($this->data['Backup']['name'], $this->data['Backup']['parent_id'], $this->data['Backup']['hash'])) return false;
 		
-		$extension = getFileExtension($this->data['Backup']['name']);
+		// get extension with the dot prefixed
+		$extension = getFileExtension($this->data['Backup']['name'], true);
+		
+		// get the name of the file without the dot and extension
 		$name = stripFileExtension($this->data['Backup']['name'], $extension);
-		$suffix = "";
 		$counter = 1;
-		$newName = $name . '.' . $extension;
+		$newName = $name . $extension;
 		
 		// check if the filename is there with a different hash	
 		while(!$this->uniqueFilename($newName, $this->data['Backup']['parent_id']))
 		{
 			$suffix = '(' . $counter . ')';
-			$newName = $name . $suffix . '.' . $extension;
+			$newName = $name . $suffix . $extension;
 			if($this->isDuplicateFile($newName, $this->data['Backup']['parent_id'], $this->data['Backup']['hash'])) return false;
 			$counter++;
 		}
@@ -178,12 +160,10 @@ class Backup extends AppModel
 		return true;
 	}
 	
-	function incrementFilename()
-	{
-		$this->data['Backup']['name'] .= 'a';
-	}
-	
 	/**
+	 * Checks if the given filename is unique in the given folder
+	 * @param name The name to check the uniqueness of
+	 * @param parent_id The folder to check in
 	 * @return True if filename is unique
 	 */
 	function uniqueFilename($name, $parent_id)
@@ -199,7 +179,10 @@ class Backup extends AppModel
 	}
 	
 	/**
-	 * Checks if the uploaded file is already present in the given folder. It checks for matching file name, hash and parent folder.
+	 * Checks if the file is already present in the given folder. It checks for matching file name, hash and parent folder.
+	 * @param name The name of the file
+	 * @param parent_id The id of the folder to check in
+	 * @param hash The hash of the file to determine if the file contents are the same
 	 * @return True if the file is already present and is unchanged. Returns false otherwise.
 	 */	
 	function isDuplicateFile($name, $parent_id, $hash)
@@ -278,6 +261,48 @@ class Backup extends AppModel
 			$this->redirect($this->referer());
 			return;
 		}*/
+	}
+	
+	/**
+	 * Checks if the name of the folder already exists, if so returns the ID of it. Else it creates a new folder with the specified name
+	 * and returns the newly created folder's ID.
+	 * @return The ID of the folder
+	 */
+	function createFolder($folderName, $parentId, $userId)
+	{
+		//echo "Creating folder: " . $folderName . ', parent_id: ' . $parentId . '<br />';
+		
+		// look for a folder matching the name and parent id
+		$folder = $this->find('first', array
+		(
+			'conditions' => array
+			(
+				'Backup.name' => $folderName,
+				'Backup.parent_id' => $parentId,
+				'Backup.user_id' => $userId
+			)
+		));
+		
+		// return the folder id if it exists
+		if($folder) return $folder['Backup']['id'];
+		
+		$this->create();
+		
+		// create a new folder
+		$newFolder = array
+		(
+			'Backup' => array
+			(
+				'name' => $folderName,
+				'type' => 'folder',
+				'parent_id' => $parentId,
+				'user_id' => $userId
+			)
+		);
+		
+		$this->save($newFolder);
+		
+		return $this->id;
 	}
 }
 ?>

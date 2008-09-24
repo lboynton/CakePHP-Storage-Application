@@ -49,17 +49,76 @@ define('BACKUP_ROOT_DIR', $_SERVER['DOCUMENT_ROOT'] . DS . 'backups' . DS);
  * @param filename The name of the file with the extension
  * @return The extension of the filename
  */
-function getFileExtension($filename)
+function getFileExtension($filename, $keepDot = false)
 {
 	$filename = strtolower($filename);
 	$exts = split("[/\\.]", $filename);
 	$n = count($exts)-1;
+	if($n == 0) return '';
 	$exts = $exts[$n];
+	if($keepDot) $exts = '.' . $exts;
 	return $exts;
 }
 
 function stripFileExtension($filename, $extension)
 {
-	return substr($filename, 0, strlen($filename) - strlen($extension) - 1);
+	if(strlen($extension) == 0) return $filename;
+
+	// check if the dot in the extension is present, if so remove it
+	if(substr($extension, 0, 1) == '.')
+	{
+		return substr($filename, 0, strlen($filename) - strlen($extension));
+	}
+	else
+	{
+		return substr($filename, 0, strlen($filename) - strlen($extension) - 1);
+	}
+}
+
+/**
+ * @description Remove recursively. (Like `rm -r`)
+ * @see Comment by davedx at gmail dot com on { http://us2.php.net/manual/en/function.rmdir.php }
+ * @param file {String} The file or folder to be deleted.
+ **/
+function rmRecursive($file) 
+{
+	if (is_dir($file) && !is_link($file)) 
+	{
+		foreach(glob($file.'/*') as $sf) 
+		{
+			if ( !$this->rmRecursive($sf) ) 
+			{
+				$this->log("Failed to remove $sf\n");
+				return false;
+			}
+		}
+		return rmdir($file);
+	} 
+	else 
+	{
+		return unlink($file);
+	}
+}
+
+/**
+ * Checks if the supplied filename is that of a directory by checking if the last character of the filename is a forward or back slash
+ * @return True if the supplied filename looks like that of a directory, false otherwise
+ */
+function isDirectoryName($filename)
+{
+	$lastCharacter = substr($filename, strlen($filename) - 1, strlen($filename));
+	
+	return $lastCharacter == '\\' || $lastCharacter == '/';
+}
+
+/**
+ * Gets the directory separator that is used in the given filename.
+ * @return Either a back slash or forward slash if either are present in the filename. Otherwise, returns the CakePHP constant DS.
+ */
+function getDirectorySeparator($filename)
+{
+	if(strstr($filename, '\\')) return '\\';
+	if(strstr($filename, '/')) return '/';
+	return DS;
 }
 ?>

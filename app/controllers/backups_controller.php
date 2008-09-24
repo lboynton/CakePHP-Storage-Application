@@ -137,6 +137,8 @@ class BackupsController extends AppController
 	{
 		if (!empty($this->data))
 		{		
+			$this->_createBackupDirectory();
+			
 			// folder id will be empty to indicate the root folder
 			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
 			
@@ -282,6 +284,30 @@ class BackupsController extends AppController
 	// Private functions
 	//
 	
+	/**
+	 * Checks if the name of the folder already exists, if so returns the ID of it. Else it creates a new folder with the specified name
+	 * and returns the newly created folder's ID.
+	 * @param path The path of folders to add
+	 * @param parent_id The parent folder to store the new folders in, defaults to root folder
+	 * @return The ID of the folder
+	 */
+	function _createFolders($path, $parent_id = null)
+	{
+		// if the dot folder name is given then the file is destined for the root folder, which has a null id
+		if($path == '.') return $parent_id;
+		
+		$ds = getDirectorySeparator($path);
+		
+		$folderNames = explode($ds, $path);
+		
+		foreach($folderNames as $folderName)
+		{
+			$parent_id = $this->Backup->createFolder($folderName, $parent_id, $this->Auth->user('id'));
+		}
+		
+		return $parent_id;
+	}
+	
 	function _uploadFile() 
 	{
 		$this->Backup->create();
@@ -304,7 +330,6 @@ class BackupsController extends AppController
 		
 		if($this->Backup->save($this->data))
 		{
-			$this->_createBackupDirectory();
 			move_uploaded_file($this->data['Backup']['file']['tmp_name'], BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $this->Backup->id);
 			$this->Session->setFlash('The file has been uploaded.', 'messages/success');
 		}
@@ -317,11 +342,14 @@ class BackupsController extends AppController
 	
 	function _uploadArchive($zip) 
 	{
+		// remember the base parent folder as the data array will change
+		$base_parent_id = $this->data['Backup']['parent_id'];
+		
 		while ($zip_entry = zip_read($zip))
 		{
 			if(zip_entry_filesize($zip_entry) <= 0) continue;
 			
-			$this->_createBackupDirectory();
+			$this->data['Backup']['parent_id'] = $this->_createFolders(dirname(zip_entry_name($zip_entry)), $base_parent_id);
 			
 			$this->Backup->create();
 			$this->data['Backup']['name'] = Sanitize::escape(basename(zip_entry_name($zip_entry)));
