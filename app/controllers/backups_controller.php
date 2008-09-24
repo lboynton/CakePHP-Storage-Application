@@ -37,23 +37,26 @@ class BackupsController extends AppController
 			// get the id of the item to view
 			$view = Sanitize::escape($this->params['named']['view']);
 			
-			// try to find the item with the specified id that matches this user's id0
-			$file = $this->Backup->find('first', array('conditions' => array('id' => $view, 'user_id' => $this->Session->read('Auth.User.id')), 'recursive' => -1));
-			
-			if(!$file)
+			if(!empty($view))
 			{
-				// file doesn't exist or belongs to another user
-				$this->Session->setFlash('Could not find any files or folders matching that ID.', 'messages/error');
-			}
-			elseif($file['Backup']['type'] == 'file')
-			{
-				// show the file
-				$this->_viewFile($file);
-			}
-			elseif($file['Backup']['type'] == 'folder')
-			{
-				// set the folder we want to view
-				$folder = $view;
+				// try to find the item with the specified id that matches this user's id0
+				$file = $this->Backup->find('first', array('conditions' => array('id' => $view, 'user_id' => $this->Session->read('Auth.User.id')), 'recursive' => -1));
+				
+				if(!$file)
+				{
+					// file doesn't exist or belongs to another user
+					$this->Session->setFlash('Could not find any files or folders matching that ID.', 'messages/error');
+				}
+				elseif($file['Backup']['type'] == 'file')
+				{
+					// show the file
+					$this->_viewFile($file);
+				}
+				elseif($file['Backup']['type'] == 'folder')
+				{
+					// set the folder we want to view
+					$folder = $view;
+				}
 			}
 		}
 		
@@ -126,6 +129,26 @@ class BackupsController extends AppController
 			));
 		}
 		
+		if(!empty($query))
+		{
+			//pr($backups);
+			
+			// get the folder name of all the files
+			for($i = 0; $i < count($backups); $i++)
+			{
+				if($backups[$i]['Backup']['parent_id'] == null)
+				{
+					$backups[$i]['Backup']['folder_name'] = 'Storage';
+				}
+				else
+				{
+					$folder = $this->Backup->findById($backups[$i]['Backup']['parent_id']);
+					
+					$backups[$i]['Backup']['folder_name'] = $folder['Backup']['name'];
+				}
+			}
+		}
+		
 		$this->set('folders', $folders);
 		$this->set(compact('backups'));
 	}
@@ -143,6 +166,8 @@ class BackupsController extends AppController
 			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
 			
 			$zip = zip_open($this->data['Backup']['file']['tmp_name']);
+			
+			//echo zipFileErrMsg($zip); return;
 			
 			// see if the file is a zip
 			if(is_resource($zip))

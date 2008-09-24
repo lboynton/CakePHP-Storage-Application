@@ -12,6 +12,12 @@ Backup/restore
 	- Intelligent metadata processing of more file formats (such as MS Office, image, email archives)
 	- Consider displaying files/folders as a tree
 	- Prevent duplicate folder names
+	- Allow files to be moved up one folder
+	- Support different archive types such as tar, tar.gz, tar.bz2. Ideally this should be abstracted so that the same code can 
+	  be used to read/write to any archives. Look for libraries for this functionality.
+	- Add option for searching in current folder
+	- Show the folder the file is in in search results
+	- Perhaps add option for extracting uploaded zip files, so that zip files can be uploaded without being extracted
 	
 User interface
 	- Add help section

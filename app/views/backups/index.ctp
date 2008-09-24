@@ -66,6 +66,7 @@
             <td class="type"><?php echo $file->icon($backup['Backup']['type'], '/backups/index/view:' . $backup['Backup']['id']); ?></td>
             <td class="name"><p id="<?php echo 'fileRename' . $backup['Backup']['id'] ?>"><?php echo $backup['Backup']['name']; ?></p></td>
             <td><?php if($backup['Backup']['type'] != 'folder') echo $number->toReadableSize($backup['Backup']['size']); ?></td>
+			<?php if(!empty($query)): ?><td><?php echo $html->link($backup['Backup']['folder_name'], '/backups/index/view:' . $backup['Backup']['parent_id']); ?></td><?php endif; ?>
             <td><?php echo $time->niceShort($backup['Backup']['created']); ?></td>
             <td><?php echo $time->niceShort($backup['Backup']['modified']); ?></td>
             <noscript><td><?php echo $html->link('Rename', '/backups/rename/' . $backup['Backup']['id']) ?></td></noscript>
