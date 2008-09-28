@@ -5,3 +5,4 @@
 		<?php echo $form->input('quota', array('after' => ' ' . $form->input('unit', array('options' => array('b' => 'Bytes', 'kb' => 'Kilobytes', 'mb' => 'Megabytes', 'gb' => 'Gigabytes'), 'value' => 'mb', 'div' => false, 'label' => false)))); ?>
 	<?php echo $form->end('Update'); ?>
 </fieldset>
+<p><?php echo $html->link('Cancel', '/admin/users'); ?></p>

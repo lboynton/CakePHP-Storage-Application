@@ -297,8 +297,33 @@ class UsersController extends AppController
 	}
 	
 	function admin_quota()
-	{
-		pr($this->Session->read('User.ids'));
+	{	
+		$this->User->useValidationRules('AdminUserView');
+		
+		if(!empty($this->data))
+		{
+			$this->User->set($this->data);
+			
+			if($this->User->validates())
+			{
+				$this->data['User']['quota'] = $this->Number->convert($this->data['User']['quota'], $this->data['User']['unit'], 'b');
+
+				foreach($this->Session->read('User.ids') as $id => $value)
+				{
+					if($value != 1) continue;
+					
+					$this->User->id = $id;
+					
+					// convert quota to bytes
+					$this->User->save($this->data, true, array('quota'));
+				}
+				
+				$this->Session->delete('User.ids');
+				$this->Session->setFlash('User settings updated.', 'messages/success');
+				$this->redirect('/admin/users');
+			}
+			else $this->Session->setFlash('User settings could not be updated, please check below for errors.', 'messages/error');
+		}
 	}
 }
 ?>
