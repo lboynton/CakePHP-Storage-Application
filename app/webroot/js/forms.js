@@ -62,12 +62,23 @@ function formHelp()
 	});
 }
 
-function toggleCheckboxes(controller)
+
+function toggleCheckboxes(controller, class)
 {
-	$$('input[type="checkbox"]').each(function(item)
+	if(class == null)
 	{
-		item.checked = $(controller).checked;
-	});
+		$$('input[type="checkbox"]').each(function(item)
+		{
+			item.checked = $(controller).checked;
+		});
+	}
+	else
+	{
+		$$('.' + class).each(function(item)
+		{
+			item.checked = $(controller).checked;
+		});
+	}
 }
 
 /**

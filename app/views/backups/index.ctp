@@ -47,6 +47,7 @@
 <?php endif; ?>
 </p>
 
+<fieldset class="compact full">
 <?php echo $form->create('Backup', array('action' => 'perform_action')); ?>
 	<table>
         <tr>
@@ -60,8 +61,8 @@
             <noscript><th>Actions</th></noscript>
         </tr>
 <?php if($backups): ?>
-    <?php foreach($backups as $backup): ?>
-        <tr>
+    <?php foreach($backups as $i => $backup): ?>
+        <tr<?php echo ($i % 2 == 0) ? " class='altrow'" : "" ?>>
             <td class="checkbox"><?php echo $form->checkbox('Backup.ids.'.$backup['Backup']['id']); ?></td>
             <td class="type"><?php echo $file->icon($backup['Backup']['type'], '/backups/index/view:' . $backup['Backup']['id']); ?></td>
             <td class="name"><p id="<?php echo 'fileRename' . $backup['Backup']['id'] ?>"><?php echo $backup['Backup']['name']; ?></p></td>
@@ -89,7 +90,7 @@
 <?php endif; ?>
 	</table>
 <?php echo $form->end(); ?>
-
+</fieldset>
 <div id="pagination">
     <span class="box"><?php echo $paginator->counter(array('format' => 'Page %page% of %pages%, %count% files found, showing %start%-%end%.')); ?>&nbsp;</span>
     <span class="box">Go to page:&nbsp;<?php echo $paginator->numbers(array('separator' => '')); ?></span>

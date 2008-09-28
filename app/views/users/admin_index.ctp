@@ -1,3 +1,5 @@
+<?php /* pass sorting args to paginator functions */ $paginator->options(array('url' => $this->passedArgs, 'update' => 'content', 'indicator' => 'loadingIndicator')); ?>
+
 <h2>Users</h2>
 <div id="subMenu">
 	<?php echo $paginator->prev('&laquo; Previous page', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
@@ -19,22 +21,24 @@
 		<?php echo $form->input('DateRegistered', array('type' => 'date', 'dateFormat' => 'DMY', 'minYear' => 2008, 'maxYear' => date('Y'), 'empty' => '---', 'selected' => 'any')); ?>
     <?php echo $form->end('Filter'); ?>
 </fieldset>
+<p></p>
+<fieldset class="compact full">
 <?php echo $form->create('User', array('action' => 'perform_action')); ?>
 	<table>
 		<tr>
-			<th class="checkbox"><?php echo $form->checkbox('selectAllTop', array('class' => 'controller')); ?></th>
-			<th class="icon"></th>
-			<th>Name</th>
-			<th>Username</th>
-			<th>Quota</th>
-			<th>Registered</th>
-			<th>Last login</th>
-			<th class="checkbox">Disabled</th>
+			<th class="checkbox"><?php echo $form->checkbox('selectAllTop', array('class' => 'controller actionBox')); ?></th>
+			<th class="icon"><?php echo $paginator->sort($html->image('user_gray.png'), 'admin', array('escape' => false)); ?></th>
+			<th><?php echo $paginator->sort('Name', 'real_name'); ?></th>
+			<th><?php echo $paginator->sort('Username', 'username'); ?></th>
+			<th><?php echo $paginator->sort('Quota', 'quota'); ?></th>
+			<th><?php echo $paginator->sort('Registered', 'created'); ?></th>
+			<th><?php echo $paginator->sort('Last login', 'last_login'); ?></th>
+			<th class="checkbox"><?php echo $paginator->sort('Disabled', 'disabled'); ?></th>
 		</tr>
 		<?php if(isset($users)): ?>
-			<?php foreach($users as $user): ?>
-			<tr>
-				<td class="checkbox"><?php echo $form->checkbox('User.ids.'.$user['User']['id']); ?></td>
+			<?php foreach($users as $i => $user): ?>
+			<tr<?php echo ($i % 2 == 0) ? " class='altrow'" : "" ?>>
+				<td class="checkbox"><?php echo $form->checkbox('User.ids.'.$user['User']['id'], array('class' => 'actionBox')); ?></td>
 				<td class="icon"><?php echo $userDetails->icon($user['User']['admin'], '/admin/users/view/' . $user['User']['id']); ?></td>
 				<td><?php echo $html->link($user['User']['real_name'], '/admin/users/view/' . $user['User']['id']) ?></td>
 				<td><?php echo $html->link($user['User']['username'], '/admin/users/view/' . $user['User']['id']) ?></td>
@@ -45,7 +49,7 @@
 			</tr>
 			<?php endforeach; ?>
 			<tr id="tableFooter">
-				<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller')); ?></td>
+				<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller actionBox')); ?></td>
 				<td id="actions" colspan="7">
 					Perform action on selected users:
 					<?php echo $form->input('action', array('type' => 'radio', 'options' => array('quota' => 'Change account quotas', 'delete' => 'Delete user accounts'), 'value' => 'quota', 'legend' => false, 'div' => false)); ?>
@@ -59,10 +63,12 @@
 		<?php endif; ?>
 	</table>
 <?php echo $form->end(); ?>
+</fieldset>
+
 <div id="pagination">
     <span class="box"><?php echo $paginator->counter(array('format' => 'Page %page% of %pages%, %count% users found, showing %start%-%end%.')); ?>&nbsp;</span>
     <span class="box">Go to page:&nbsp;<?php echo $paginator->numbers(array('separator' => '')); ?></span>
 </div>
 
-<?php echo $javascript->event('UserSelectAllTop', 'click', 'toggleCheckboxes(\'UserSelectAllTop\');'); ?>
-<?php echo $javascript->event('UserSelectAllBottom', 'click', 'toggleCheckboxes(\'UserSelectAllBottom\');'); ?>
+<?php echo $javascript->event('UserSelectAllTop', 'click', 'toggleCheckboxes(\'UserSelectAllTop\', \'actionBox\');'); ?>
+<?php echo $javascript->event('UserSelectAllBottom', 'click', 'toggleCheckboxes(\'UserSelectAllBottom\', \'actionBox\');'); ?>

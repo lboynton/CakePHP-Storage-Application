@@ -9,7 +9,7 @@ table th
 	padding:3px 2px;
 	font-weight:normal;
 	margin:0;
-	border-bottom:2px solid #F56C1E;
+
 	/*background:#F5E1C9;*/
 }
 table td
@@ -21,6 +21,7 @@ table td
 table tr
 {
 	color:#555;
+	border-bottom:1px solid #f0d5b6;
 }
 table tr p
 {
@@ -29,7 +30,11 @@ table tr p
 table tr:hover td
 {
 	color:#000;
-	background:#FAFAFA;
+	border-bottom:1px solid #ccc;
+}
+table tr.altrow:hover
+{
+
 }
 table th a
 {
@@ -54,7 +59,6 @@ table #tableFooter td
 {
 	font-size:10px;
 	text-align:left;
-	background:#FFF;
 	color:#000;
 	/*border-top:1px solid #f0d5b6;*/
 	/*background:#f0d5b6;*/
@@ -103,4 +107,8 @@ table .name
 table td.type
 {
 	width:16px;
+}
+table tr.altrow
+{
+	background:#f5e1c9;
 }
