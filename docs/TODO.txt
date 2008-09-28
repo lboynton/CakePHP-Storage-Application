@@ -3,7 +3,6 @@ Admin section
 	- Delete multiple user accounts at a time
 	- Disable multiple user accounts at a time
 	- Message users
-	- Disable users
 	- Perhaps use ACL for different groups like student, staff, admin. The default quota could then be changed for each group.
 	
 Backup/restore
@@ -18,6 +17,7 @@ Backup/restore
 	- Add option for searching in current folder
 	- Show the folder the file is in in search results
 	- Perhaps add option for extracting uploaded zip files, so that zip files can be uploaded without being extracted
+	- Look into zip file number limit
 	
 User interface
 	- Add help section

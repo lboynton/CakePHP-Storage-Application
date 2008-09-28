@@ -19,7 +19,7 @@ class SiteParametersController extends AppController
 			else $this->Session->setFlash('The settings could not be saved. Please check the errors below.', 'messages/error');
 		}
 		
-		$this->set('quota', $this->Number->convert($this->SiteParameter->getParam('default_quota'), 'b', 'mb'));
+		$this->set('quota', $this->Number->toReadableSize($this->SiteParameter->getParam('default_quota')));
 	}
 }
 ?>

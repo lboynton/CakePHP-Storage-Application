@@ -117,6 +117,13 @@ class User extends AppModel
 	// validation rules for admin edit user
 	var $validateAdminUserView = array
 	(
+		'quota' => array
+		(
+			'rule' => 'numeric',
+			'message' => 'Quota must be a numerical value',
+			'allowEmpty' => false,
+			'required' => true
+		),
 		'unit' => array
 		(
 			'rule' => array('inList', array('b', 'kb', 'mb', 'gb')),

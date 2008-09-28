@@ -195,17 +195,18 @@ class UsersController extends AppController
 		
 		if(!empty($this->data))
 		{
+			$this->User->set($this->data);
 			$this->User->id = $id;
-
-			// convert quota to bytes
-			$this->data['User']['quota'] = $this->Number->convert($this->data['User']['quota'], $this->data['User']['unit'], 'b');
 			
-			if($this->User->save($this->data, true, array('quota')))
+			if($this->User->validates())
 			{
+				// convert quota to bytes
+				$this->data['User']['quota'] = $this->Number->convert($this->data['User']['quota'], $this->data['User']['unit'], 'b');
+				$this->User->save($this->data, true, array('quota'));
 				$this->Session->setFlash('User settings updated.', 'messages/success');
 				$this->redirect('/admin/users');
 			}
-			else $this->Session->setFlash('User settings could not be updated.', 'messages/error');
+			else $this->Session->setFlash('User settings could not be updated, please check below for errors.', 'messages/error');
 		}
 		
 		$this->helpers[] = "Number";
@@ -217,7 +218,7 @@ class UsersController extends AppController
 		$this->User->recursive = -1;
 		$user = $this->User->findById($id);
 		$this->set('user', $user);
-		$this->set('quota', $this->Number->convert($user['User']['quota'], 'b', 'mb'));
+		$this->set('quota', $this->Number->toReadableSize($user['User']['quota']));
 		$this->set('backupCount', $this->User->Backup->find('count', array('conditions' => array('type' => 'file', 'user_id' => $id))));
 		$this->set('backupSum', $this->User->Backup->find('all', array('fields' => 'SUM(size) as size', 'conditions' => array('user_id' => $id))));
 	}
@@ -275,6 +276,29 @@ class UsersController extends AppController
 		}
 		
 		$this->redirect('/admin/users');
+	}
+	
+	function admin_perform_action()
+	{
+		switch($this->data['User']['action'])
+		{
+			case "quota":
+				$this->Session->write('User.ids', $this->data['User']['ids']);
+				$this->redirect('/admin/users/quota');
+				break;
+			
+			case "disable":
+				
+			case "delete":
+				
+		}
+		
+		$this->redirect('/admin/users');
+	}
+	
+	function admin_quota()
+	{
+		pr($this->Session->read('User.ids'));
 	}
 }
 ?>

@@ -392,3 +392,10 @@ fieldset#upload input[type="submit"], fieldset#search input[type="submit"]
 	margin-top:1px;
 	font-size:12px;
 }
+.compact.full
+{
+	width:97%;
+	height:auto;
+	float:none;
+	margin-bottom:10px;
+}
