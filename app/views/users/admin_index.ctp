@@ -29,6 +29,7 @@
 			<th>Quota</th>
 			<th>Registered</th>
 			<th>Last login</th>
+			<th class="checkbox">Disabled</th>
 		</tr>
 		<?php if(isset($users)): ?>
 			<?php foreach($users as $user): ?>
@@ -37,16 +38,17 @@
 				<td class="icon"><?php echo $userDetails->icon($user['User']['admin'], '/admin/users/view/' . $user['User']['id']); ?></td>
 				<td><?php echo $html->link($user['User']['real_name'], '/admin/users/view/' . $user['User']['id']) ?></td>
 				<td><?php echo $html->link($user['User']['username'], '/admin/users/view/' . $user['User']['id']) ?></td>
-				<td><?php echo $number->toReadableSize($user['User']['quota']); ?></td>
+				<td><?php echo $number->toReadableSize($user['User']['quota']); ?>[input box]</td>
 				<td><?php echo $time->niceShort($user['User']['created']); ?></td>
 				<td><?php echo $time->niceShort($user['User']['last_login']); ?></td>
+				<td class="checkbox"><?php echo $form->input('disableAccount', array('type' => 'checkbox', 'checked' => (boolean)$user['User']['disabled'], 'label' => false, 'div' => false)); ?></td>
 			</tr>
 			<?php endforeach; ?>
 			<tr id="tableFooter">
 				<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller')); ?></td>
-				<td id="actions" colspan="6">
+				<td id="actions" colspan="7">
 					Perform action on selected users:
-					<?php echo $form->input('action', array('type' => 'radio', 'options' => array('quota' => 'Change account quotas', 'disable' => 'Disable user accounts', 'delete' => 'Delete user accounts'), 'value' => 'quota', 'legend' => false, 'div' => false)); ?>
+					<?php echo $form->input('action', array('type' => 'radio', 'options' => array('quota' => 'Change account quotas', 'delete' => 'Delete user accounts'), 'value' => 'quota', 'legend' => false, 'div' => false)); ?>
 					<?php echo $form->submit('Go'); ?>
 				</td>
 			</tr>

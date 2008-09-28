@@ -280,17 +280,23 @@ class UsersController extends AppController
 	
 	function admin_perform_action()
 	{
-		switch($this->data['User']['action'])
+		if(!empty($this->data))
 		{
-			case "quota":
-				$this->Session->write('User.ids', $this->data['User']['ids']);
-				$this->redirect('/admin/users/quota');
-				break;
-			
-			case "disable":
+			switch($this->data['User']['action'])
+			{
+				case "quota":
+					$this->Session->write('User.ids', $this->data['User']['ids']);
+					$this->redirect('/admin/users/quota');
+					break;
 				
-			case "delete":
-				
+				case "disable":
+					$this->_disable_accounts($this->data['User']['ids']);
+					break;
+					
+				case "delete":
+					$this->_delete_accounts();
+					break;				
+			}
 		}
 		
 		$this->redirect('/admin/users');
@@ -324,6 +330,19 @@ class UsersController extends AppController
 			}
 			else $this->Session->setFlash('User settings could not be updated, please check below for errors.', 'messages/error');
 		}
+	}
+	
+	function _disable_accounts($ids)
+	{
+		$this->User->useValidationRules('AdminCheckboxes');
+		
+		foreach($ids as $id => $value)
+		{
+			$this->User->id = $id;
+			$this->User->saveField('disabled', $value, true);
+		}
+		
+		$this->Session->setFlash('The user accounts have been enabled/disabled');
 	}
 }
 ?>

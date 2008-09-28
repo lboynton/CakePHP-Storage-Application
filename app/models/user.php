@@ -143,6 +143,17 @@ class User extends AppModel
 		)
 	);
 	
+	// validation set for checkboxes in the admin section
+	var $validateAdminCheckboxes = array
+	(
+		'ids' => array
+		(
+			'rule' => array('inList', array('0', '1')),
+			'message' => 'Incorrect value supplied',
+			'required' => true
+		)
+	);
+	
 	/**
 	 * Called after validation, before data is stored in the database
 	 */
