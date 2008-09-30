@@ -289,12 +289,13 @@ class UsersController extends AppController
 					$this->redirect('/admin/users/quota');
 					break;
 				
-				case "disable":
-					$this->_disable_accounts($this->data['User']['ids']);
+				// using value of submit button, other two use radio buttons
+				case "Save":
+					$this->_disable_accounts($this->data['User']['disable_ids']);
 					break;
 					
 				case "delete":
-					$this->_delete_accounts();
+					$this->_delete_accounts($this->data['User']['ids']);
 					break;				
 			}
 		}
@@ -334,15 +335,33 @@ class UsersController extends AppController
 	
 	function _disable_accounts($ids)
 	{
-		$this->User->useValidationRules('AdminCheckboxes');
-		
 		foreach($ids as $id => $value)
 		{
+			$value = intval($value);
+			
+			if($value != 0 && $value != 1) continue;
+			
 			$this->User->id = $id;
-			$this->User->saveField('disabled', $value, true);
+			$this->User->saveField('disabled', $value);
 		}
 		
-		$this->Session->setFlash('The user accounts have been enabled/disabled');
+		$this->Session->setFlash('The selected user accounts have been enabled/disabled.', 'messages/success');
+	}
+	
+	function _delete_accounts($ids)
+	{
+		foreach($ids as $id => $value)
+		{
+			$value = intval($value);
+			
+			if($value == 1) 
+			{
+				$this->User->id = $id;
+				$this->User->delete();
+			}
+		}
+		
+		$this->Session->setFlash('The selected user accounts have been deleted.', 'messages/success');
 	}
 }
 ?>

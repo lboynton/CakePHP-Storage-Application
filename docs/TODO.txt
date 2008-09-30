@@ -1,23 +1,18 @@
 Admin section
-	- Change multiple users' quota
-	- Delete multiple user accounts at a time
-	- Disable multiple user accounts at a time
 	- Message users
 	- Perhaps use ACL for different groups like student, staff, admin. The default quota could then be changed for each group.
 	
 Backup/restore
 	- Set correct content-type in header when viewing files
-	- Create directories in uploaded zip files
 	- Intelligent metadata processing of more file formats (such as MS Office, image, email archives)
 	- Consider displaying files/folders as a tree
-	- Prevent duplicate folder names
-	- Allow files to be moved up one folder
 	- Support different archive types such as tar, tar.gz, tar.bz2. Ideally this should be abstracted so that the same code can 
 	  be used to read/write to any archives. Look for libraries for this functionality.
 	- Add option for searching in current folder
-	- Show the folder the file is in in search results
 	- Perhaps add option for extracting uploaded zip files, so that zip files can be uploaded without being extracted
 	- Look into zip file number limit
+	- Consider changing the file icon function so that it looks for file names with comma separated file extensions, instead of 
+	  needing a file for each extension
 	
 User interface
 	- Add help section

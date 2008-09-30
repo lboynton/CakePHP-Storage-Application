@@ -36,6 +36,23 @@ class Backup extends AppModel
 		)
 	); 
 	
+	var $validateNewFolder = array
+	(
+		'name' => array
+		(
+			'empty' => array
+			(
+				'rule' => array('custom', '/\S+/'),
+				'message' => 'Please enter a name for the folder.',
+			),
+			'uniqueName' => array
+			(
+				'rule' => 'validateNewFolder',
+				'message' => 'The filename is already present in this folder.',
+			)	
+		)
+	);
+	
 	// validation set for renaming files and folders
 	var $validateRename = array
 	(
@@ -196,6 +213,19 @@ class Backup extends AppModel
 				'Backup.name' => $name
 			),
 			'recursive' => false
+		));
+	}
+	
+	function validateNewFolder($data)
+	{
+		return !(boolean) $this->find('count', array
+		(
+			'conditions' => array
+			(
+				'Backup.parent_id' => $this->data['Backup']['parent_id'],
+				'Backup.name' => $data['name'],
+				'Backup.user_id' => $this->data['Backup']['user_id']
+			)	
 		));
 	}
 	

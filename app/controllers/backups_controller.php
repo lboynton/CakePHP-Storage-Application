@@ -107,7 +107,11 @@ class BackupsController extends AppController
 					'parent_id' => $folder
 				)
 			));
-			$folders[''] = 'Storage';
+			
+			// add parent folder to list of folders to move to
+			$parent = $this->Backup->getparentnode($folder);	
+			$folders[$parent['Backup']['id']] = '&uarr; ' . $parent['Backup']['name'];
+			$folders[''] = '&larr; Storage';
 		}
 		else
 		{
@@ -183,6 +187,8 @@ class BackupsController extends AppController
 	
 	function add_folder()
 	{
+		$this->Backup->useValidationRules('NewFolder');
+		
 		$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 		$this->data['Backup']['type'] = 'folder';
 		
@@ -195,10 +201,10 @@ class BackupsController extends AppController
 		// set the data to the model to check if the data is valid
 		$this->Backup->set($this->data);
 		
-		// as there is only one validation rule for the folder, set the flash message to indicate that validation failed
+		// set the validation errors as a flash message
 		if (!$this->Backup->validates()) 
 		{
-			$this->Session->setFlash('Please enter a name for the folder.', 'messages/error');
+			$this->Session->setFlash(join(' ', $this->Backup->invalidFields()), 'messages/error');
 			$this->redirect($this->referer());
 		}
 		

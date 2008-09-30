@@ -8,7 +8,7 @@ class FileHelper extends AppHelper
 	 * @param type The type determines the icon that is shown. Currently type can be file or folder.
 	 * @param link Optionally have the icon inside a link
 	 */
-    function icon($type, $link=null) 
+    function icon($type, $link=null, $name=null) 
 	{
         switch(strtolower($type))
 		{
@@ -18,7 +18,11 @@ class FileHelper extends AppHelper
 				break;
 			
 			default:
-				$output = '<img src="/img/page_white.png" alt="File" />';
+				if($name == null)
+				{
+					$output = '<img src="/img/page_white.png" alt="File" />';
+				}
+				else $output = $this->getFileIcon(getFileExtension($name));
 				$title = 'View file';
 		}
 		
@@ -29,6 +33,24 @@ class FileHelper extends AppHelper
 		
 		return $this->output($output);
     }
+	
+	function getFileIcon($extension)
+	{
+		$extension = strtolower($extension);
+		
+		$file = APP . 'webroot' . DS . 'img' . DS . 'file' . DS . $extension . '.png';
+		
+		if(file_exists($file))
+		{
+			$img = "/img/file/" . $extension . ".png";
+		} 
+		else 
+		{
+			$img = "/img/page_white.png";
+		}
+		
+		return $this->Html->image($img, array('alt' => 'File'));
+	}
 }
 
 ?>

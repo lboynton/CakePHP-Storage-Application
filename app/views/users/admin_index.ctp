@@ -42,18 +42,21 @@
 				<td class="icon"><?php echo $userDetails->icon($user['User']['admin'], '/admin/users/view/' . $user['User']['id']); ?></td>
 				<td><?php echo $html->link($user['User']['real_name'], '/admin/users/view/' . $user['User']['id']) ?></td>
 				<td><?php echo $html->link($user['User']['username'], '/admin/users/view/' . $user['User']['id']) ?></td>
-				<td><?php echo $number->toReadableSize($user['User']['quota']); ?>[input box]</td>
+				<td><?php echo $number->toReadableSize($user['User']['quota']); ?></td>
 				<td><?php echo $time->niceShort($user['User']['created']); ?></td>
 				<td><?php echo $time->niceShort($user['User']['last_login']); ?></td>
-				<td class="checkbox"><?php echo $form->input('disableAccount', array('type' => 'checkbox', 'checked' => (boolean)$user['User']['disabled'], 'label' => false, 'div' => false)); ?></td>
+				<td class="checkbox"><?php echo $form->checkbox('User.disable_ids.'.$user['User']['id'], array('checked' => (boolean)$user['User']['disabled'])); ?></td>
 			</tr>
 			<?php endforeach; ?>
-			<tr id="tableFooter">
+			<tr<?php echo ($i % 2 != 0) ? " class='altrow'" : "" ?> id="tableFooter">
 				<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller actionBox')); ?></td>
-				<td id="actions" colspan="7">
+				<td id="actions" colspan="6">
 					Perform action on selected users:
 					<?php echo $form->input('action', array('type' => 'radio', 'options' => array('quota' => 'Change account quotas', 'delete' => 'Delete user accounts'), 'value' => 'quota', 'legend' => false, 'div' => false)); ?>
 					<?php echo $form->submit('Go'); ?>
+				</td>
+				<td>
+					<?php echo $form->submit('Save', array('name' => 'data[User][action]')); ?>
 				</td>
 			</tr>
 		<?php else: ?>

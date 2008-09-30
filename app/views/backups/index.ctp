@@ -64,7 +64,7 @@
     <?php foreach($backups as $i => $backup): ?>
         <tr<?php echo ($i % 2 == 0) ? " class='altrow'" : "" ?>>
             <td class="checkbox"><?php echo $form->checkbox('Backup.ids.'.$backup['Backup']['id']); ?></td>
-            <td class="type"><?php echo $file->icon($backup['Backup']['type'], '/backups/index/view:' . $backup['Backup']['id']); ?></td>
+            <td class="type"><?php echo $file->icon($backup['Backup']['type'], '/backups/index/view:' . $backup['Backup']['id'], $backup['Backup']['name']); ?></td>
             <td class="name"><p id="<?php echo 'fileRename' . $backup['Backup']['id'] ?>"><?php echo $backup['Backup']['name']; ?></p></td>
             <td><?php if($backup['Backup']['type'] != 'folder') echo $number->toReadableSize($backup['Backup']['size']); ?></td>
 			<?php if(!empty($query)): ?><td><?php echo $html->link($backup['Backup']['folder_name'], '/backups/index/view:' . $backup['Backup']['parent_id']); ?></td><?php endif; ?>
@@ -74,12 +74,12 @@
             <?php echo $ajax->editor('fileRename' . $backup['Backup']['id'], '/backups/rename/' . $backup['Backup']['id'], array('callback' => "return 'data[Backup][name]=' + escape(value)")); ?>
         </tr>
     <?php endforeach; ?>
-        <tr id="tableFooter">
+        <tr<?php echo ($i % 2 != 0) ? " class='altrow'" : "" ?> id="tableFooter">
         	<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller')); ?></td>
             <td id="actions" colspan="6">
             	Perform action on selected items:
                 <?php echo $form->input('action', array('type' => 'radio', 'options' => array('download' => 'Download', 'delete' => 'Delete', 'move' => 'Move to'), 'value' => 'download', 'legend' => false, 'div' => false)); ?>
-                <?php echo $form->input('folder', array('options' => $folders, 'div' => false, 'label' => 'folder')); ?>
+                <?php echo $form->input('folder', array('options' => $folders, 'div' => false, 'label' => 'folder', 'escape' => false)); ?>
                 <?php echo $form->submit('Go'); ?>
             </td>
         </tr>
