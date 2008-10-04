@@ -6,6 +6,7 @@ class BackupsController extends AppController
 	var $name = "Backups";
 	var $helpers = array('Html', 'Form', 'Ajax');
 	var $components = array('RequestHandler');
+	var $uses = array('Backup', 'SiteParameter');
 	
 	// pagination defaults
 	var $paginate = array
@@ -33,6 +34,9 @@ class BackupsController extends AppController
 		
 		// pass the query to the view
 		$this->set('query', $query);
+		
+		// pass the upload limit to the view
+		$this->set('upload_limit', $this->SiteParameter->getParam('upload_limit'));
 		
 		if(isset($this->params['named']['view']))
 		{

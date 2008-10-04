@@ -12,6 +12,12 @@ class SiteParameter extends AppModel
 			'rule' => 'numeric',
 			'message' => 'The quota must be a numerical value',
 			'allowEmpty' => false
+		),
+		'upload_limit' => array
+		(
+			'rule' => 'numeric',
+			'message' => 'The upload limit must be a numerical value',
+			'allowEmpty' => false
 		)
 	);
 	

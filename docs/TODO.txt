@@ -16,6 +16,9 @@ Backup/restore
 	  needing a file for each extension
 	- Would be nice to show the amount of files and folders in a folder without opening it
 	
+User accounts
+	- Forgotten password reset
+	
 User interface
 	- Add help section
 	- Test on different browsers

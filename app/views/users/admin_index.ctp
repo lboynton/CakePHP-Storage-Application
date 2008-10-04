@@ -50,7 +50,7 @@
 		<tr>
 			<th class="checkbox"><?php echo $form->checkbox('selectAllTop', array('class' => 'controller actionBox')); ?></th>
 			<th class="icon"><?php echo $paginator->sort($html->image('user_gray.png'), 'admin', array('escape' => false)); ?></th>
-			<th><?php echo $paginator->sort('Name', 'real_name'); ?></th>
+			<th class="name"><?php echo $paginator->sort('Name', 'real_name'); ?></th>
 			<th><?php echo $paginator->sort('Username', 'username'); ?></th>
 			<th><?php echo $paginator->sort('Quota', 'quota'); ?></th>
 			<th><?php echo $paginator->sort('Registered', 'created'); ?></th>
@@ -62,7 +62,7 @@
 			<tr<?php echo ($i % 2 == 0) ? " class='altrow'" : "" ?>>
 				<td class="checkbox"><?php echo $form->checkbox('User.ids.'.$user['User']['id'], array('class' => 'actionBox')); ?></td>
 				<td class="icon"><?php echo $userDetails->icon($user['User']['admin'], '/admin/users/view/' . $user['User']['id']); ?></td>
-				<td><?php echo $html->link($user['User']['real_name'], '/admin/users/view/' . $user['User']['id']) ?></td>
+				<td class="name"><?php echo $html->link($user['User']['real_name'], '/admin/users/view/' . $user['User']['id']) ?></td>
 				<td><?php echo $html->link($user['User']['username'], '/admin/users/view/' . $user['User']['id']) ?></td>
 				<td><?php echo $number->toReadableSize($user['User']['quota']); ?></td>
 				<td><?php echo $time->niceShort($user['User']['created']); ?></td>

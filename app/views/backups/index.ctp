@@ -9,7 +9,7 @@
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 
 <p>Upload files here. They can be uploaded individually or as part of a zip archive. Click the icon adjacent to the file or folder name to view it. To rename files or folders, simply click on the name.</p>
-<?php echo $folder_id ?>
+
 <fieldset class="compact">
 	<?php if($query != ""): ?>
 		<?php echo $html->link('Reset search', '/backups', array('class' => 'reset')); ?>
@@ -17,13 +17,13 @@
 	<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
         <?php echo $form->input('Search', array('name' => 'query', 'value' => $query)); ?>
         <?php echo $form->input('Show', array('name' => 'show', 'after' => ' results ' . $form->submit('Search'), 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100), 'selected' => 25)); ?>
-		<?php echo $form->input('searchFolder', array('type' => 'checkbox', 'value' => $folder_id,'label' => 'Search in current folder')); ?>
+		<?php echo $form->input('view', array('type' => 'checkbox', 'value' => $folder_id,'label' => 'Search in current folder')); ?>
     <?php echo $form->end(); ?>
 </fieldset>
 
 <fieldset class="compact">
     <?php echo $form->create('Backup', array('class' => 'compact', 'enctype' => 'multipart/form-data')); ?>
-        <?php echo $form->input('file', array('type' => 'file', 'label' => 'Upload file')); ?>
+        <?php echo $form->input('file', array('type' => 'file', 'label' => 'Upload file (max: ' . $upload_limit . 'MB)')); ?>
         <?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
     <?php echo $form->end('Upload'); ?>
 </fieldset>
