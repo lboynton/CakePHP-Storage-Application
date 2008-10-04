@@ -1,6 +1,7 @@
 Admin section
 	- Message users
 	- Perhaps use ACL for different groups like student, staff, admin. The default quota could then be changed for each group.
+	- Search and filters for finding users
 	
 Backup/restore
 	- Set correct content-type in header when viewing files
@@ -13,6 +14,7 @@ Backup/restore
 	- Look into zip file number limit
 	- Consider changing the file icon function so that it looks for file names with comma separated file extensions, instead of 
 	  needing a file for each extension
+	- Would be nice to show the amount of files and folders in a folder without opening it
 	
 User interface
 	- Add help section

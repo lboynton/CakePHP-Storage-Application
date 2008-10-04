@@ -168,12 +168,17 @@ class UsersController extends AppController
 		$this->helpers[] = "Time";
 		$this->helpers[] = "UserDetails";
 		
-		if(!empty($this->data))
+		if(isset($this->params['named']['query']))
 		{
-			// filter  applied
+		   	App::import('Sanitize');
+			Sanitize::clean($this->params['named']);
+			
+			$this->set('query', $this->params['named']['query']);
+			
+			// filter applied
 			$users = $this->paginate('User', array
 			(
-				'User.real_name LIKE' => $this->data('query')
+				'User.real_name LIKE' => '%' . $this->params['named']['query'] . '%'
 			));
 		}
 		else

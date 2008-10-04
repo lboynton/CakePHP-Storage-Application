@@ -25,8 +25,10 @@ class BackupsController extends AppController
 		$this->helpers[] = "File";
 		$this->pageTitle = "File Management";
 		
+		Sanitize::clean($this->params['named']);
+		
 		// get the search query if set, else set it to empty string to find all files and folders
-		if(isset($this->params['named']['query'])) $query = Sanitize::escape($this->params['named']['query']);
+		if(isset($this->params['named']['query'])) $query = $this->params['named']['query'];
 		else $query = "";
 		
 		// pass the query to the view
@@ -35,7 +37,7 @@ class BackupsController extends AppController
 		if(isset($this->params['named']['view']))
 		{
 			// get the id of the item to view
-			$view = Sanitize::escape($this->params['named']['view']);
+			$view = $this->params['named']['view'];
 			
 			if(!empty($view))
 			{
@@ -59,14 +61,28 @@ class BackupsController extends AppController
 				}
 			}
 		}
-		
+
 		if(!empty($query))
 		{
-			$conditions = array
-			(
-				'Backup.name LIKE' => '%' . $query . '%',
-				'Backup.user_id' => $this->Auth->user('id')
-			);
+			if(isset($this->params['named']['searchFolder']) && $this->params['named']['searchFolder'] == "0")
+			{
+				$conditions = array
+				(
+					'Backup.name LIKE' => '%' . $query . '%',
+					'Backup.user_id' => $this->Auth->user('id')
+				);
+			}
+			else
+			{
+				if(empty($this->params['named']['searchFolder'])) $this->params['named']['searchFolder'] = null;
+				
+				$conditions = array
+				(
+					'Backup.name LIKE' => '%' . $query . '%',
+					'Backup.user_id' => $this->Auth->user('id'),
+					'Backup.parent_id' => $this->params['named']['searchFolder']
+				);
+			}
 		}
 		elseif(isset($folder))
 		{
