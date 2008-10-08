@@ -3,7 +3,7 @@ class UsersController extends AppController
 {
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
-	var $components = array('Number');
+	var $components = array('Number', 'Filter');
 	var $uses = array('User', 'SiteParameter');
 	
 	// pagination defaults
@@ -21,7 +21,7 @@ class UsersController extends AppController
 		$this->Auth->allow('register');
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 		$this->Auth->autoRedirect = false;
-	} 
+	}
 	
     function index()
     {
@@ -168,25 +168,18 @@ class UsersController extends AppController
 		$this->helpers[] = "Time";
 		$this->helpers[] = "UserDetails";
 		
-		if(isset($this->params['named']['query']))
-		{
-		   	App::import('Sanitize');
-			Sanitize::clean($this->params['named']);
-			
-			$this->set('query', $this->params['named']['query']);
-			
-			// filter applied
-			$users = $this->paginate('User', array
-			(
-				'User.real_name LIKE' => '%' . $this->params['named']['query'] . '%'
-			));
-		}
-		else
-		{
-			$users = $this->paginate('User');
-		}
+		if(isset($this->data['User']['show'])) $this->paginate['limit'] = $this->data['User']['show'];
+		$this->set('show', $this->paginate['limit']);
 		
-		$this->set(compact('users'));
+		$this->data['User'][$this->data['User']['field']] = $this->data['User']['query'];
+
+		$filter = $this->Filter->process($this, array('username', 'real_name', 'email', 'disabled', 'admin'));
+		$this->set('url', $this->Filter->url);
+		$this->set('users', $this->paginate(null, $filter));
+		@$this->set('advanced', $this->data['User']['advanced']);
+
+		if(isset($this->data['User']['field'])) $this->set('field', $this->data['User']['field']);
+		else $this->set('field', 'real_name');
 	}
 	
 	function admin_login()
