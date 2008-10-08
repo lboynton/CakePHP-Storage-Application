@@ -3,7 +3,7 @@ class UsersController extends AppController
 {
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
-	var $components = array('Number', 'Filter');
+	var $components = array('Number', 'Filter', 'RequestHandler');
 	var $uses = array('User', 'SiteParameter');
 	
 	// pagination defaults
@@ -172,15 +172,26 @@ class UsersController extends AppController
 		if(isset($this->params['named']['show'])) $this->paginate['limit'] = $this->params['named']['show'];
 		$this->set('show', $this->paginate['limit']);
 		
-		$this->data['User'][$this->data['User']['field']] = $this->data['User']['query'];
-
+		if(isset($this->data['User']['advanced'])) $this->set('advanced', $this->data['User']['advanced']);
+		else $this->set('advanced', false);
+		
+		@$this->data['User'][$this->data['User']['field']] = $this->data['User']['query'];
+		
 		$filter = $this->Filter->process($this, array('username', 'real_name', 'email', 'disabled', 'admin'));
 		$this->set('url', $this->Filter->url . '/show:' . $this->paginate['limit']);
 		$this->set('users', $this->paginate(null, $filter));
-		@$this->set('advanced', $this->data['User']['advanced']);
 
 		if(isset($this->data['User']['field'])) $this->set('field', $this->data['User']['field']);
 		else $this->set('field', 'real_name');
+
+		if($this->RequestHandler->isAjax()) 
+		{
+			$filter = $this->Filter->process($this, array('username', 'real_name', 'email', 'disabled', 'admin'));
+			$this->set('url', $this->Filter->url . '/show:' . $this->paginate['limit']);
+			$this->set('users', $this->paginate(null, $filter));
+            $this->viewPath = 'elements'.DS.'users';
+            $this->render('paging');            
+        }
 	}
 	
 	function admin_login()

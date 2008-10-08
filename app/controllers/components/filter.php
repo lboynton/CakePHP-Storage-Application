@@ -41,7 +41,7 @@ class FilterComponent extends Object {
      */
     function process(&$controller, $whiteList = null){
         @$this->_prepareFilter(&$controller);
-                
+
         $ret = array();
         if(isset($controller->data)){
             //Loop for models
