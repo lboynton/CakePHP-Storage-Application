@@ -169,12 +169,13 @@ class UsersController extends AppController
 		$this->helpers[] = "UserDetails";
 		
 		if(isset($this->data['User']['show'])) $this->paginate['limit'] = $this->data['User']['show'];
+		if(isset($this->params['named']['show'])) $this->paginate['limit'] = $this->params['named']['show'];
 		$this->set('show', $this->paginate['limit']);
 		
 		$this->data['User'][$this->data['User']['field']] = $this->data['User']['query'];
 
 		$filter = $this->Filter->process($this, array('username', 'real_name', 'email', 'disabled', 'admin'));
-		$this->set('url', $this->Filter->url);
+		$this->set('url', $this->Filter->url . '/show:' . $this->paginate['limit']);
 		$this->set('users', $this->paginate(null, $filter));
 		@$this->set('advanced', $this->data['User']['advanced']);
 

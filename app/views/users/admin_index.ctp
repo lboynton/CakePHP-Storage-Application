@@ -17,7 +17,7 @@
 		<?php echo $form->input('admin', array('label' => 'Users who are', 'options' => array('' => 'Administrators or normal users', '1' => 'Administrators', '0' => 'Normal users'))); ?>
 		<?php //echo $form->input('created', array('label' => 'Registered date', 'type' => 'date', 'dateFormat' => 'DMY', 'minYear' => 2008, 'maxYear' => date('Y'), 'empty' => '---')); ?>
 		<?php echo $form->input('disabled', array('label' => 'Accounts which are', 'options' => array('' => 'Enabled or disabled', '0' => 'Enabled', '1' => 'Disabled'))); ?>
-		<?php echo $form->input('show', array('selected' => $show, 'after' => ' results', 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100, 200 => 200, 500 => 500))); ?>
+		<?php echo $form->input('show', array('selected' => $show, 'after' => ' results', 'options' => array(1=>1, 10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100, 200 => 200, 500 => 500))); ?>
 	</div>
 	<div id="advancedControl" style="display:none">
 		<?php echo $form->label('advanced', 'Advanced options', array('class' => 'input')); ?>
