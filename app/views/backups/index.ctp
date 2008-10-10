@@ -16,8 +16,9 @@
     <?php endif; ?>
 	<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
         <?php echo $form->input('Search', array('name' => 'query', 'value' => $query)); ?>
-        <?php echo $form->input('Show', array('name' => 'show', 'after' => ' results ' . $form->submit('Search'), 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100), 'selected' => 25)); ?>
-		<?php echo $form->input('view', array('type' => 'checkbox', 'value' => $folder_id,'label' => 'Search in current folder')); ?>
+        <?php echo $form->input('show', array('div' => false, 'label' => false, $form->submit('Search'), 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100), 'selected' => 25)); ?>
+		<?php echo $form->input('search_folder', array('div' => false, 'label' => false, 'options' => array('' => 'All folders'))); ?>
+		<?php echo $form->submit('Search', array('div' => false)); ?>
     <?php echo $form->end(); ?>
 </fieldset>
 
@@ -34,7 +35,7 @@
         <?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
     <?php echo $form->end('Add'); ?>
 </fieldset>
-<div style="clear:both;"></div><p>&nbsp;</p>
+<div style="clear:both;"></div>
 <p>Folder: 
 <?php if($query == ""): ?>	
 	<?php echo $html->link('Storage', '/backups'); ?>

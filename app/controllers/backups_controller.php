@@ -32,12 +32,6 @@ class BackupsController extends AppController
 		if(isset($this->params['named']['query'])) $query = $this->params['named']['query'];
 		else $query = "";
 		
-		// pass the query to the view
-		$this->set('query', $query);
-		
-		// pass the upload limit to the view
-		$this->set('upload_limit', $this->SiteParameter->getParam('upload_limit'));
-		
 		if(isset($this->params['named']['view']))
 		{
 			// get the id of the item to view
@@ -153,30 +147,24 @@ class BackupsController extends AppController
 			));
 		}
 		
-		if(!empty($query))
-		{
-			// get the folder name of all the files
-			for($i = 0; $i < count($backups); $i++)
-			{
-				if($backups[$i]['Backup']['parent_id'] == null)
-				{
-					$backups[$i]['Backup']['folder_name'] = 'Storage';
-				}
-				else
-				{
-					$folder = $this->Backup->findById($backups[$i]['Backup']['parent_id']);
-					
-					$backups[$i]['Backup']['folder_name'] = $folder['Backup']['name'];
-				}
-			}
-		}
+		// if we are displaying search results find out the name of the parent folder of all the files to display in the search listing
+		if(!empty($query)) $backups = $this->Backup->getParentFolderNames($backups);
 		
+		// pass the array of folders to the view for moving files to different folders
 		$this->set('folders', $folders);
+		
+		// pass the query to the view
+		$this->set('query', $query);
+		
+		// pass the upload limit to the view
+		$this->set('upload_limit', $this->SiteParameter->getParam('upload_limit'));
+		
+		// pass the paginated backups to the view
 		$this->set(compact('backups'));
 	}
 	
 	/**
-	 * Add file to backup
+	 * Add file to backup form submitted
 	 */
 	function add() 
 	{
@@ -188,11 +176,10 @@ class BackupsController extends AppController
 			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
 			
 			$zip = zip_open($this->data['Backup']['file']['tmp_name']);
-			
-			//echo zipFileErrMsg($zip); return;
-			
+
 			// see if the file is a zip
-			if(is_resource($zip))
+			// is_resoucre alone is not enough as at least odt and ods files are treated as zips by PHP
+			if(is_resource($zip) && getFileExtension($this->data['Backup']['file']['name']) == "zip")
 			{
 				$this->_uploadArchive($zip);
 			}
@@ -205,6 +192,9 @@ class BackupsController extends AppController
 		}
 	}
 	
+	/**
+	 * Called when the add folder form is submitted
+	 */
 	function add_folder()
 	{
 		$this->Backup->useValidationRules('NewFolder');
@@ -224,6 +214,7 @@ class BackupsController extends AppController
 		// set the validation errors as a flash message
 		if (!$this->Backup->validates()) 
 		{
+			// join the validation errors and display them in the flash message
 			$this->Session->setFlash(join(' ', $this->Backup->invalidFields()), 'messages/error');
 			$this->redirect($this->referer());
 		}
@@ -357,6 +348,10 @@ class BackupsController extends AppController
 		return $parent_id;
 	}
 	
+	
+	/**
+	 * Called when the add file form is submitted. Uploads the file to the user's storage.
+	 */
 	function _uploadFile() 
 	{
 		$this->Backup->create();
@@ -389,6 +384,9 @@ class BackupsController extends AppController
 		}
 	}
 	
+	/**
+	 * Called when the add file form is submitted. Extracts the archive and stores the files and (non-empty) folders.
+	 */
 	function _uploadArchive($zip) 
 	{
 		// remember the base parent folder as the data array will change
@@ -659,29 +657,6 @@ class BackupsController extends AppController
 		if($error) $this->Session->setFlash('Some files or folders could not be moved, please check there are no files with the same name in the destination folder.', 'messages/error');
 		else $this->Session->setFlash('The selected files and folders have been moved.', 'messages/info');		
 	}
-
-	/**
-	 * Gets the real path of the given file/folder on the file system. Folder names in the path are defined by the folder id.
-	 */
-	function _getRealPath($id)
-	{
-		// no path for root folder
-		if($id == null) return "";
-		
-		// get the path of the file
-		$folders = $this->Backup->getpath($id);
-		
-		$path = "";
-		
-		if(!$folders) return $path;
-		
-		foreach($folders as $folder)
-		{
-			$path .= $folder['Backup']['id'] . DS;
-		}
-		
-		return $path;
-	}
 	
 	/**
 	 * Gets the virtual path of the given file/folder. Folder names are defined by the user.
@@ -714,15 +689,6 @@ class BackupsController extends AppController
 		echo fread($fp, $file['Backup']['size']);
 		fclose($fp);
 		exit();
-	}
-
-	/**
-	 * Checks if the logged in user owns the given file/folder
-	 * @return True if the file/folder belongs to the logged in user, false otherwise
-	 */
-	function _userOwnsFile($id)
-	{
-		return (boolean) $this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id'))));
 	}
 }
 ?>

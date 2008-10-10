@@ -334,5 +334,40 @@ class Backup extends AppModel
 		
 		return $this->id;
 	}
+	
+	/**
+	 * Used for file searches to retrieve the name of the parent folder to improve search listings
+	 * @param backups Array of files
+	 */
+	function getParentFolderNames($backups)
+	{
+		// go through each file in the search results
+		for($i = 0; $i < count($backups); $i++)
+		{
+			// if the file's parent is null then it's in the root storage folder
+			if($backups[$i]['Backup']['parent_id'] == null)
+			{
+				$backups[$i]['Backup']['folder_name'] = 'Storage';
+			}
+			else
+			{
+				// find the folder corresponding to the parent_id
+				$folder = $this->findById($backups[$i]['Backup']['parent_id']);
+				
+				$backups[$i]['Backup']['folder_name'] = $folder['Backup']['name'];
+			}
+		}
+		
+		return $backups;
+	}
+	
+	/**
+	 * Checks if the logged in user owns the given file/folder
+	 * @return True if the file/folder belongs to the logged in user, false otherwise
+	 */
+	function _userOwnsFile($id)
+	{
+		return (boolean) $this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id'))));
+	}
 }
 ?>
