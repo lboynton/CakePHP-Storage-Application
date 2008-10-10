@@ -3,7 +3,7 @@ class UsersController extends AppController
 {
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
-	var $components = array('Number', 'Filter', 'RequestHandler');
+	var $components = array('Number', 'Filter', 'RequestHandler', 'Ticket', 'Email');
 	var $uses = array('User', 'SiteParameter');
 	
 	// pagination defaults
@@ -17,8 +17,8 @@ class UsersController extends AppController
 	function beforeFilter()
 	{
 		parent::beforeFilter();
-		// allow unregistered access to the register page
-		$this->Auth->allow('register');
+		// allow unregistered access to the register and forgot password page
+		$this->Auth->allow('register', 'forgot_password', 'reset_password');
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 		$this->Auth->autoRedirect = false;
 	}
@@ -117,6 +117,93 @@ class UsersController extends AppController
 				$this->Session->setFlash('Your account could not be created due to the problems highlighted below.','messages/error');
 			}
 		}
+	}
+	
+	function forgot_password()
+	{
+		$this->pageTitle = "Forgotten Password";
+		
+		$this->User->useValidationRules('ForgotPassword');
+		
+		if(!empty($this->data))
+		{
+			$this->User->set($this->data);
+			$this->User->recursive = -1;
+			
+			if($this->User->validates() && $user = $this->User->findByEmail($this->data['User']['email']))
+			{
+				$ticket = $this->Ticket->set($user['User']['email']);
+				
+				$this->Email->to = $user['User']['email'];
+				$this->Email->subject = 'Password reset';
+				$this->Email->from = 'Backup system <app@backup>';
+				$this->Email->template = 'forgot_password'; // note no '.ctp'
+				//Send as 'html', 'text' or 'both' (default is 'text')
+				$this->Email->sendAs = 'text'; // because we like to send pretty mail
+				//Set view variables as normal
+				$this->set('link', 'http://'.$_SERVER['SERVER_NAME'].'/'.$this->params['controller'].'/reset_password/'.$ticket);
+				//Do not pass any args to send()
+				if($this->Email->send())
+				{
+					$this->Session->setFlash('An email has been sent to the address you specified. Please check your email and follow the instructions within it.', 'messages/success');
+				}
+				else
+				{
+					$this->Session->setFlash('Sorry, due to a misconfiguration an email cannot be sent to you at this time.', 'messages/error');
+				}
+			}
+			else
+			{
+				$this->Session->setFlash('There was a problem with the email address you supplied.', 'messages/error');
+			}
+		}
+	}
+	
+	/**
+	 * @param hash The ticket required to reset the password
+	 */
+	function reset_password($hash = null)
+	{
+		$this->User->useValidationRules('ResetPassword');
+		
+        if($email = $this->Ticket->get($hash))
+        {
+			$this->set('ticket', $hash);
+			
+            $authUser = $this->User->findByEmail($email);
+			
+            if(is_array($authUser))
+            {
+                if(!empty($this->data))
+                {
+					$this->User->recursive = -1;
+					$user = $this->User->findByEmail($email);
+					
+					$this->User->set($this->data);
+					$this->User->id = $user['User']['id'];
+					
+					// call validates() because save() doesn't seem to be doing any validation
+					if($this->User->validates())
+					{
+						if($this->User->save($this->data, true, array('password')))
+                    	{
+							$this->Session->setFlash('Your password has been changed. You can now login with the new password below.', 'messages/success');
+							$this->Ticket->del($hash);
+							$this->redirect('/users/login');
+                    	}
+					}
+					else
+					{
+						$this->Session->setFlash('Your password could not be changed. Please check for any errors below.', 'messages/error');
+					}
+                }
+				
+                return;
+            }
+        }
+		
+        $this->Ticket->del($hash);
+        $this->redirect('/');
 	}
 	
 	function _update_details()

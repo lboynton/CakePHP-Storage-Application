@@ -18,6 +18,7 @@ Backup/restore
 	
 User accounts
 	- Forgotten password reset
+	- Prevent more than one password reset attempt within 24 hours
 	
 User interface
 	- Add help section

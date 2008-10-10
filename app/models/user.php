@@ -17,9 +17,18 @@ class User extends AppModel
 	(
 		'email' => array
 		(
-			'rule' => 'email',
-			'required' => true,
-			'message' => 'Please enter a valid email address',
+			'valid' => array
+			(
+				'rule' => 'email',
+				'required' => true,
+				'message' => 'Please enter a valid email address',
+			),
+            'unique' => array
+			(
+                'rule' => 'isUnique',
+                'required' => true,
+                'message' => 'This email address has already been used',
+            )
 		),
         'username' => array
 		(
@@ -76,10 +85,65 @@ class User extends AppModel
 	(
 		'email' => array
 		(
-			'rule' => 'email',
-			'required' => true,
-			'message' => 'Please enter a valid email address'
+			'valid' => array
+			(
+				'rule' => 'email',
+				'required' => true,
+				'message' => 'Please enter a valid email address',
+			),
+            'unique' => array
+			(
+                'rule' => 'isUnique',
+                'required' => true,
+                'message' => 'This email address has already been used',
+            )
 		)
+	);
+	
+	// validation set for the password reset form
+	var $validateForgotPassword = array
+	(
+		'email' => array
+		(
+            'unique' => array
+			(
+                'rule' => 'checkEmailExists',
+                'required' => true,
+                'message' => 'Could not find this email address',
+            ),
+			'valid' => array
+			(
+				'rule' => 'email',
+				'required' => true,
+				'message' => 'Please enter a valid email address',
+			)
+		)
+	);
+	
+	// validation set for the password change form
+	var $validateResetPassword = array
+	(
+		'new_password' => array
+		(
+			'rule' => array('minLength', '6'),
+			'message' => 'Password must be at least 6 characters long',
+			'required' => true,
+        ),
+		'confirm_password' => array
+		(
+			'empty' => array
+			(
+				'rule' => array('minLength', '6'),
+				'message' => 'Password must be at least 6 characters long',
+				'required' => true,
+			),
+			'identical' => array
+			(
+				'rule' => array('identicalFieldValues', 'new_password'),
+				'message' => 'Passwords do not match',
+				'required' => true,
+			)
+        )
 	);
 	
 	// validation set for changing the password
@@ -199,6 +263,16 @@ class User extends AppModel
 		$user = $this->findById($id, array('fields' => 'disabled'));
 		
 		return (boolean) $user['User']['disabled'];
+	}
+	
+	/**
+	 * Checks if the given email address is present in the users table
+	 * @param data The email address
+	 * @return True if it exists, false otherwise
+	 */
+	function checkEmailExists($data)
+	{
+		return !$this->isUnique(array('email' => $data));
 	}
 }
 ?>
