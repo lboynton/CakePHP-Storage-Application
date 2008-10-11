@@ -19,6 +19,7 @@ Backup/restore
 User accounts
 	- Forgotten password reset
 	- Prevent more than one password reset attempt within 24 hours
+	- Verify email address upon registration?
 	
 User interface
 	- Add help section
