@@ -81,3 +81,9 @@
 2008-10-11 16:42:33 Warning: Warning (2): unlink(/home/lee/public_html/backup//backups/1/1014) [<a href='http://php.net/function.unlink'>function.unlink</a>]: No such file or directory in [APP/controllers/backups_controller.php, line 625]
 2008-10-11 16:42:33 Warning: Warning (2): unlink(/home/lee/public_html/backup//backups/1/1012) [<a href='http://php.net/function.unlink'>function.unlink</a>]: No such file or directory in [APP/controllers/backups_controller.php, line 625]
 2008-10-11 16:42:34 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/lee/public_html/backup/cake/basics.php:111) in [CORE/cake/libs/controller/controller.php, line 587]
+2008-10-11 18:28:02 Error: Error whilst uploading file, error code: 1
+2008-10-11 18:28:02 Error: Error whilst uploading file, error code: 1
+2008-10-11 18:30:40 Error: Error whilst uploading file, error code: 1
+2008-10-11 18:30:40 Error: Error whilst uploading file, error code: 1
+2008-10-11 18:31:09 Error: Error whilst uploading file, error code: 1
+2008-10-11 18:31:09 Error: Error whilst uploading file, error code: 1

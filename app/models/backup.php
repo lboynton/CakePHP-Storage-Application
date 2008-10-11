@@ -26,7 +26,7 @@ class Backup extends AppModel
 			'valid_data' => array 
 			(
 				'rule' => 'validateUploadedFile',
-				'message' => 'Sorry, an error occurred whilst uploading.',
+				'message' => 'Sorry, an error occurred whilst uploading. Please check the file is not too big.',
 			),
 			'duplicates' => array
 			(

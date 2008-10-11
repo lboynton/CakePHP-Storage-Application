@@ -121,3 +121,6 @@
 2008-10-11 16:41:30 Notice: Notice (8): Undefined property: Backup::$Session in [APP/models/backup.php, line 370]
 2008-10-11 16:43:13 Debug: Not creating backup store for user with ID 1, directory already present.
 2008-10-11 16:43:40 Notice: Notice (8): Undefined property: BackupsController::$User in [APP/controllers/backups_controller.php, line 649]
+2008-10-11 18:28:02 Debug: Not creating backup store for user with ID 1, directory already present.
+2008-10-11 18:30:40 Debug: Not creating backup store for user with ID 1, directory already present.
+2008-10-11 18:31:09 Debug: Not creating backup store for user with ID 1, directory already present.
