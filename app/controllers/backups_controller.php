@@ -170,7 +170,11 @@ class BackupsController extends AppController
 	{
 		if (!empty($this->data))
 		{		
-			$this->_createBackupDirectory();
+			if(!$this->_createBackupDirectory())
+			{
+				$this->Session->setFlash('Sorry, due to a misconfiguration no files can currently be stored.', 'messages/error');
+				$this->redirect($this->referer());
+			}
 			
 			// folder id will be empty to indicate the root folder
 			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
@@ -201,9 +205,6 @@ class BackupsController extends AppController
 		
 		$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
 		$this->data['Backup']['type'] = 'folder';
-		
-		// create backup store for this user if not already created
-		$this->_createBackupDirectory();
 		
 		// set parent_id to null for the root folder
 		if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
@@ -454,6 +455,7 @@ class BackupsController extends AppController
 	
 	/**
 	 * Creates the root directory for the user's backups
+	 * @return boolean True if the backup directory is present, false otherwise
 	 */
 	function _createBackupDirectory()
 	{
@@ -470,7 +472,7 @@ class BackupsController extends AppController
 		}
 		else
 		{
-			$this->log('Could not create backup store for user with ID ' . $this->Session->read('Auth.User.id'));
+			$this->log('Could not create backup store for user with ID ' . $this->Session->read('Auth.User.id') . '. Please check permissions.');
 			return false;
 		}
 	}
@@ -598,7 +600,7 @@ class BackupsController extends AppController
 	{
 		foreach($files as $id => $value)
 		{
-			if($value == 1 && $this->_userOwnsFile($id)) 
+			if($value == 1 && $this->Backup->userOwnsFile($id, $this->Session->read('Auth.User.id'))) 
 			{
 				$this->Backup->id = $id;
 				$file = $this->Backup->findById($id);
@@ -637,14 +639,14 @@ class BackupsController extends AppController
 		
 		foreach($files as $id => $value)
 		{
-			if($value == 1 && $this->_userOwnsFile($id)) 
+			if($value == 1 && $this->Backup->userOwnsFile($id, $this->Session->read('Auth.User.id'))) 
 			{
 				$this->Backup->id = $id;
 				
 				$this->Backup->useValidationRules('Move');
 				
 				// check user owns the folder, or, that the user is moving it to the root folder
-				if($folder_id != "" && !$this->_userOwnsFile($folder_id)) continue;
+				if($folder_id != "" && !$this->Backup->userOwnsFile($folder_id, $this->Session->read('Auth.User.id'))) continue;
 				
 				// try to move the file. This will fail if a folder is moved into itself.
 				if(!$this->Backup->save(array('parent_id' => $folder_id)))

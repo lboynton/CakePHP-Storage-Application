@@ -362,12 +362,12 @@ class Backup extends AppModel
 	}
 	
 	/**
-	 * Checks if the logged in user owns the given file/folder
+	 * Checks if the given user owns the given file/folder
 	 * @return True if the file/folder belongs to the logged in user, false otherwise
 	 */
-	function _userOwnsFile($id)
+	function userOwnsFile($id, $user)
 	{
-		return (boolean) $this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id'))));
+		return (boolean) $this->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $user)));
 	}
 }
 ?>

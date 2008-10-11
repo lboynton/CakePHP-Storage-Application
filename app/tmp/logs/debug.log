@@ -115,3 +115,9 @@
 2008-07-28 12:56:33 Debug: Notice (8): Undefined index:  hash in [APP\views\backups\xml.ctp, line 6]
 2008-07-28 12:56:46 Debug: Notice (8): Undefined index:  path in [APP\views\backups\xml.ctp, line 6]
 2008-07-28 12:56:46 Debug: Notice (8): Undefined index:  hash in [APP\views\backups\xml.ctp, line 7]
+2008-10-11 16:39:07 Debug: Created backup store for user with ID 1
+2008-10-11 16:40:32 Notice: Notice (8): Undefined property: BackupsController::$User in [APP/controllers/backups_controller.php, line 603]
+2008-10-11 16:41:20 Notice: Notice (8): Undefined property: Backup::$Backup in [APP/models/backup.php, line 370]
+2008-10-11 16:41:30 Notice: Notice (8): Undefined property: Backup::$Session in [APP/models/backup.php, line 370]
+2008-10-11 16:43:13 Debug: Not creating backup store for user with ID 1, directory already present.
+2008-10-11 16:43:40 Notice: Notice (8): Undefined property: BackupsController::$User in [APP/controllers/backups_controller.php, line 649]
