@@ -73,8 +73,16 @@ class UsersController extends AppController
 			}
 			else
 			{
+				// update the last login timestamp
 				$this->User->id = $this->Auth->user('id');
 				$this->User->saveField('last_login', date("Y-m-d H:i:s"));
+				
+				// delete any password reset tickets for this user
+				if($this->Ticket->delByData($this->Auth->user('email')))
+				{
+					$this->Session->setFlash('Your password reset request has been cancelled because you logged in successfully.', 'messages/info');
+				}
+				
 				$this->redirect('/users');
 			}
 		}
@@ -125,6 +133,9 @@ class UsersController extends AppController
 		
 		$this->User->useValidationRules('ForgotPassword');
 		
+		// show the forum unless otherwise stated below
+		$this->set('showForm', true);
+		
 		if(!empty($this->data))
 		{
 			$this->User->set($this->data);
@@ -134,27 +145,38 @@ class UsersController extends AppController
 			{
 				$ticket = $this->Ticket->set($user['User']['email']);
 				
+				// ticket will not be generated for duplicate requests within 24 hours
+				if(!$ticket)
+				{
+					$this->Session->setFlash('You have already made a password reset attempt within the last 24 hours. Please follow the instructions sent in the email that was sent to you.', 'messages/error');
+					$this->set('showForm', false);
+					return;
+				}
+				
 				$this->Email->to = $user['User']['email'];
 				$this->Email->subject = 'Password reset';
 				$this->Email->from = 'Backup system <app@backup>';
-				$this->Email->template = 'forgot_password'; // note no '.ctp'
-				//Send as 'html', 'text' or 'both' (default is 'text')
-				$this->Email->sendAs = 'text'; // because we like to send pretty mail
-				//Set view variables as normal
+				$this->Email->template = 'forgot_password';
+				$this->Email->sendAs = 'text';
+
+				// pass the link including the ticket hash to the email view
 				$this->set('link', 'http://'.$_SERVER['SERVER_NAME'].'/'.$this->params['controller'].'/reset_password/'.$ticket);
-				//Do not pass any args to send()
+
 				if($this->Email->send())
 				{
 					$this->Session->setFlash('An email has been sent to the address you specified. Please check your email and follow the instructions within it.', 'messages/success');
+					$this->set('showForm', false);
 				}
 				else
 				{
 					$this->Session->setFlash('Sorry, due to a misconfiguration an email cannot be sent to you at this time.', 'messages/error');
+					$this->set('showForm', false);
 				}
 			}
 			else
 			{
 				$this->Session->setFlash('There was a problem with the email address you supplied.', 'messages/error');
+				$this->set('showForm', true);
 			}
 		}
 	}

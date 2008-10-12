@@ -54,6 +54,22 @@ class TicketComponent
         }
         return false;
     }
+	
+	// delete a ticket using the data as a reference
+	function delByData($data = null)
+	{
+        $this->garbage();
+        if ($data)
+        {
+            $ticketObj = new Ticket();
+            $data = $ticketObj->findByData($data);
+            if ( is_array($data) && is_array($data['Ticket']) )
+            {
+                return $data = $ticketObj->del($data['Ticket']['id']);
+            }
+        }
+        return false;
+	}
 
     // Remove old tickets
     function garbage()
