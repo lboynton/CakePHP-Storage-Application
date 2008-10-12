@@ -23,6 +23,11 @@ class UsersController extends AppController
 		$this->Auth->autoRedirect = false;
 	}
 	
+	function test()
+	{
+		pr($this->User->findById(2));
+	}
+	
     function index()
     {
 		$this->helpers[] = "Time";
@@ -101,6 +106,8 @@ class UsersController extends AppController
 			// create user with defaults
 			$this->User->create();
 			$this->data['User']['quota'] = $this->SiteParameter->getParam('default_quota');
+			
+			pr($this->data);
 
 			// try to store the data
 			if($this->User->save($this->data, true, array('real_name', 'email', 'username', 'password', 'quota')))

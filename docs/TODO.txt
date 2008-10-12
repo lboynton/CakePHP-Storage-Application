@@ -9,7 +9,7 @@ Backup/restore
 	- Consider displaying files/folders as a tree
 	- Support different archive types such as tar, tar.gz, tar.bz2. Ideally this should be abstracted so that the same code can 
 	  be used to read/write to any archives. Look for libraries for this functionality.
-	- Add option for searching in current folder
+	- Add option for searching in current folder and in current folder and all subfolders
 	- Perhaps add option for extracting uploaded zip files, so that zip files can be uploaded without being extracted
 	- Look into zip file number limit
 	- Consider changing the file icon function so that it looks for file names with comma separated file extensions, instead of 
@@ -17,8 +17,6 @@ Backup/restore
 	- Would be nice to show the amount of files and folders in a folder without opening it
 	
 User accounts
-	- Forgotten password reset
-	- Prevent more than one password reset attempt within 24 hours
 	- Verify email address upon registration?
 	
 User interface

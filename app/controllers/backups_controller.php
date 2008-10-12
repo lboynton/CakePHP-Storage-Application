@@ -16,6 +16,26 @@ class BackupsController extends AppController
 		'recursive' => -1
 	);
 	
+	function test()
+	{
+		pr($this->Backup->children());
+	}
+	
+	function getnodes(){
+		
+		// retrieve the node id that Ext JS posts via ajax
+		$parent = intval($this->params['form']['node']);
+		
+		// find all the nodes underneath the parent node defined above
+		// the second parameter (true) means we only want direct children
+		$nodes = $this->Backup->children($parent, true);
+		
+		// send the nodes to our view
+		$this->set(compact('nodes'));
+		
+	}
+
+	
 	/**
 	 * Display a table containing the files and folders
 	 */
@@ -39,7 +59,7 @@ class BackupsController extends AppController
 			
 			if(!empty($view))
 			{
-				// try to find the item with the specified id that matches this user's id0
+				// try to find the item with the specified id that matches this user's id
 				$file = $this->Backup->find('first', array('conditions' => array('id' => $view, 'user_id' => $this->Session->read('Auth.User.id')), 'recursive' => -1));
 				
 				if(!$file)

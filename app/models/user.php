@@ -3,14 +3,7 @@ class User extends AppModel
 {
     var $name = 'User';
 	var $actsAs = array('MultipleValidatable');
-	var $hasMany = array
-	(
-        'Backup' => array
-		(
-            'className'     => 'Backup',
-            'foreignKey'    => 'user_id',
-        )
-    );  
+	var $hasMany = 'Backup';  
 	
 	// default validation rules
 	var $validate = array
@@ -23,39 +16,40 @@ class User extends AppModel
 				'required' => true,
 				'message' => 'Please enter a valid email address',
 			),
-            'unique' => array
+			'unique' => array
 			(
-                'rule' => 'isUnique',
-                'required' => true,
-                'message' => 'This email address has already been used',
-            )
+				'rule' => 'isUnique',
+				'required' => true,
+				'message' => 'This email address has already been used',
+			)
 		),
-        'username' => array
+		'username' => array
 		(
-            'unique' => array
+			'unique' => array
 			(
-                'rule' => 'isUnique',
-                'required' => true,
-                'message' => 'This username has already been taken, sorry!',
-            ),
-            'alphanumeric' => array(
-                'rule' => 'alphaNumeric',
-                'required' => true,
-                'message' => 'Username must be alphanumeric',
-            ),
-            'empty' => array
+				'rule' => 'isUnique',
+				'required' => true,
+				'message' => 'This username has already been taken, sorry!',
+			),
+			'alphanumeric' => array
+			(
+				'rule' => 'alphaNumeric',
+				'required' => true,
+				'message' => 'Username must be alphanumeric',
+			),
+			'empty' => array
 			(
 				'rule' => array('custom', '/\S+/'),
 				'required' => true,
 				'message' => 'Please enter your username',
-            )
-        ),
+			)
+		),
 		'new_password' => array
 		(
-			'rule' => array('minLength', '6'),
+			'rule' => array('custom', '/\S+/'),
 			'message' => 'Password must be at least 6 characters long',
 			'required' => true,
-        ),
+		),
 		'confirm_password' => array
 		(
 			'empty' => array
@@ -70,7 +64,7 @@ class User extends AppModel
 				'message' => 'Passwords do not match',
 				'required' => true,
 			)
-        ),
+		),
 		'password' => array // required when logging in
 		(
 			'required' => true,

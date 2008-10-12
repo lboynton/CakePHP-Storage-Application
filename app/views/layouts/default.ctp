@@ -17,6 +17,11 @@
 <?php echo $javascript->link('prototype'); ?>
 <?php echo $javascript->link('scriptaculous'); ?>
 <?php echo $javascript->link('forms'); ?>
+
+<?php echo $html->css('/js/ext-2.2/resources/css/ext-all.css'); ?>
+<?php echo $javascript->link('/js/ext-2.2/adapter/ext/ext-base.js'); ?>
+<?php echo $javascript->link('/js/ext-2.2/ext-all.js'); ?>
+
 <?php echo $scripts_for_layout; ?>
 </head>
 <body>
