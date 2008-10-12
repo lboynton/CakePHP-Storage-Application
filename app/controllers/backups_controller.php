@@ -5,7 +5,7 @@ class BackupsController extends AppController
 {
 	var $name = "Backups";
 	var $helpers = array('Html', 'Form', 'Ajax');
-	var $components = array('RequestHandler');
+	var $components = array('RequestHandler', 'Security');
 	var $uses = array('Backup', 'SiteParameter');
 	
 	// pagination defaults
@@ -16,25 +16,86 @@ class BackupsController extends AppController
 		'recursive' => -1
 	);
 	
+	function beforeFilter()
+	{
+		parent::beforeFilter();
+		
+		// ensure ajax methods are posted
+		$this->Security->requirePost('get_nodes', 'reorder', 'reparent');
+	}
+
 	function test()
 	{
-		pr($this->Backup->children());
+
 	}
 	
-	function getnodes(){
-		
+	function get_nodes()
+	{
 		// retrieve the node id that Ext JS posts via ajax
 		$parent = intval($this->params['form']['node']);
 		
+		if(empty($parent)) $parent = $this->Backup->getRootFolderId($this->Auth->user('id'));
+		
 		// find all the nodes underneath the parent node defined above
 		// the second parameter (true) means we only want direct children
-		$nodes = $this->Backup->children($parent, true);
+		$nodes = $this->Backup->children($parent, true, null, 'type DESC, name ASC');
 		
 		// send the nodes to our view
 		$this->set(compact('nodes'));
+	}
+	
+	function reorder()
+	{
+		// retrieve the node instructions from javascript
+		// delta is the difference in position (1 = next node, -1 = previous node)
+		
+		$node = intval($this->params['form']['node']);
+		$delta = intval($this->params['form']['delta']);
+		
+		if ($delta > 0) {
+			$this->Backup->movedown($node, abs($delta));
+		} elseif ($delta < 0) {
+			$this->Backup->moveup($node, abs($delta));
+		}
+		
+		// send success response
+		exit('1');
 		
 	}
-
+	
+	function reparent(){
+		
+		$node = intval($this->params['form']['node']);
+		$parent = intval($this->params['form']['parent']);
+		$position = intval($this->params['form']['position']);
+		
+		if(empty($node)) $node = $this->Backup->getRootFolderId($this->Auth->user('id'));
+		
+		// save the Backup node with the new parent id
+		// this will move the Backup node to the bottom of the parent list
+		
+		$this->Backup->id = $node;
+		$this->Backup->saveField('parent_id', $parent);
+		
+		// If position == 0, then we move it straight to the top
+		// otherwise we calculate the distance to move ($delta).
+		// We have to check if $delta > 0 before moving due to a bug
+		// in the tree behavior (https://trac.cakephp.org/ticket/4037)
+		
+		if ($position == 0){
+			$this->Backup->moveup($node, true);
+		} else {
+			$count = $this->Backup->childcount($parent, true);
+			$delta = $count-$position-1;
+			if ($delta > 0){
+				$this->Backup->moveup($node, $delta);
+			}
+		}
+		
+		// send success response
+		exit('1');
+		
+	} 
 	
 	/**
 	 * Display a table containing the files and folders
@@ -115,7 +176,7 @@ class BackupsController extends AppController
 			$conditions = array
 			(
 				'Backup.user_id' => $this->Auth->user('id'),
-				'Backup.parent_id' => null
+				'Backup.parent_id' => $this->Backup->getRootFolderId($this->Auth->user('id'))
 			);
 		}
 		
@@ -190,14 +251,14 @@ class BackupsController extends AppController
 	{
 		if (!empty($this->data))
 		{		
-			if(!$this->_createBackupDirectory())
+			if(!$this->Backup->createBackupDirectory($this->Auth->user('id')))
 			{
 				$this->Session->setFlash('Sorry, due to a misconfiguration no files can currently be stored.', 'messages/error');
 				$this->redirect($this->referer());
 			}
 			
 			// folder id will be empty to indicate the root folder
-			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
+			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = $this->Backup->getRootFolderId($this->Auth->user('id'));
 			
 			$zip = zip_open($this->data['Backup']['file']['tmp_name']);
 
@@ -227,7 +288,7 @@ class BackupsController extends AppController
 		$this->data['Backup']['type'] = 'folder';
 		
 		// set parent_id to null for the root folder
-		if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
+		if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = $this->Backup->getRootFolderId($this->Auth->user('id'));
 		
 		// set the data to the model to check if the data is valid
 		$this->Backup->set($this->data);
@@ -471,30 +532,6 @@ class BackupsController extends AppController
 				$this->log("Could not delete file: " . $absoluteFile);
 			}
 		} 
-	}
-	
-	/**
-	 * Creates the root directory for the user's backups
-	 * @return boolean True if the backup directory is present, false otherwise
-	 */
-	function _createBackupDirectory()
-	{
-		if(file_exists(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id')))
-		{
-			$this->log('Not creating backup store for user with ID ' . $this->Session->read('Auth.User.id') . ', directory already present.', LOG_DEBUG);
-			return true;
-		}
-		
-		if(mkdir(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id'), 0777, true))
-		{
-			$this->log('Created backup store for user with ID ' . $this->Session->read('Auth.User.id'), LOG_DEBUG);
-			return true;
-		}
-		else
-		{
-			$this->log('Could not create backup store for user with ID ' . $this->Session->read('Auth.User.id') . '. Please check permissions.');
-			return false;
-		}
 	}
 	
 	/**

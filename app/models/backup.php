@@ -369,5 +369,53 @@ class Backup extends AppModel
 	{
 		return (boolean) $this->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $user)));
 	}
+	
+	/**
+	 * Creates the root directory for the user's backups
+	 * @return boolean True if the backup directory is present, false otherwise
+	 */
+	function createBackupDirectory($user_id)
+	{
+		if(file_exists(BACKUP_ROOT_DIR . $user_id))
+		{
+			$this->log('Not creating backup store for user with ID ' . $user_id . ', directory already present.', LOG_DEBUG);
+			return true;
+		}
+		
+		if(mkdir(BACKUP_ROOT_DIR . $user_id, 0777, true))
+		{
+			$this->log('Created backup store for user with ID ' . $user_id, LOG_DEBUG);
+			return true;
+		}
+		else
+		{
+			$this->log('Could not create backup store for user with ID ' . $user_id . '. Please check permissions.');
+			return false;
+		}
+	}
+	
+	function getRootFolderId($user_id)
+	{
+		$folder = $this->find('first', array('conditions' => array('user_id' => $user_id, 'parent_id' => null)));
+		
+		// create root folder in the database if it doesn't exist
+		if(!$folder)
+		{
+			$this->save
+			(
+				array
+				(
+					'user_id' => $user_id,
+					'parent_id' => null,
+					'type' => 'root_folder',
+					'name' => $user_id . '_root_folder'
+				)
+			);
+			
+			return $this->id;
+		}
+		
+		return $folder['Backup']['id'];
+	}
 }
 ?>
