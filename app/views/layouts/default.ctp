@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $title_for_layout?></title>
 <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" />
-<?php echo $html->css(array('main','forms','tables','corners')); ?>
+<?php echo $html->css(array('main','forms','tables','corners', 'ext-tree-custom', 'ext-dd-custom')); ?>
 <!--[if lt IE 7]>
 <?php echo $html->css(array('ie6')); ?>
 <![endif]-->
@@ -18,7 +18,6 @@
 <?php echo $javascript->link('scriptaculous'); ?>
 <?php echo $javascript->link('forms'); ?>
 
-<?php echo $html->css('/js/ext-2.2/resources/css/ext-all.css'); ?>
 <?php echo $javascript->link('/js/ext-2.2/adapter/ext/ext-base.js'); ?>
 <?php echo $javascript->link('/js/ext-2.2/ext-all.js'); ?>
 

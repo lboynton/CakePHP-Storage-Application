@@ -7,26 +7,31 @@ Ext.onReady(function()
     var reparentUrl = '/backups/reparent';
     
     var Tree = Ext.tree;
+	
+	var loader = new Ext.tree.TreeLoader
+	({
+		dataUrl:getnodesUrl
+	});
     
     var tree = new Tree.TreePanel
 	({
-        el:'tree-div',
-        autoScroll:true,
-        animate:true,
-        enableDD:true,
-        containerScroll: true,
-        rootVisible: false,
-        loader: new Ext.tree.TreeLoader
-		({
-            dataUrl:getnodesUrl
-        })
+        el				: 'tree-div',
+        autoScroll		: true,
+        animate			: true,
+        enableDD		: true,
+        containerScroll	: true,
+        rootVisible		: false,
+		border	 		: false,
+        loader			: loader
     });
     
-    var root = new Tree.AsyncTreeNode({
+    var root = new Tree.AsyncTreeNode
+	({
         text:'Files',
         draggable:false,
         id:'root'
     });
+	
     tree.setRootNode(root);
     
 	// track what nodes are moved and send to server to save
@@ -38,27 +43,26 @@ Ext.onReady(function()
 	{
 		oldPosition = node.parentNode.indexOf(node);
 		oldNextSibling = node.nextSibling;
-	}
-);
+	});
 
-tree.on('movenode', function(tree, node, oldParent, newParent, position)
-{
+	tree.on('movenode', function(tree, node, oldParent, newParent, position)
+	{
 
-    if (oldParent == newParent)
-	{
-        var url = reorderUrl;
-        var params = {'node':node.id, 'delta':(position-oldPosition)};
-    } 
-	else 
-	{
-        var url = reparentUrl;
-        var params = {'node':node.id, 'parent':newParent.id, 'position':position};
-    }
-    
-    // we disable tree interaction until we've heard a response from the server
-    // this prevents concurrent requests which could yield unusual results
-    
-    tree.disable();
+		if (oldParent == newParent)
+		{
+			var url = reorderUrl;
+			var params = {'node':node.id, 'delta':(position-oldPosition)};
+		} 
+		else 
+		{
+			var url = reparentUrl;
+			var params = {'node':node.id, 'parent':newParent.id, 'position':position};
+		}
+		
+		// we disable tree interaction until we've heard a response from the server
+		// this prevents concurrent requests which could yield unusual results
+		
+		tree.disable();
     
     Ext.Ajax.request(
 	{
