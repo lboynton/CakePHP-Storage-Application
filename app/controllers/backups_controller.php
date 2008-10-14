@@ -34,11 +34,25 @@ class BackupsController extends AppController
 		// retrieve the node id that Ext JS posts via ajax
 		$parent = intval($this->params['form']['node']);
 		
-		if(empty($parent)) $parent = $this->Backup->getRootFolderId($this->Auth->user('id'));
-		
-		// find all the nodes underneath the parent node defined above
-		// the second parameter (true) means we only want direct children
-		$nodes = $this->Backup->children($parent, true, null, 'type DESC, name ASC');
+		if(empty($parent))
+		{
+			// filter out other users' files and folders from the root folder
+			$nodes = $this->Backup->find('all', array
+			(
+				'conditions' => array
+				(
+					'user_id' => $this->Auth->user('id'),
+					'parent_id' => null
+				),
+				'order' => array('type DESC, name ASC')
+			));
+		}
+		else
+		{
+			// find all the nodes underneath the parent node defined above
+			// the second parameter (true) means we only want direct children
+			$nodes = $this->Backup->children($parent, true, null, 'type DESC, name ASC');
+		}
 		
 		// send the nodes to our view
 		$this->set(compact('nodes'));
@@ -68,8 +82,6 @@ class BackupsController extends AppController
 		$node = intval($this->params['form']['node']);
 		$parent = intval($this->params['form']['parent']);
 		$position = intval($this->params['form']['position']);
-		
-		if(empty($node)) $node = $this->Backup->getRootFolderId($this->Auth->user('id'));
 		
 		// save the Backup node with the new parent id
 		// this will move the Backup node to the bottom of the parent list
@@ -176,7 +188,7 @@ class BackupsController extends AppController
 			$conditions = array
 			(
 				'Backup.user_id' => $this->Auth->user('id'),
-				'Backup.parent_id' => $this->Backup->getRootFolderId($this->Auth->user('id'))
+				'Backup.parent_id' => null
 			);
 		}
 		
@@ -258,7 +270,7 @@ class BackupsController extends AppController
 			}
 			
 			// folder id will be empty to indicate the root folder
-			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = $this->Backup->getRootFolderId($this->Auth->user('id'));
+			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
 			
 			$zip = zip_open($this->data['Backup']['file']['tmp_name']);
 
@@ -288,7 +300,7 @@ class BackupsController extends AppController
 		$this->data['Backup']['type'] = 'folder';
 		
 		// set parent_id to null for the root folder
-		if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = $this->Backup->getRootFolderId($this->Auth->user('id'));
+		if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
 		
 		// set the data to the model to check if the data is valid
 		$this->Backup->set($this->data);
