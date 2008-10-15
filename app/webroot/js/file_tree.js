@@ -1,4 +1,11 @@
-Ext.BLANK_IMAGE_URL = '/js/ext-2.2/resources/images/default/s.gif';
+Ext.BLANK_IMAGE_URL = '/img/ext/s.gif';
+
+var checkedNodes = new Array();
+
+function showChecked()
+{
+	alert(checkedNodes.join());	
+}
 
 Ext.onReady(function()
 {    
@@ -21,9 +28,15 @@ Ext.onReady(function()
         enableDD		: true,
         containerScroll	: true,
         rootVisible		: false,
-		border	 		: false,
+		border	 		: true,
         loader			: loader
     });
+	
+	// add listener to changes to checkboxes
+	tree.on("checkchange", function (node, checked)
+	{
+		checkedNodes[node.id] = checked;
+	});
     
     var root = new Tree.AsyncTreeNode
 	({
@@ -47,7 +60,6 @@ Ext.onReady(function()
 
 	tree.on('movenode', function(tree, node, oldParent, newParent, position)
 	{
-
 		if (oldParent == newParent)
 		{
 			var url = reorderUrl;
@@ -64,48 +76,66 @@ Ext.onReady(function()
 		
 		tree.disable();
     
-    Ext.Ajax.request(
-	{
-        url:url,
-        params:params,
-        success:function(response, request) 
+		Ext.Ajax.request(
 		{
-            // if the first char of our response is zero, then we fail the operation,
-            // otherwise we re-enable the tree
-            
-            if (response.responseText.charAt(0) != 1)
+			url:url,
+			params:params,
+			success:function(response, request) 
 			{
-                request.failure();
-            } 
-			else 
+				// if the first char of our response is zero, then we fail the operation,
+				// otherwise we re-enable the tree
+				
+				if (response.responseText.charAt(0) != 1)
+				{
+					request.failure();
+				} 
+				else 
+				{
+					tree.enable();
+				}
+			},
+			failure:function() 
 			{
-                tree.enable();
-            }
-        },
-        failure:function() 
-		{
-            // we move the node back to where it was beforehand and
-            // we suspendEvents() so that we don't get stuck in a possible infinite loop
-            
-            tree.suspendEvents();
-            oldParent.appendChild(node);
-			
-            if (oldNextSibling)
-			{
-                oldParent.insertBefore(node, oldNextSibling);
-            }
-            
-            tree.resumeEvents();
-            tree.enable();
-            
-            alert("Oh no! Your changes could not be saved!");
-        }
-    });
-});
+				// we move the node back to where it was beforehand and
+				// we suspendEvents() so that we don't get stuck in a possible infinite loop
+				
+				tree.suspendEvents();
+				oldParent.appendChild(node);
+				
+				if (oldNextSibling)
+				{
+					oldParent.insertBefore(node, oldNextSibling);
+				}
+				
+				tree.resumeEvents();
+				tree.enable();
+				
+				alert("Sorry, your changes could not be saved. Please try again later.");
+			}
+		});
+	});
 
-	
     tree.render();
     root.expand();
 
 	}
 );
+
+function print_r(theObj){
+  if(theObj.constructor == Array ||
+     theObj.constructor == Object){
+    document.write("<ul>")
+    for(var p in theObj){
+      if(theObj[p].constructor == Array||
+         theObj[p].constructor == Object){
+document.write("<li>["+p+"] => "+typeof(theObj)+"</li>");
+        document.write("<ul>")
+        print_r(theObj[p]);
+        document.write("</ul>")
+      } else {
+document.write("<li>["+p+"] => "+theObj[p]+"</li>");
+      }
+    }
+    document.write("</ul>")
+  }
+}

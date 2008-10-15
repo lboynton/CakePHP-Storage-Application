@@ -49,7 +49,6 @@
 <?php endif; ?>
 </p>
 
-<fieldset class="compact full">
 <?php echo $form->create('Backup', array('action' => 'perform_action')); ?>
 	<table>
         <tr>
@@ -92,7 +91,7 @@
 <?php endif; ?>
 	</table>
 <?php echo $form->end(); ?>
-</fieldset>
+
 <div id="pagination">
     <span class="box"><?php echo $paginator->counter(array('format' => 'Page %page% of %pages%, %count% files found, showing %start%-%end%.')); ?>&nbsp;</span>
     <span class="box">Go to page:&nbsp;<?php echo $paginator->numbers(array('separator' => '')); ?></span>

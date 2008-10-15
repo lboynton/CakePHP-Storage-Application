@@ -10,4 +10,4 @@
 		<?php echo $html->link('Forgot password', '/users/forgot_password'); ?>
     <?php echo $form->end(); ?>
 </fieldset>
-<p>Don't have an account yet? Simply visit the <?php echo $html->link('register', '/users/register'); ?> page to create an account.</p>
+<p>Don't have an account yet? Visit the <?php echo $html->link('register', '/users/register'); ?> page to create an account.</p>

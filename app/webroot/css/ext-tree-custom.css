@@ -16,10 +16,16 @@
 {
 	background:none;
 }
-
 .x-tree li
 {
 	font-size:12px;
+}
+.x-tree input[type="checkbox"]
+{
+	padding:0;
+	margin:0;
+	position:relative;
+	top:2px;
 }
 .x-tree-drop-ok-append .x-dd-drop-icon{background-image:url(/img/ext/tree/drop-add.gif);}
 .x-tree-drop-ok-above .x-dd-drop-icon{background-image:url(/img/ext/tree/drop-over.gif);}

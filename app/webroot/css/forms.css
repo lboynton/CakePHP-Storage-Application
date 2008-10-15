@@ -28,7 +28,7 @@ label.optional:after
 input 
 {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
-	font-size:12px;
+	font-size:10px;
 	padding:3px 4px 2px 3px;
 }
 textarea 
@@ -36,13 +36,13 @@ textarea
 	width: 350px;
 	height: 200px;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
-	font-size:12px;
+	font-size:10px;
 	padding:4px;
 }
 select
 {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
-	font-size:12px;
+	font-size:10px;
 }
 input[type="text"]:focus, textarea:focus, input[type="password"]:focus
 {
@@ -65,8 +65,6 @@ input[type="checkbox"]
 }
 input[type="submit"]
 {
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 }
 .error-message
 {
@@ -118,7 +116,7 @@ form .help
 	font-size:9px;
 	padding:0 0 0 20px;
 	display:block;
-	margin:-4px 0 0 0;
+	margin:-3px 0 0 0;
 	color:#555;
 	background:url(/img/information.png) no-repeat 0 1px;
 }
@@ -128,23 +126,16 @@ form .help
 .fieldset1
 {
 	margin: 2em -1px;
-	padding:2em 1em;
-	background:#f5e1c9;
-	background:#f0d5b6;
+	padding:1.5em 1em;
 	border:0;
 	/*border-top:2px solid #F56C1E;*/
 	position:relative;
-	border-top:2px solid #dcb990;
-	border-bottom:2px solid #dcb990;
+	border-top:1px solid #9ec1ef;
+	border-bottom:1px solid #9ec1ef;
 }
 .fieldset1 input[type="submit"]
 {
-	background:#F56C1E;
-	color:#FFF;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border:2px solid #fff;
-	font-weight:bold;
+	color:#385F95;
 }
 .fieldset1 input[disabled]
 {
@@ -185,7 +176,7 @@ form .help
 	padding-top:3px;
 	padding-bottom:3px;
 	margin-top:1px;
-	font-size:14px;
+	font-size:12px;
 	font-weight:bold;
 }
 .fieldset1 input[type="text"], textarea, input[type="password"], input[type="file"]
@@ -194,15 +185,15 @@ form .help
 }
 .fieldset1 input[type="submit"]
 {
-	font-size:14px;
+	font-size:12px;
 	font-weight:bold;
 	padding:2px 4px;
-	margin-left:173px;
+	margin-left:150px;
 }
 .fieldset1 input[type="submit"]:active
 {
-	border-width:3px;
-	padding:1px 3px;
+	border-width:2px;
+
 }
 fieldset.compact .error-message
 {
@@ -241,7 +232,7 @@ fieldset.compact a.reset:hover
 }
 fieldset.compact
 {
-	width:235px;
+	width:31.7%;
 	float:left;
 	padding:0;
 	margin-bottom:15px;
@@ -250,8 +241,6 @@ fieldset.compact
 	font-size:10px;
 	border:none;
 	height:125px;
-	-moz-border-radius:3px;
-	-webkit-border-radius:3px;
 }
 fieldset.compact + fieldset.compact
 {
@@ -296,7 +285,7 @@ fieldset.compact select
 }
 fieldset.compact p
 {
-	font-size:14px;
+	font-size:12px;
 	margin:10px -2px;
 }
 form#deleteAllFiles
@@ -346,7 +335,8 @@ fieldset.compact
 	border:0;
 	margin-bottom:5px;
 	padding:3px;
-	background:#f0d5b6;
+	background:#EEE;
+	border:1px solid #DDD;
 }
 fieldset#search
 {

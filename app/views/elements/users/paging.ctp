@@ -1,6 +1,5 @@
 <?php $paginator->options(array('update'=>'UserPaging', 'url'=> $url, 'indicator' => 'loadingIndicator')); ?> 
 
-<fieldset class="compact full">
 <?php echo $form->create('User', array('action' => 'perform_action')); ?>
 	<table>
 		<tr>
@@ -44,7 +43,6 @@
 		<?php endif; ?>
 	</table>
 <?php echo $form->end(); ?>
-</fieldset>
 
 <div id="pagination">
     <span class="box"><?php echo $paginator->counter(array('format' => 'Page %page% of %pages%, %count% users found, showing %start%-%end%.')); ?>&nbsp;</span>

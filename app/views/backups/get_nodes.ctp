@@ -12,7 +12,9 @@ foreach ($nodes as $node)
         "text" => $node['Backup']['name'], 
         "id" => $node['Backup']['id'], 
         "cls" => "folder",
-		"leaf" => $leaf
+		"leaf" => $leaf,
+		"checked" => false,
+		"checkbox.name" => 'data[Backup][ids][' . $node['Backup']['id'] . ']'
     );
 }
 

@@ -21,7 +21,6 @@ table td
 table tr
 {
 	color:#555;
-	border-bottom:1px solid #f0d5b6;
 }
 table tr p
 {
@@ -115,5 +114,5 @@ table td.delete
 }
 table tr.altrow
 {
-	background:#f5e1c9;
+	background:#F5F5F5;
 }

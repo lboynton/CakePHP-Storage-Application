@@ -4,12 +4,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $title_for_layout?></title>
 <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" />
-<?php echo $html->css(array('main','forms','tables','corners', 'ext-tree-custom', 'ext-dd-custom')); ?>
-<!--[if lt IE 7]>
-<?php echo $html->css(array('ie6')); ?>
-<![endif]-->
-<!--[if IE 7]>
-<?php echo $html->css(array('ie7')); ?>
+<?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree-custom', 'ext-dd-custom')); ?>
+<!--[if IE]>
+<?php echo $html->css(array('ie')); ?>
 <![endif]-->
 <!--[if lt IE 8]>
 <script type="text/javascript" src="/js/IE8.js"></script>
@@ -25,7 +22,8 @@
 </head>
 <body>
 <div id="container">
-    <div id="header">
+    <div id="header"">
+		<a href="/"><h1></h1></a>
 		<?php 
         if($session->check('Auth.User'))
 		{
@@ -38,6 +36,10 @@
         else echo $this->element('unauthenticatedMenu');
         ?> 
     </div>
+	<div id="bar">
+		<div id="left"></div>
+		<div id="right"></div>
+	</div>
     <div id="content">
     	<?php echo $content_for_layout ?>
         <div style="clear:both"></div>
