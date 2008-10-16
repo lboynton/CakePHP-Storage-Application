@@ -1,5 +1,4 @@
 <?php if($ajax->isAjax()): // if ajax show the new name ?>
-fef
 <?php echo $file['Backup']['name']; ?>
 <?php else: // else show the rename form ?>
     <h2>Rename file</h2>
