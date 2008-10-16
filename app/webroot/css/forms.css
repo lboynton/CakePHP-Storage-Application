@@ -27,15 +27,15 @@ label.optional:after
 }
 input 
 {
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-	font-size:10px;
+	font-family:verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+	font-size:12px;
 	padding:3px 4px 2px 3px;
 }
 textarea 
 {
 	width: 350px;
 	height: 200px;
-	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-family:verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
 	font-size:10px;
 	padding:4px;
 }
@@ -56,6 +56,7 @@ input[type="text"], textarea, input[type="password"]
 	border:1px solid #999;
 	-webkit-border-radius:3px;
 	width:200px;
+	background:url(/img/input_bg.gif);
 }
 input[type="checkbox"]
 {
@@ -97,8 +98,8 @@ input[type="submit"]
 .input.required label:after
 {
 	content:" *";
-	color:#F56C1E;
-	font-size:smaller;
+	color:#839c5a;
+	font-size:larger;
 }
 .input.required
 {
@@ -125,13 +126,10 @@ form .help
 /* Specific form related styles */
 .fieldset1
 {
-	margin: 2em -1px;
-	padding:1.5em 1em;
+	margin: 1.2em -1px;
+	padding:0.8em 1em 1.7em 1em;
 	border:0;
-	/*border-top:2px solid #F56C1E;*/
-	position:relative;
-	border-top:1px solid #9ec1ef;
-	border-bottom:1px solid #9ec1ef;
+	background:#eeeff5;
 }
 .fieldset1 input[type="submit"]
 {
@@ -149,24 +147,6 @@ form .help
 .fieldset1 form
 {
 	margin-top:15px;
-}
-.fieldset1 .message
-{
-	background:#f8eddf url(/img/box_bg.gif) repeat;
-	border-left:2px solid #F56C1E;
-	display:block;
-	margin:0 0 20px 0;
-	position:relative;
-	-moz-border-radius:0;
-	-webkit-border-radius:0;
-	-moz-border-radius-topright:5px;
-	-moz-border-radius-bottomright:5px;
-	-webkit-border-top-right-radius:5px;
-	-webkit-border-bottom-right-radius:5px;
-}
-.fieldset1 .message .error, .fieldset1 .message .info, .fieldset1 .message .success
-{
-	background-color:transparent;
 }
 .fieldset1 label
 {
@@ -188,7 +168,8 @@ form .help
 	font-size:12px;
 	font-weight:bold;
 	padding:2px 4px;
-	margin-left:150px;
+	margin-left:148px;
+	margin-right:5px;
 }
 .fieldset1 input[type="submit"]:active
 {

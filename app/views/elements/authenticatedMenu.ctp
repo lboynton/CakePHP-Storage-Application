@@ -5,6 +5,7 @@
 			'Your account' => '/users',
 			'File management' => '/backups',
 			'Test' => '/backups/test',
+			'Help' => '/help',
 			'Logout' => '/users/logout')
 		);
     ?> 

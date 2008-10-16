@@ -102,6 +102,8 @@ class PagesController extends AppController {
 			$this->redirect('/admins/status');
 			return;
 		}
+		
+		$this->redirect('/users/login');
 	}
 }
 

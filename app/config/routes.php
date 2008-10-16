@@ -34,7 +34,10 @@
  * to use (in this case, /app/views/pages/home.thtml)...
  */
 	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
-	//Router::connect('/', array('controller' => 'users', 'action' => 'display', 'login'));
+	Router::connect('/help', array('controller' => 'pages', 'action' => 'display', 'help'));
+	
+	// redirect is handled in pages_controller
+	//Router::connect('/', array('controller' => 'users', 'action' => 'login'));
 /**
  * ...and connect the rest of 'Pages' controller's urls.
  */

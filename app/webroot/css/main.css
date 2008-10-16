@@ -117,6 +117,7 @@ applet
 	/*border-top:3px solid #5cdb39;*/
 	border-left:3px solid #777;
 	border-right:3px solid #777;
+	background:url(/img/content_bg.gif) no-repeat left center;
 }
 #content > h1, #content > h2
 {

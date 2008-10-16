@@ -32,10 +32,13 @@ h1
 }
 h2
 {
-	text-transform:uppercase;
 	color:#385F95;
-	font-size:14px;
+	font-size:18px;
 	margin:4px 0;
+	border-left:3px solid #839c5a;
+	padding:0 0 2px 5px;
+	text-transform:uppercase;
+	
 }
 h3
 {
@@ -74,11 +77,14 @@ dd:after
 	max-width:960px;
 	min-width:730px;
 	background:#FFF;
+	background:url(/img/container_bg.gif) no-repeat bottom right;
+	padding:0 15px 10px 0;
 }
 #header
 {
 	height:50px;
 	position:relative;
+	margin-left:10px;
 }
 #menu
 {
@@ -121,6 +127,7 @@ dd:after
 	background:#b0b0b0;
 	height:12px;
 	position:relative;
+	margin-left:13px;
 }
 #bar #left
 {
@@ -144,7 +151,8 @@ dd:after
 }
 #content
 {
-	padding:15px;
+	padding:15px 15px 15px 30px;
+	background:url(/img/content_bg.gif) no-repeat;
 }
 #footer
 {
@@ -152,7 +160,31 @@ dd:after
 	height:15px;
 	display:none;
 }
-
+#loadingIndicator
+{
+	position:fixed;
+	top:10px;
+	left:10px;
+	padding:6px 10px;
+	background:#FFF;
+	border:1px solid #CCC;
+	font-size:14px;
+	font-weight:bold;
+}
+#closeBox
+{
+	position:absolute;
+	top:5px;
+	right:5px;
+	font-size:9px;
+	text-transform:uppercase;
+	color:#888;
+}
+#closeBox:hover
+{
+	color:#666;
+	background:none;
+}
 .chartBG
 {
 	width:120px;
@@ -192,4 +224,57 @@ dd:after
 	left:5px;
 	top:3px;
 	display:block;
+}
+.message, #flashMessage
+{
+	font-size:15px;
+	font-weight:bold;
+	position:relative;
+}
+.message p
+{
+	color:#333;
+	padding:10px 10px 10px 30px;
+	margin:0;
+}
+.message .error
+{
+	background:#f2eed4 url(/img/error.png) no-repeat 8px 10px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border:1px solid #d3ca8c;
+}
+.message .info
+{
+	background:#ccd7e3 url(/img/information.png) no-repeat 8px 11px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border:1px solid #aec7e3;
+}
+.message .success
+{
+	background:#d8f2d4 url(/img/accept.png) no-repeat 8px 11px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border:1px solid #a0cd99;
+}
+.clear
+{
+	clear:both;
+}
+.JSRequired
+{
+	display:none;
+}
+.high
+{
+	color:#FF0000;
+}
+.medium
+{
+	color:#FF9900;
+}
+.low
+{
+	color:#00CC00;
 }

@@ -1,9 +1,9 @@
 <h2>Register</h2>
 <p>Please enter your details below to register a new account.</p>
+<?php $session->flash(); ?>
+<?php $session->flash('auth'); ?>
 <fieldset class="fieldset1">
 <?php echo $form->create(array('action' => 'register')); ?>
-	<?php $session->flash(); ?>
-	<?php $session->flash('auth'); ?>
 	<?php echo $form->input('real_name'); ?>
     <p id="UserRealNameHelp" class="help">This is optional</p> 
     
