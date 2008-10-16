@@ -351,7 +351,7 @@ class BackupsController extends AppController
 		if($this->Backup->find('count', array('conditions' => array('Backup.id' => $id, 'Backup.user_id' => $this->Session->read('Auth.User.id')))) == 1)
 		{
 			// check for POST data
-			if(isset($this->data))
+			if(!empty($this->data))
 			{
 				$this->Backup->id = $id;
 				$this->Backup->useValidationRules('Rename');
@@ -359,7 +359,7 @@ class BackupsController extends AppController
 				// if this is from an ajax call, we want to show the new file name
 				if($this->RequestHandler->isAjax()) 
 				{
-					$this->Backup->saveField('name', $this->data['Backup']['name'], true);
+					$this->Backup->save(array('name' => $this->data['Backup']['name']), true);
 					$this->layout = 'ajax';
 				}
 				else
