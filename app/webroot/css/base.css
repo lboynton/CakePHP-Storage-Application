@@ -70,6 +70,10 @@ dd:after
 	content:".";
 	visibility:hidden;
 }
+strong
+{
+	color:#839c5a; /* brighter 93cf36*/
+}
 #container
 {
 	margin:auto;
@@ -154,6 +158,27 @@ dd:after
 	padding:15px 15px 15px 30px;
 	background:url(/img/content_bg.gif) no-repeat;
 }
+#column
+{
+	float:right;
+	width:25%;
+}
+#column h5
+{
+	background:#999;
+	color:#FFF;
+	text-transform:uppercase;
+	padding:0 2px 0 6px;
+	margin:0;
+	font-size:9px;
+}
+#main
+{
+	float:left;
+	width:73%;
+	background:url(/img/content_bg.gif) no-repeat bottom right;
+	padding-right:12px;
+}
 #footer
 {
 	background:#EEE;
@@ -225,6 +250,53 @@ dd:after
 	top:3px;
 	display:block;
 }
+.pagination
+{
+	height:28px;
+	text-align:center;
+	font-size:9px;
+}
+.pagination .current
+{
+	padding:4px 6px;
+	color:#839c5a;
+	font-weight:bold;
+}
+.pagination a
+{
+	padding:4px;
+	background:#777;
+	color:#FFF;
+	text-transform:uppercase;
+	font-size:9px;
+	border:0;
+}
+.pagination a span
+{
+	color:#93cf36;
+	font-size:12px;
+	font-weight:bold;
+}
+.pagination .disabled span
+{
+	color:#839c5a;
+	font-size:12px;
+	font-weight:bold;
+}
+.disabled
+{
+	display:inline;
+	font-size:12px;
+}
+.pagination .disabled
+{
+	padding:4px;
+	color:#999;
+	text-transform:uppercase;
+	font-size:9px;
+	border:0;
+	display:inline;
+}
 .message, #flashMessage
 {
 	font-size:15px;
@@ -277,4 +349,27 @@ dd:after
 .low
 {
 	color:#00CC00;
+}
+.box
+{
+	line-height:14px;
+	text-align:justify;
+	color:#666;
+	font-size:10px;
+	padding:4px 6px;
+	margin:0 0 8px 0;
+	border-top:2px solid #93cf36;
+}
+
+h5 .helpControl
+{
+	margin:1px 0 0 0;
+}
+.helpControl
+{
+	float:right;
+	background:url(/img/help.png);
+	height:16px;
+	width:16px;
+	border:0;
 }

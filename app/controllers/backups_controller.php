@@ -5,7 +5,7 @@ class BackupsController extends AppController
 {
 	var $name = "Backups";
 	var $helpers = array('Html', 'Form', 'Ajax');
-	var $components = array('RequestHandler', 'Security');
+	var $components = array('RequestHandler');
 	var $uses = array('Backup', 'SiteParameter');
 	
 	// pagination defaults
@@ -21,7 +21,8 @@ class BackupsController extends AppController
 		parent::beforeFilter();
 		
 		// ensure ajax methods are posted
-		$this->Security->requirePost('get_nodes', 'reorder', 'reparent');
+		// security component removed due to possible bug
+		//$this->Security->requirePost('get_nodes', 'reorder', 'reparent');
 	}
 
 	function test()
@@ -31,82 +32,92 @@ class BackupsController extends AppController
 	
 	function get_nodes()
 	{
-		// retrieve the node id that Ext JS posts via ajax
-		$parent = intval($this->params['form']['node']);
-		
-		if(empty($parent))
+		if(!empty($this->params['form']))
 		{
-			// filter out other users' files and folders from the root folder
-			$nodes = $this->Backup->find('all', array
-			(
-				'conditions' => array
+			// retrieve the node id that Ext JS posts via ajax
+			$parent = intval($this->params['form']['node']);
+			
+			if(empty($parent))
+			{
+				// filter out other users' files and folders from the root folder
+				$nodes = $this->Backup->find('all', array
 				(
-					'user_id' => $this->Auth->user('id'),
-					'parent_id' => null
-				),
-				'order' => array('type DESC, name ASC')
-			));
-		}
-		else
-		{
-			// find all the nodes underneath the parent node defined above
-			// the second parameter (true) means we only want direct children
-			$nodes = $this->Backup->children($parent, true, null, 'type DESC, name ASC');
-		}
-		
-		// send the nodes to our view
-		$this->set(compact('nodes'));
+					'conditions' => array
+					(
+						'user_id' => $this->Auth->user('id'),
+						'parent_id' => null
+					),
+					'order' => array('type DESC, name ASC')
+				));
+			}
+			else
+			{
+				// find all the nodes underneath the parent node defined above
+				// the second parameter (true) means we only want direct children
+				$nodes = $this->Backup->children($parent, true, null, 'type DESC, name ASC');
+			}
+			
+			// send the nodes to our view
+			$this->set(compact('nodes'));
+		} 
+		else $this->redirect('/backups');
 	}
 	
 	function reorder()
 	{
-		// retrieve the node instructions from javascript
-		// delta is the difference in position (1 = next node, -1 = previous node)
-		
-		$node = intval($this->params['form']['node']);
-		$delta = intval($this->params['form']['delta']);
-		
-		if ($delta > 0) {
-			$this->Backup->movedown($node, abs($delta));
-		} elseif ($delta < 0) {
-			$this->Backup->moveup($node, abs($delta));
-		}
-		
-		// send success response
-		exit('1');
-		
+		if(!empty($this->data))
+		{
+			// retrieve the node instructions from javascript
+			// delta is the difference in position (1 = next node, -1 = previous node)
+			
+			$node = intval($this->params['form']['node']);
+			$delta = intval($this->params['form']['delta']);
+			
+			if ($delta > 0) {
+				$this->Backup->movedown($node, abs($delta));
+			} elseif ($delta < 0) {
+				$this->Backup->moveup($node, abs($delta));
+			}
+			
+			// send success response
+			exit('1');
+		} 
+		else $this->redirect('/backups');
 	}
 	
-	function reparent(){
-		
-		$node = intval($this->params['form']['node']);
-		$parent = intval($this->params['form']['parent']);
-		$position = intval($this->params['form']['position']);
-		
-		// save the Backup node with the new parent id
-		// this will move the Backup node to the bottom of the parent list
-		
-		$this->Backup->id = $node;
-		$this->Backup->saveField('parent_id', $parent);
-		
-		// If position == 0, then we move it straight to the top
-		// otherwise we calculate the distance to move ($delta).
-		// We have to check if $delta > 0 before moving due to a bug
-		// in the tree behavior (https://trac.cakephp.org/ticket/4037)
-		
-		if ($position == 0){
-			$this->Backup->moveup($node, true);
-		} else {
-			$count = $this->Backup->childcount($parent, true);
-			$delta = $count-$position-1;
-			if ($delta > 0){
-				$this->Backup->moveup($node, $delta);
+	function reparent()
+	{
+		if(!empty($this->data))
+		{
+			$node = intval($this->params['form']['node']);
+			$parent = intval($this->params['form']['parent']);
+			$position = intval($this->params['form']['position']);
+			
+			// save the Backup node with the new parent id
+			// this will move the Backup node to the bottom of the parent list
+			
+			$this->Backup->id = $node;
+			$this->Backup->saveField('parent_id', $parent);
+			
+			// If position == 0, then we move it straight to the top
+			// otherwise we calculate the distance to move ($delta).
+			// We have to check if $delta > 0 before moving due to a bug
+			// in the tree behavior (https://trac.cakephp.org/ticket/4037)
+			
+			if ($position == 0){
+				$this->Backup->moveup($node, true);
+			} else {
+				$count = $this->Backup->childcount($parent, true);
+				$delta = $count-$position-1;
+				if ($delta > 0){
+					$this->Backup->moveup($node, $delta);
+				}
 			}
-		}
-		
-		// send success response
-		exit('1');
-		
+			
+			// send success response
+			exit('1');
+		} 
+		else $this->redirect('/backups');
 	} 
 	
 	/**
@@ -155,25 +166,25 @@ class BackupsController extends AppController
 
 		if(!empty($query))
 		{
-			if(isset($this->params['named']['searchFolder']) && $this->params['named']['searchFolder'] == "0")
+			if($this->params['named']['view'] == "all")
 			{
-				$conditions = array
-				(
-					'Backup.name LIKE' => '%' . $query . '%',
-					'Backup.user_id' => $this->Auth->user('id')
-				);
-			}
-			else
-			{
-				if(empty($this->params['named']['searchFolder'])) $this->params['named']['searchFolder'] = null;
-				
 				$conditions = array
 				(
 					'Backup.name LIKE' => '%' . $query . '%',
 					'Backup.user_id' => $this->Auth->user('id'),
-					'Backup.parent_id' => $this->params['named']['searchFolder']
 				);
 			}
+			else
+			{
+				$conditions = array
+				(
+					'Backup.name LIKE' => '%' . $query . '%',
+					'Backup.user_id' => $this->Auth->user('id'),
+					'Backup.parent_id' => $folder
+				);
+			}
+			
+			$this->set('search_folder', $this->params['named']['search_folder']);
 		}
 		elseif(isset($folder))
 		{

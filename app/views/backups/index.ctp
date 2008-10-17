@@ -1,41 +1,9 @@
 <?php /* pass sorting args to paginator functions */ $paginator->options(array('url' => $this->passedArgs, 'update' => 'content', 'indicator' => 'loadingIndicator')); ?>
+
+<div id="main">
 <h2>File management</h2>
 
-<div id="subMenu">
-	<?php echo $paginator->prev('&laquo; Previous page', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
-	<?php echo $paginator->next('Next page &raquo;', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
-</div>
-
 <?php if($session->check('Message.flash')) $session->flash(); ?>
-
-<p>Upload files here. They can be uploaded individually or as part of a zip archive. Click the icon adjacent to the file or folder name to view it. To rename files or folders, simply click on the name.</p>
-
-<fieldset class="compact">
-	<?php if($query != ""): ?>
-		<?php echo $html->link('Reset search', '/backups', array('class' => 'reset')); ?>
-    <?php endif; ?>
-	<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
-        <?php echo $form->input('Search', array('name' => 'query', 'value' => $query)); ?>
-        <?php echo $form->input('show', array('div' => false, 'label' => false, $form->submit('Search'), 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100), 'selected' => 25)); ?>
-		<?php echo $form->input('search_folder', array('div' => false, 'label' => false, 'options' => array($folder_id => 'This folder', '' => 'All folders'))); ?>
-		<?php echo $form->submit('Search', array('div' => false)); ?>
-    <?php echo $form->end(); ?>
-</fieldset>
-
-<fieldset class="compact">
-    <?php echo $form->create('Backup', array('class' => 'compact', 'enctype' => 'multipart/form-data')); ?>
-        <?php echo $form->input('file', array('type' => 'file', 'label' => 'Upload file (max: ' . $upload_limit . 'MB)')); ?>
-        <?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
-    <?php echo $form->end('Upload'); ?>
-</fieldset>
-
-<fieldset class="compact">
-	<?php echo $form->create('Backup', array('class' => 'compact', 'action' => 'add_folder')); ?>
-        <?php echo $form->input('name', array('label' => 'Create folder')); ?>
-        <?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
-    <?php echo $form->end('Add'); ?>
-</fieldset>
-<div style="clear:both;"></div>
 <p>Folder: 
 <?php if($query == ""): ?>	
 	<?php echo $html->link('Storage', '/backups'); ?>
@@ -48,7 +16,6 @@
 	Showing files in all folders
 <?php endif; ?>
 </p>
-
 <?php echo $form->create('Backup', array('action' => 'perform_action')); ?>
 	<table>
         <tr>
@@ -91,12 +58,62 @@
 <?php endif; ?>
 	</table>
 <?php echo $form->end(); ?>
-
-<div id="pagination">
-    <span class="box"><?php echo $paginator->counter(array('format' => 'Page %page% of %pages%, %count% files found, showing %start%-%end%.')); ?>&nbsp;</span>
-    <span class="box">Go to page:&nbsp;<?php echo $paginator->numbers(array('separator' => '')); ?></span>
 </div>
 
+<div id="column">
+	
+	<?php if ($paginator->hasNext() || $paginator->hasPrev()): ?>
+		<div class="pagination">
+			<?php echo $paginator->prev('<span>&laquo;</span> Previous page', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
+			<?php echo $paginator->next('Next page <span>&raquo;</span>', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
+		</div>
+		<div class="pagination">
+			Page: <?php echo $paginator->numbers(array('separator' => '')); ?>
+		</div>
+	<?php endif; ?>
+	
+	<h5>Search</h5>
+	<fieldset class="compact">
+		<?php if($query != ""): ?>
+			<?php echo $html->link('Reset search', '/backups', array('class' => 'reset')); ?>
+		<?php endif; ?>
+		<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
+			<?php echo $form->input('Search', array('name' => 'query', 'value' => $query)); ?>
+			<?php echo $form->input('show', array($form->submit('Search'), 'options' => array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100), 'selected' => 25, 'after' => ' results')); ?>
+			<?php echo $form->input('view', array('label' => 'Look', 'options' => array('all' => 'In all folders', $folder_id => 'Only in this folder'), 'selected' => $folder_id)); ?>
+			<?php echo $form->submit('Search'); ?>
+		<?php echo $form->end(); ?>
+	</fieldset>
+	
+	<h5><a href="javascript:;" id="uploadHelpControl" class="helpControl"></a>Upload File/Archive </h5>
+	<fieldset class="compact">
+		<?php echo $form->create('Backup', array('class' => 'compact', 'enctype' => 'multipart/form-data')); ?>
+			<?php echo $form->input('file', array('type' => 'file', 'label' => 'Select file (max: ' . $upload_limit . 'MB)')); ?>
+			<?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
+		<?php echo $form->end('Upload'); ?>
+		<div class="box" id="uploadHelp" style="display:none">
+			<strong>Help:</strong> Select browse to select a file to upload. Add your files and folders to a ZIP archive to upload multiple files at once. When you've selected a file, select the 'Upload' button to start the upload process.
+		</div>
+	</fieldset>
+
+	<h5><a href="javascript:;" id="addFolderHelpControl" class="helpControl"></a>Add Folder</h5>
+	<fieldset class="compact">
+		<?php echo $form->create('Backup', array('class' => 'compact', 'action' => 'add_folder')); ?>
+			<?php echo $form->input('name', array('label' => 'Name')); ?>
+			<?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
+		<?php echo $form->end('Add'); ?>
+		<div class="box" id="addFolderHelp" style="display:none">
+			<strong>Help:</strong> Enter the name for the new folder above, and click the 'Add' button to add the new folder. The folder will be created in the currently displayed folder.
+		</div>
+	</fieldset>
+
+	<div class="pagination">
+		<?php echo $paginator->counter(array('format' => 'Page %page% of %pages%, %count% files found, showing %start%-%end%.')); ?>
+	</div>
+</div>
+
+<?php echo $javascript->event('uploadHelpControl', 'click', 'Effect.toggle(\'uploadHelp\', \'blind\')'); ?>
+<?php echo $javascript->event('addFolderHelpControl', 'click', 'Effect.toggle(\'addFolderHelp\', \'blind\')'); ?>
 <?php echo $javascript->event('BackupSelectAllTop', 'click', 'toggleCheckboxes(\'BackupSelectAllTop\');'); ?>
 <?php echo $javascript->event('BackupSelectAllBottom', 'click', 'toggleCheckboxes(\'BackupSelectAllBottom\');'); ?>
 <?php echo $javascript->event('BackupFolder', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>

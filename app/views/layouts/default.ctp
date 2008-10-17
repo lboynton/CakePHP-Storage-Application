@@ -5,8 +5,9 @@
 <title><?php echo $title_for_layout?></title>
 <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" />
 <?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree-custom', 'ext-dd-custom')); ?>
+<?php echo $html->css('aminimal'); ?>
 <!--[if IE]>
-<?php echo $html->css(array('ie')); ?>
+<?php //echo $html->css(array('ie')); ?>
 <![endif]-->
 <!--[if lt IE 8]>
 <script type="text/javascript" src="/js/IE8.js"></script>

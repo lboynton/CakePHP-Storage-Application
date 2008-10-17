@@ -1,8 +1,7 @@
 table
 {
-	width:97.5%;
+	width:100%;
 	border-collapse:collapse;
-	margin-left:10px;
 }
 table th
 {
@@ -30,10 +29,6 @@ table tr:hover td
 {
 	color:#000;
 	border-bottom:1px solid #ccc;
-}
-table tr.altrow:hover
-{
-
 }
 table th a
 {
@@ -114,5 +109,5 @@ table td.delete
 }
 table tr.altrow
 {
-	background:#F5F5F5;
+	background:#f5f9ef;
 }
