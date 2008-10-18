@@ -3,10 +3,8 @@ class SiteParameter extends AppModel
 {
 	var $name = 'SiteParameter';
 	var $primaryKey = 'key';
-	var $validatae = array
+	var $validate = array
 	(
-		'key' => array('custom', '/\S+/'),
-		'value' => array('custom', '/\S+/'),
 		'default_quota' => array
 		(
 			'rule' => 'numeric',
@@ -29,6 +27,8 @@ class SiteParameter extends AppModel
 	 */
 	function setParam($key, $value)
 	{
+		$this->data['SiteParameter'][$key] = $value;
+		
 		return $this->save(array
 		(
 			'SiteParameter' => array

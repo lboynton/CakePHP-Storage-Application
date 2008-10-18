@@ -5,24 +5,11 @@ class Backup extends AppModel
 	var $belongsTo = array('User');
 	var $actsAs = array('Tree', 'MultipleValidatable');
 	
-	// default validation applies when uploading files and creating folders
+	// default validation applies when uploading files
 	var $validate = array 
 	(
-		'name' => array
-		(
-			'empty' => array
-			(
-				'rule' => array('custom', '/\S+/'),
-				'message' => 'Please enter a name for the file',
-			),
-		),
 		'file' => array 
 		(
-			'file_size' => array
-			(
-				'rule' => array('validateFileSize', true),
-				'message' => 'Please select a non-empty file.',
-			),
 			'valid_data' => array 
 			(
 				'rule' => 'validateUploadedFile',
@@ -32,6 +19,12 @@ class Backup extends AppModel
 			(
 				'rule' => 'checkForDuplicates',
 				'message' => 'The selected file was skipped as it is already present in this folder.'
+			),
+			'file_size' => array
+			(
+				'rule' => array('validateFileSize', true),
+				'message' => 'Please select a non-empty file.',
+				'required' => true
 			)
 		)
 	); 
@@ -44,6 +37,7 @@ class Backup extends AppModel
 			(
 				'rule' => array('custom', '/\S+/'),
 				'message' => 'Please enter a name for the folder.',
+				'required' => true
 			),
 			'uniqueName' => array
 			(

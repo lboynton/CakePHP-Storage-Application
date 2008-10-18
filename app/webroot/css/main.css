@@ -177,7 +177,7 @@ applet
 .message, #flashMessage
 {
 	background:#F3F3F3;
-	margin:0 8px 5px 8px;
+	margin:5px 8px 5px 8px;
 	position:relative;
 	font-size:15px;
 	font-weight:bold;

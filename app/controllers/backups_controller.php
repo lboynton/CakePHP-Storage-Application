@@ -283,7 +283,8 @@ class BackupsController extends AppController
 			// folder id will be empty to indicate the root folder
 			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
 			
-			$zip = zip_open($this->data['Backup']['file']['tmp_name']);
+			// ignore empty string warning when no file is selected as this error is caught by validation
+			@$zip = zip_open($this->data['Backup']['file']['tmp_name']);
 
 			// see if the file is a zip
 			// is_resoucre alone is not enough as at least odt and ods files are treated as zips by PHP

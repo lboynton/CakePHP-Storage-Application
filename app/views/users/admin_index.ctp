@@ -1,7 +1,7 @@
 <h2>Users</h2>
+<p>To view a user, and to change a user's quota or administrator status, click on the user's username or icon.</p>
 
 <?php if($session->check('Message.flash')) $session->flash(); ?>
-<p>To view a user, and to change a user's quota or administrator status, click on the user's username or icon.</p>
 
 <fieldset class="fieldset2">
 <?php echo $form->create('User', array('action' => 'admin_index')); ?>

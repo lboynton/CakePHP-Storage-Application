@@ -4,6 +4,7 @@
 <h2>File management</h2>
 
 <?php if($session->check('Message.flash')) $session->flash(); ?>
+
 <p>Folder: 
 <?php if($query == ""): ?>	
 	<?php echo $html->link('Storage', '/backups'); ?>
