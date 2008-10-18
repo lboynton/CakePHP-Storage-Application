@@ -141,6 +141,10 @@ class BackupsController extends AppController
 			// get the id of the item to view
 			$view = $this->params['named']['view'];
 			
+			$this->set('view', $view);
+			
+			if($view == "all") $view = null;
+			
 			if(!empty($view))
 			{
 				// try to find the item with the specified id that matches this user's id
@@ -533,7 +537,8 @@ class BackupsController extends AppController
 			}
 			else
 			{
-				$this->Session->setFlash('There was an error uploading the file.', 'messages/error');
+				$this->Session->setFlash('There was an error uploading the file. Please check the files are not already present in this folder.', 'messages/error');
+				//pr($this->Backup->invalidFields());
 			}
 		}
 	}

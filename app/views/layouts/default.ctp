@@ -5,7 +5,7 @@
 <title><?php echo $title_for_layout?></title>
 <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" />
 <?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree-custom', 'ext-dd-custom')); ?>
-<?php echo $html->css('aminimal'); ?>
+<?php //echo $html->css('minimal'); ?>
 <!--[if IE]>
 <?php //echo $html->css(array('ie')); ?>
 <![endif]-->
@@ -23,7 +23,7 @@
 </head>
 <body>
 <div id="container">
-    <div id="header"">
+    <div id="header">
 		<a href="/"><h1></h1></a>
 		<?php 
         if($session->check('Auth.User'))

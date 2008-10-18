@@ -172,6 +172,12 @@ strong
 	margin:0;
 	font-size:9px;
 }
+#column h5 a
+{
+	float:right;
+	color:#EFEFEF;
+	border:0;
+}
 #main
 {
 	float:left;

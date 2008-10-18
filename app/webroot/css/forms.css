@@ -66,6 +66,8 @@ input[type="checkbox"]
 }
 input[type="submit"]
 {
+	color:#385F95;
+	font-weight:bold;
 }
 .error-message
 {
@@ -167,6 +169,7 @@ form .help
 {
 	font-size:12px;
 	font-weight:bold;
+	color:#385F95;
 	padding:2px 4px;
 	margin-left:148px;
 	margin-right:5px;
