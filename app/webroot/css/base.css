@@ -208,8 +208,8 @@ strong
 #closeBox
 {
 	position:absolute;
-	top:5px;
-	right:5px;
+	top:0;
+	right:2px;
 	font-size:9px;
 	text-transform:uppercase;
 	color:#888;

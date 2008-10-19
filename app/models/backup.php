@@ -1,4 +1,6 @@
 <?php
+App::import('SiteParameter');
+
 class Backup extends AppModel 
 {
 	var $name = 'Backup';
@@ -410,6 +412,40 @@ class Backup extends AppModel
 		}
 		
 		return $folder['Backup']['id'];
+	}
+	
+	/**
+	 * Gets the storage usage in bytes
+	 */
+	function getUsage()
+	{
+		$usage = $this->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->user_id), 'recursive' => -1));
+		
+		return $usage[0][0]['size'];
+	}
+	
+	/**
+	 * Gets the remaining quota space in bytes
+	 */
+	function getRemainingSpace($quota)
+	{
+		return $quota - $this->getUsage();
+	}
+	
+	/**
+	 * Determines the upload limit for the logged in user. Takes into account the upload limit site parameter
+	 * and the remaining quota space.
+	 * @return limit bytes The upload limit in bytes
+	 */
+	function getUploadLimit($quota)
+	{
+		$params = new SiteParameter();
+		$upload_limit = $params->getParam('upload_limit');
+		
+		$remaining_quota = $this->getRemainingSpace($quota);
+		
+		if($remaining_quota < $upload_limit) return $remaining_quota;
+		else return $upload_limit;
 	}
 }
 ?>

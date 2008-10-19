@@ -5,7 +5,7 @@ class BackupsController extends AppController
 {
 	var $name = "Backups";
 	var $helpers = array('Html', 'Form', 'Ajax');
-	var $components = array('RequestHandler');
+	var $components = array('RequestHandler', 'Number');
 	var $uses = array('Backup', 'SiteParameter');
 	
 	// pagination defaults
@@ -65,7 +65,7 @@ class BackupsController extends AppController
 	
 	function reorder()
 	{
-		if(!empty($this->data))
+		if(!empty($this->params['form']))
 		{
 			// retrieve the node instructions from javascript
 			// delta is the difference in position (1 = next node, -1 = previous node)
@@ -87,7 +87,7 @@ class BackupsController extends AppController
 	
 	function reparent()
 	{
-		if(!empty($this->data))
+		if(!empty($this->params['form']))
 		{
 			$node = intval($this->params['form']['node']);
 			$parent = intval($this->params['form']['parent']);
@@ -265,7 +265,8 @@ class BackupsController extends AppController
 		$this->set('query', $query);
 		
 		// pass the upload limit to the view
-		$this->set('upload_limit', $this->SiteParameter->getParam('upload_limit'));
+		$this->Backup->user_id = $this->Auth->user('id');
+		$this->set('upload_limit', $this->Backup->getUploadLimit($this->Session->read('Auth.User.quota')));
 		
 		// pass the paginated backups to the view
 		$this->set(compact('backups'));
@@ -422,6 +423,14 @@ class BackupsController extends AppController
 					
 				case "move":
 					// perform move file action
+					if(isset($this->data['Backup']['nofolders']))
+					{
+						$this->Session->setFlash('You have not created any folders which you can move files to.', 'messages/error');
+						break;
+					}
+					
+					if(!isset($this->data['Backup']['folder'])) break;
+					
 					$this->_moveFiles($this->data['Backup']['ids'], $this->data['Backup']['folder']);
 					break;
 			}
@@ -473,9 +482,9 @@ class BackupsController extends AppController
 		
 		// check if file can be stored within the quota limit
 		$quota = $this->Session->read('Auth.User.quota');
-		$usage = $this->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id'))));
-		
-		if($usage[0][0]['size'] + $this->data['Backup']['size'] > $quota)
+		$this->Backup->user_id = $this->Auth->user('id');
+
+		if($this->Backup->getUsage() + $this->data['Backup']['size'] > $quota)
 		{
 			$this->Session->setFlash('Sorry, there is not enough space to store this file.', 'messages/error');
 			$this->redirect($this->referer());

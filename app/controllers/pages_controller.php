@@ -97,11 +97,6 @@ class PagesController extends AppController {
 			$this->redirect('/users');
 			return;
 		}
-		if($this->Session->check('Auth.Admin'))
-		{
-			$this->redirect('/admins/status');
-			return;
-		}
 		
 		$this->redirect('/users/login');
 	}

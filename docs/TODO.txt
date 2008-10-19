@@ -1,12 +1,11 @@
 Admin section
 	- Message users
 	- Perhaps use ACL for different groups like student, staff, admin. The default quota could then be changed for each group.
-	- Search and filters for finding users
 	
 Backup/restore
 	- Set correct content-type in header when viewing files
 	- Intelligent metadata processing of more file formats (such as MS Office, image, email archives)
-	- Consider displaying files/folders as a tree
+	- Experiment with displaying files/folders as a tree using ExtJS
 	- Support different archive types such as tar, tar.gz, tar.bz2. Ideally this should be abstracted so that the same code can 
 	  be used to read/write to any archives. Look for libraries for this functionality.
 	- Add option for searching in current folder and in current folder and all subfolders
@@ -15,6 +14,8 @@ Backup/restore
 	- Consider changing the file icon function so that it looks for file names with comma separated file extensions, instead of 
 	  needing a file for each extension
 	- Would be nice to show the amount of files and folders in a folder without opening it
+	- Take into account the remaining quota space when displaying the maximum upload 
+	- Don't show empty folders select box
 	
 User accounts
 	- Verify email address upon registration?
@@ -27,3 +28,5 @@ User interface
 General
 	- Tidy up code, especially backups controller.
 	- Consider moving some controller functions to the model
+	- Favicon
+	- Cater for possibility of HTTPS when sending URL in password reset email

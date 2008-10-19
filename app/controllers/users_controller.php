@@ -155,7 +155,7 @@ class UsersController extends AppController
 				// ticket will not be generated for duplicate requests within 24 hours
 				if(!$ticket)
 				{
-					$this->Session->setFlash('You have already made a password reset attempt within the last 24 hours. Please follow the instructions sent in the email that was sent to you.', 'messages/error');
+					$this->Session->setFlash('You have already made a password reset attempt within the last 24 hours. Please follow the instructions in the email that was sent to you.', 'messages/error');
 					$this->set('showForm', false);
 					return;
 				}
@@ -168,6 +168,11 @@ class UsersController extends AppController
 
 				// pass the link including the ticket hash to the email view
 				$this->set('link', 'http://'.$_SERVER['SERVER_NAME'].'/'.$this->params['controller'].'/reset_password/'.$ticket);
+				/**
+				 *
+				 * Does not cater for possibility of HTTPS
+				 *
+				 */
 
 				if($this->Email->send())
 				{

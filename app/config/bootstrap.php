@@ -86,7 +86,7 @@ function rmRecursive($file)
 	{
 		foreach(glob($file.'/*') as $sf) 
 		{
-			if ( !$this->rmRecursive($sf) ) 
+			if ( !rmRecursive($sf) ) 
 			{
 				$this->log("Failed to remove $sf\n");
 				return false;

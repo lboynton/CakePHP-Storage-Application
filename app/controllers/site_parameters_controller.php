@@ -9,8 +9,9 @@ class SiteParametersController extends AppController
 	{
 		if(!empty($this->data))
 		{
-			// convert quota to bytes
+			// convert values to bytes
 			$this->data['SiteParameter']['default_quota'] = $this->Number->convert($this->data['SiteParameter']['default_quota'], $this->data['SiteParameter']['unit'], 'b');
+			$this->data['SiteParameter']['upload_limit'] = $this->Number->convert($this->data['SiteParameter']['upload_limit'], 'mb', 'b');
 			
 			if( $this->SiteParameter->setParam('default_quota', $this->data['SiteParameter']['default_quota']) &&
 				$this->SiteParameter->setParam('upload_limit', $this->data['SiteParameter']['upload_limit']))
@@ -21,7 +22,7 @@ class SiteParametersController extends AppController
 		}
 		
 		$this->set('quota', $this->Number->toReadableSize($this->SiteParameter->getParam('default_quota')));
-		$this->set('upload_limit', $this->SiteParameter->getParam('upload_limit'));
+		$this->set('upload_limit', $this->Number->toReadableSize($this->SiteParameter->getParam('upload_limit')));
 	}
 }
 ?>

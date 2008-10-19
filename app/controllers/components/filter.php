@@ -40,7 +40,7 @@ class FilterComponent extends Object {
      * @access public
      */
     function process(&$controller, $whiteList = null){
-        @$this->_prepareFilter(&$controller);
+        @$this->_prepareFilter($controller);
 
         $ret = array();
         if(isset($controller->data)){

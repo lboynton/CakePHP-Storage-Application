@@ -44,11 +44,14 @@
         </tr>
     <?php endforeach; ?>
         <tr<?php echo ($i % 2 != 0) ? " class='altrow'" : "" ?> id="tableFooter">
-        	<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller')); ?></td>
-            <td id="actions" colspan="6">
+            <td id="actions" colspan="7">
             	Perform action on selected items:
                 <?php echo $form->input('action', array('type' => 'radio', 'options' => array('download' => 'Download', 'delete' => 'Delete', 'move' => 'Move to'), 'value' => 'download', 'legend' => false, 'div' => false)); ?>
-                <?php echo $form->input('folder', array('options' => $folders, 'div' => false, 'label' => 'folder', 'escape' => false)); ?>
+                <?php if(empty($folders)): ?>
+					<?php echo $form->input('nofolders', array('options' => array('No folders exist'), 'div' => false, 'label' => 'folder')); ?>
+				<?php else: ?>
+					<?php echo $form->input('folder', array('options' => $folders, 'div' => false, 'label' => 'folder', 'escape' => false)); ?>
+				<?php endif; ?>
                 <?php echo $form->submit('Go'); ?>
             </td>
         </tr>
@@ -88,7 +91,7 @@
 		<h5><a href="javascript:;" id="uploadHelpControl" class="helpControl"></a>Upload File/Archive </h5>
 		<fieldset class="compact">
 			<?php echo $form->create('Backup', array('class' => 'compact', 'enctype' => 'multipart/form-data')); ?>
-				<?php echo $form->input('file', array('type' => 'file', 'label' => 'Select file (max: ' . $upload_limit . 'MB)')); ?>
+				<?php echo $form->input('file', array('type' => 'file', 'label' => 'Select file (max: ' . $number->toReadableSize($upload_limit) . ')')); ?>
 				<?php echo $form->hidden('parent_id', array('value' => $folder_id, 'id' => null)); ?>
 			<?php echo $form->end('Upload'); ?>
 			<div class="box" id="uploadHelp" style="display:none">
@@ -118,3 +121,4 @@
 <?php echo $javascript->event('BackupSelectAllTop', 'click', 'toggleCheckboxes(\'BackupSelectAllTop\');'); ?>
 <?php echo $javascript->event('BackupSelectAllBottom', 'click', 'toggleCheckboxes(\'BackupSelectAllBottom\');'); ?>
 <?php echo $javascript->event('BackupFolder', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>
+<?php echo $javascript->event('BackupNofolders', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>

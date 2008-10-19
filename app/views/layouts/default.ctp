@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $title_for_layout?></title>
-<link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" />
+<?php /* <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" /> */ ?>
 <?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree-custom', 'ext-dd-custom')); ?>
 <!--[if lt IE 7]>
 <?php echo $html->css(array('ie6')); ?>

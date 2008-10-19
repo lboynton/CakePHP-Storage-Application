@@ -15,8 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-use backup;
-
 --
 -- Table structure for table `backups`
 --
@@ -37,7 +35,7 @@ CREATE TABLE `backups` (
   `type` varchar(255) NOT NULL,
   `hash` varchar(32) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1012 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -68,8 +66,9 @@ CREATE TABLE `tickets` (
   `created` datetime default NULL,
   `modified` datetime default NULL,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `hashs` (`hash`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `data` (`data`),
+  UNIQUE KEY `hash` (`hash`)
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -91,8 +90,9 @@ CREATE TABLE `users` (
   `last_login` datetime default NULL,
   `disabled` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `UNIQUE` USING BTREE (`username`,`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -104,6 +104,6 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-10-11 15:08:24
+-- Dump completed on 2008-10-19 11:18:20
 INSERT INTO `backup`.`users` (`id`,`username`,`password`,`email`,`created`,`real_name`,`admin`,`quota`,`last_login`,`disabled`) VALUES
   (1,'lee','d3521f0f4841ff1a777252f1d0ed1671236ae505','lee@lboynton.com','2008-09-12 17:17:27','Lee Boynton',1,10485760,'2008-09-20 18:07:17',0);
