@@ -110,7 +110,7 @@ class UsersController extends AppController
 			pr($this->data);
 
 			// try to store the data
-			if($this->User->save($this->data, true, array('real_name', 'email', 'username', 'password', 'quota')))
+			if($this->User->save($this->data, true, array('real_name', 'email', 'username', 'password', 'quota', 'new_password', 'confirm_password')))
 			{
 				// passed validation
 				
@@ -264,7 +264,7 @@ class UsersController extends AppController
 		$this->User->useValidationRules('ChangePassword');
 		
 		// use save() instead of saveField() which seems to bugger validation up
-		if($this->User->save($this->data, true, array('password')))
+		if($this->User->save($this->data, true, array('password', 'old_password', 'new_password', 'confirm_password')))
 		{
 			$this->Session->setFlash('Your password has been updated.', 'messages/success');
 			

@@ -42,7 +42,10 @@ h2
 }
 h3
 {
-	margin:15px 0 0 0;
+	margin:15px 0 3px 0;
+	font-size:14px;
+	padding:0 0 3px 3px;
+	border-bottom:1px solid #c4d5a9;
 }
 dl
 {

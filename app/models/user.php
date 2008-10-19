@@ -241,7 +241,7 @@ class User extends AppModel
 	 */
 	function matchOldPassword($data)
 	{
-		$user = $this->find('first', array('conditions' => array('id' => 3), 'recursive' => -1));
+		$user = $this->find('first', array('conditions' => array('id' => $this->id), 'recursive' => -1));
 		
 		return AuthComponent::password($this->data['User']['old_password']) == $user['User']['password'];
 	}

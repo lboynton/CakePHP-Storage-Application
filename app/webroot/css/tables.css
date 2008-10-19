@@ -28,7 +28,6 @@ table tr p
 table tr:hover td
 {
 	color:#000;
-	border-bottom:1px solid #ccc;
 }
 table th a
 {

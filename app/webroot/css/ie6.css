@@ -1,0 +1,13 @@
+#menu li a
+{
+	display:block;
+}
+.submit input
+{
+	border:1px solid #999;
+	background:#FFF;
+}
+.fieldset1 .submit input
+{
+	margin-left:151px;
+}
