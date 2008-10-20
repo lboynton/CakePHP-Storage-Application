@@ -1,13 +1,31 @@
+a
+{
+	border-bottom-style:solid;
+}
+#header h1
+{
+	margin:10px 0 8px 0;
+}
 #menu li a
 {
 	display:block;
 }
+.input input
+{
+	width:auto;
+}
 .submit input
 {
 	border:1px solid #999;
-	background:#FFF;
+	padding:1px 1px;
+	background:url(/img/input_bg.gif);
 }
 .fieldset1 .submit input
 {
 	margin-left:151px;
+	padding:3px 1px;
+}
+.fieldset2 .submit input
+{
+	padding:2px 1px 1px 1px;
 }

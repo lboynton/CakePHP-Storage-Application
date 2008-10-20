@@ -49,8 +49,10 @@
                 <?php echo $form->input('action', array('type' => 'radio', 'options' => array('download' => 'Download', 'delete' => 'Delete', 'move' => 'Move to'), 'value' => 'download', 'legend' => false, 'div' => false)); ?>
                 <?php if(empty($folders)): ?>
 					<?php echo $form->input('nofolders', array('options' => array('No folders exist'), 'div' => false, 'label' => 'folder')); ?>
+					<?php echo $javascript->event('BackupNofolders', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>
 				<?php else: ?>
 					<?php echo $form->input('folder', array('options' => $folders, 'div' => false, 'label' => 'folder', 'escape' => false)); ?>
+					<?php echo $javascript->event('BackupFolder', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>
 				<?php endif; ?>
                 <?php echo $form->submit('Go'); ?>
             </td>
@@ -119,6 +121,3 @@
 <?php echo $javascript->event('uploadHelpControl', 'click', 'Effect.toggle(\'uploadHelp\', \'blind\')'); ?>
 <?php echo $javascript->event('addFolderHelpControl', 'click', 'Effect.toggle(\'addFolderHelp\', \'blind\')'); ?>
 <?php echo $javascript->event('BackupSelectAllTop', 'click', 'toggleCheckboxes(\'BackupSelectAllTop\');'); ?>
-<?php echo $javascript->event('BackupSelectAllBottom', 'click', 'toggleCheckboxes(\'BackupSelectAllBottom\');'); ?>
-<?php echo $javascript->event('BackupFolder', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>
-<?php echo $javascript->event('BackupNofolders', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>

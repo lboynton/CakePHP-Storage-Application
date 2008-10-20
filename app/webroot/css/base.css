@@ -93,6 +93,14 @@ strong
 	position:relative;
 	margin-left:10px;
 }
+#header a
+{
+	border:0;
+}
+#header h1
+{
+	margin:0;
+}
 #menu
 {
 	position:absolute;

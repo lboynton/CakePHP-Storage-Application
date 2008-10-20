@@ -15,6 +15,7 @@
 .x-tree a
 {
 	background:none;
+	border:0;
 }
 .x-tree li
 {

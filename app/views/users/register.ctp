@@ -20,4 +20,3 @@
     <p id="UserEmailHelp" class="help">Finally, your email. This should be valid.</p> 
 <?php echo $form->end('Register'); ?>
 </fieldset>
-<p>Required fields are highlighted and denoted by asterisks.</p>

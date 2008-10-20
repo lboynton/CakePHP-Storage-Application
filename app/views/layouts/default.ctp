@@ -9,7 +9,7 @@
 <?php echo $html->css(array('ie6')); ?>
 <![endif]-->
 <!--[if lt IE 8]>
-<script type="text/javascript" src="/js/IE8.js"></script>
+<?php /* <script type="text/javascript" src="/js/IE8a.js"></script> */ ?>
 <![endif]-->
 <?php echo $javascript->link('prototype'); ?>
 <?php echo $javascript->link('scriptaculous'); ?>

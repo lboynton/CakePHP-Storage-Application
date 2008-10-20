@@ -2,4 +2,4 @@
 <?php echo $javascript->link('file_tree', false); ?>
 
 <div id="tree-div" style="height:400px;"></div>
-<p>Yeah this isn't finished.</p>
+<p>Sometimes nothing displays here, I don't know why.</p>
