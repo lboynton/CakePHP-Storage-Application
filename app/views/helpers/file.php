@@ -1,7 +1,7 @@
 <?php
 class FileHelper extends AppHelper 
 {
-	var $helpers = array('Html');
+	var $helpers = array('Html', 'Image');
 	
 	/**
 	 * Displays the appropriate icon for the file type (currently either file or directory)
@@ -13,14 +13,14 @@ class FileHelper extends AppHelper
         switch(strtolower($type))
 		{
 			case "folder":
-				$output = '<img src="/img/folder.png" alt="Folder" />';
+				$output = $this->Image->alpha('folder.png', array('alt' => 'Folder'));
 				$title = 'View folder';
 				break;
 			
 			default:
 				if($name == null)
 				{
-					$output = '<img src="/img/page_white.png" alt="File" />';
+					$output = $this->Image->alpha('page_white.png', array('alt' => 'File'));
 				}
 				else $output = $this->getFileIcon(getFileExtension($name));
 				$title = 'View file';
@@ -42,14 +42,14 @@ class FileHelper extends AppHelper
 		
 		if(file_exists($file))
 		{
-			$img = "/img/file/" . $extension . ".png";
+			$img = "file/" . $extension . ".png";
 		} 
 		else 
 		{
-			$img = "/img/page_white.png";
+			$img = "page_white.png";
 		}
 		
-		return $this->Html->image($img, array('alt' => 'File'));
+		return $this->Image->alpha($img, array('alt' => 'File'));
 	}
 }
 

@@ -9,7 +9,14 @@ table th
 	font-weight:normal;
 	margin:0;
 	text-align:center;
+	background:url(/img/td_bg.gif) repeat-x 1px 1px;
+	border-top:1px solid #DDD;
+	border-bottom:1px solid #DDD;
+	text-transform:uppercase;
+	font-size:9px;
 	/*background:#F5E1C9;*/
+	letter-spacing:1px;
+	border-collapse:separate;
 }
 table td
 {
@@ -89,7 +96,7 @@ table form, table form *
 	margin:0;
 	display:inline;
 }
-table .name
+table td.name
 {
 	overflow:hidden;
 	text-align:left;
@@ -98,9 +105,20 @@ table .name
 	width:46%;
 	padding:0;
 }
+table th.name
+{
+	text-align:left;
+	color:#000;
+	width:46%;
+	padding:0 0 0 5px;
+}
 table td.type
 {
 	width:16px;
+}
+table td.type a
+{
+	border:0;
 }
 table td.delete
 {
@@ -109,7 +127,6 @@ table td.delete
 	padding-bottom:0;
 	width:20px;
 }
-table tr.altrow
+table tr
 {
-	background:#f5f9ef;
 }

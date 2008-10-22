@@ -73,7 +73,7 @@ input[type="text"]:focus, textarea:focus, input[type="password"]:focus
 {
 	display:inline;
 	margin:0 0 0 5px;
-	font-size:smaller;
+	font-size:10px;
 	background:url(/img/error.png) no-repeat 0 0;
 	padding:3px 0 1px 20px;
 }

@@ -1,5 +1,6 @@
 <h2>Login</h2>
 <p>Please enter your username and password below to login.</p>
+<?php echo $javascript->event('closeBox', 'click', "$('messageBox').fade(); return false;"); ?>
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 <?php if($session->check('Message.auth')) $session->flash('auth'); ?>
 <fieldset class="fieldset1">

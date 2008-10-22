@@ -1,7 +1,7 @@
 <?php
 class UserDetailsHelper extends AppHelper 
 {
-	var $helpers = array('Html');
+	var $helpers = array('Html', 'Image');
 	
     function userLevel($level) 
 	{
@@ -32,12 +32,12 @@ class UserDetailsHelper extends AppHelper
         switch(strtolower($type))
 		{
 			case 0:
-				$output = '<img src="/img/user_orange.png" alt="Normal user" />';
+				$output = $this->Image->alpha('user_orange.png', array('alt' => 'Normal user'));
 				$title = 'View user';
 				break;
 			
 			case 1:
-				$output = '<img src="/img/user_gray.png" alt="Administrator" />';
+				$output = $this->Image->alpha('user_gray.png', array('alt' => 'Administrator'));
 				$title = 'View administrator';
 		}
 		

@@ -4,7 +4,7 @@
 	<table>
 		<tr>
 			<th class="checkbox"><?php echo $form->checkbox('selectAllTop', array('class' => 'controller actionBox')); ?></th>
-			<th class="icon"><?php echo $paginator->sort($html->image('user_gray.png'), 'admin', array('escape' => false)); ?></th>
+			<th class="icon"><?php echo $paginator->sort($image->alpha('user_gray.png'), 'admin', array('escape' => false)); ?></th>
 			<th><?php echo $paginator->sort('Name', 'real_name'); ?></th>
 			<th><?php echo $paginator->sort('Username', 'username'); ?></th>
 			<th><?php echo $paginator->sort('Quota', 'quota'); ?></th>
