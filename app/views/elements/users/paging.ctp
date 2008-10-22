@@ -10,7 +10,7 @@
 			<th><?php echo $paginator->sort('Quota', 'quota'); ?></th>
 			<th><?php echo $paginator->sort('Registered', 'created'); ?></th>
 			<th><?php echo $paginator->sort('Last login', 'last_login'); ?></th>
-			<th class="checkbox"><?php echo $paginator->sort('Disabled', 'disabled'); ?></th>
+			<th class="disabledColumn"><?php echo $paginator->sort('Disabled', 'disabled'); ?></th>
 		</tr>
 		<?php if(isset($users) && !empty($users)): ?>
 			<?php foreach($users as $i => $user): ?>
@@ -22,7 +22,7 @@
 				<td><?php echo $number->toReadableSize($user['User']['quota']); ?></td>
 				<td><?php echo $time->niceShort($user['User']['created']); ?></td>
 				<td><?php echo $time->niceShort($user['User']['last_login']); ?></td>
-				<td class="checkbox"><?php echo $form->checkbox('User.disable_ids.'.$user['User']['id'], array('checked' => (boolean)$user['User']['disabled'])); ?></td>
+				<td class="disabledColumn"><?php echo $form->checkbox('User.disable_ids.'.$user['User']['id'], array('checked' => (boolean)$user['User']['disabled'])); ?></td>
 			</tr>
 			<?php endforeach; ?>
 			<tr<?php echo ($i % 2 != 0) ? " class='altrow'" : "" ?> id="tableFooter">

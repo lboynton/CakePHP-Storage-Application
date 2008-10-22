@@ -68,7 +68,8 @@
 
 <div id="column">
 	
-	<?php if ($paginator->hasNext() || $paginator->hasPrev()): ?>
+	<div id="paginationContainer">
+	<?php //if ($paginator->hasNext() || $paginator->hasPrev()): ?>
 		<div class="pagination">
 			<?php echo $paginator->prev('<span>&laquo;</span> Previous page', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
 			<?php echo $paginator->next('Next page <span>&raquo;</span>', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
@@ -76,7 +77,8 @@
 		<div class="pagination">
 			Page: <?php echo $paginator->numbers(array('separator' => '')); ?>
 		</div>
-	<?php endif; ?>
+	<?php //endif; ?>
+	</div>
 	
 	<h5><?php if($query != ""): echo $html->link('(Reset)', '/backups', array('class' => 'reset')); endif; ?>Search</h5>
 	<fieldset class="compact">

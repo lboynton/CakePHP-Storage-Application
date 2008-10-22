@@ -11,7 +11,7 @@ class BackupsController extends AppController
 	// pagination defaults
 	var $paginate = array
 	(
-		'limit' => 25,
+		'limit' => 15,
 		'order' => array('Backup.type' => 'desc', 'Backup.name' => 'asc'), // order by type and name
 		'recursive' => -1
 	);

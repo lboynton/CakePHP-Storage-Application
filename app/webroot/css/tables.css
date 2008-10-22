@@ -17,6 +17,8 @@ table th
 	/*background:#F5E1C9;*/
 	letter-spacing:1px;
 	border-collapse:separate;
+	font-weight:bold;
+	padding:0;
 }
 table td
 {
@@ -50,6 +52,11 @@ table .checkbox
 	padding-top:0;
 	padding-bottom:0;
 	width:20px;
+}
+table .disabledColumn
+{
+	padding:0 4px;
+	width:60px;
 }
 table input[type="checkbox"]
 {
@@ -117,6 +124,10 @@ table td.type
 	width:16px;
 }
 table td.type a
+{
+	border:0;
+}
+table .icon a
 {
 	border:0;
 }
