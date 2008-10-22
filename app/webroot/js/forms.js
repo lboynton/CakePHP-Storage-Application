@@ -3,8 +3,8 @@
 //
 
 // calls functions after the page has loaded
-Event.observe(window, 'load', function() 
-{		
+Event.observe(document, 'dom:loaded', function() 
+{
 	formHelp();	
 	focusFirstFormElement();
 	enableJSElements();
@@ -49,7 +49,7 @@ function formHelp()
 		if(!$(item.id + 'Help')) throw $break;
 		
 		// hide the help on page load
-		$(item.id + 'Help').setStyle('visibility:hidden');	
+		$(item.id + 'Help').setStyle('visibility:hidden;');	
 		
 		Event.observe(item, 'focus', function(event)
 		{
@@ -62,10 +62,9 @@ function formHelp()
 	});
 }
 
-
-function toggleCheckboxes(controller, class)
+function toggleCheckboxes(controller, checkboxClass)
 {
-	if(class == null)
+	if(checkboxClass == null)
 	{
 		$$('input[type="checkbox"]').each(function(item)
 		{
@@ -74,7 +73,7 @@ function toggleCheckboxes(controller, class)
 	}
 	else
 	{
-		$$('.' + class).each(function(item)
+		$$('.' + checkboxClass).each(function(item)
 		{
 			item.checked = $(controller).checked;
 		});
