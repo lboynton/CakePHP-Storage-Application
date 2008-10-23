@@ -1,24 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo $title_for_layout?></title>
-<?php /* <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" /> */ ?>
-<?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree-custom', 'ext-dd-custom')); ?>
-<!--[if lt IE 7]>
-<?php echo $html->css(array('ie6')); ?>
-<![endif]-->
-<!--[if lt IE 8]>
-<?php /* <script type="text/javascript" src="/js/IE8a.js"></script> */ ?>
-<![endif]-->
-<?php echo $javascript->link('prototype'); ?>
-<?php echo $javascript->link('scriptaculous'); ?>
-<?php echo $javascript->link('forms'); ?>
-
-<?php echo $javascript->link('/js/ext-2.2/adapter/ext/ext-base.js'); ?>
-<?php echo $javascript->link('/js/ext-2.2/ext-all.js'); ?>
-
-<?php echo $scripts_for_layout; ?>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title><?php echo $title_for_layout?></title>
+	<?php /* <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" /> */ ?>
+	<?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree-custom', 'ext-dd-custom', 'ext-column-tree', 'ext-panel', 'ext-core')); ?>
+	
+	<!--[if lt IE 7]><?php echo $html->css(array('ie6')); ?>
+	<![endif]-->
+	<?php echo $javascript->link(array('prototype', 'scriptaculous.js?load=effects,controls', 'ext/adapter/prototype/ext-prototype-adapter.js', 'ext/ext-all-debug.js', 'forms')); ?>
+	<?php echo $scripts_for_layout; ?>
 </head>
 <body>
 <div id="container">
@@ -36,10 +27,7 @@
         else echo $this->element('unauthenticatedMenu');
         ?> 
     </div>
-	<div id="bar">
-		<div id="left"></div>
-		<div id="right"></div>
-	</div>
+	<div id="bar"></div>
     <div id="content">
     	<?php echo $content_for_layout ?>
         <div style="clear:both"></div>

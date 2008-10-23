@@ -24,18 +24,23 @@ class BackupsController extends AppController
 		// security component removed due to possible bug
 		//$this->Security->requirePost('get_nodes', 'reorder', 'reparent');
 	}
+	
+	function column()
+	{
+	}
 
 	function test()
 	{
-
+		var_dump($this->data);
 	}
 	
 	function get_nodes()
 	{
-		if(!empty($this->params['form']))
-		{
+		//if(!empty($this->params['form']))
+		//{
 			// retrieve the node id that Ext JS posts via ajax
 			$parent = intval($this->params['form']['node']);
+			//$parent = null;
 			
 			if(empty($parent))
 			{
@@ -59,8 +64,8 @@ class BackupsController extends AppController
 			
 			// send the nodes to our view
 			$this->set(compact('nodes'));
-		} 
-		else $this->redirect('/backups');
+		//} 
+		//else $this->redirect('/backups');
 	}
 	
 	function reorder()

@@ -14,7 +14,11 @@ foreach ($nodes as $node)
         "cls" => "folder",
 		"leaf" => $leaf,
 		"checked" => false,
-		"checkbox.name" => 'data[Backup][ids][' . $node['Backup']['id'] . ']'
+		"checkbox.name" => 'data[Backup][ids][' . $node['Backup']['id'] . ']',
+		"name" => $node['Backup']['name'],
+		"size" => $node['Backup']['size'],
+		"cls" => 'master-task',
+    	"iconCls" => 'task-folder'
     );
 }
 

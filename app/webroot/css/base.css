@@ -144,26 +144,6 @@ strong
 	position:relative;
 	margin-left:13px;
 }
-#bar #left
-{
-	background:url(/img/bar_corners.gif) left;
-	height:26px;
-	width:8px;
-	top:0;
-	left:0;
-	
-	display:none;
-}
-#bar #right
-{
-	background:url(/img/bar_corners.gif) right;
-	height:26px;
-	width:8px;
-	position:absolute;
-	right:0;
-	top:0;
-	display:none;
-}
 #content
 {
 	padding:15px 15px 15px 30px;
