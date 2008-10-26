@@ -19,7 +19,6 @@ Ext.onReady(function()
         height: 407,
         rootVisible:false,
         autoScroll:true,
-        title: 'Files',
         renderTo: 'tree-div',
 		enableDD: true,
         

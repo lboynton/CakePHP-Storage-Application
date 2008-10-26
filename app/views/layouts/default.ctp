@@ -4,7 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><?php echo $title_for_layout?></title>
 	<?php /* <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" /> */ ?>
-	<?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree-custom', 'ext-dd-custom', 'ext-column-tree', 'ext-panel', 'ext-core')); ?>
+	<?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree', 'ext-dd', 'ext-column-tree')); ?>
 	
 	<!--[if lt IE 7]><?php echo $html->css(array('ie6')); ?>
 	<![endif]-->

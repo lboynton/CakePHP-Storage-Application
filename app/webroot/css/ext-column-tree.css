@@ -9,11 +9,23 @@
 {
 	overflow:hidden;
 }
+.x-clear 
+{
+    clear:both;
+    height:0;
+    overflow:hidden;
+    line-height:0;
+    font-size:0;
+}
+.altrow
+{
+	background:#F9F9F9;
+}
 .x-column-tree .x-tree-node {
     zoom:1;
 }
 .x-column-tree .x-tree-node-el {
-    /*border-bottom:1px solid #eee; borders? */
+    border-bottom:1px dotted #eee;
     zoom:1;
 }
 .x-column-tree .x-tree-selected {
