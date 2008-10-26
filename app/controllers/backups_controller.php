@@ -36,6 +36,9 @@ class BackupsController extends AppController
 	
 	function get_nodes()
 	{
+		$this->layout = 'ajax';
+		$this->RequestHandler->setContent('json');
+		
 		//if(!empty($this->params['form']))
 		//{
 			// retrieve the node id that Ext JS posts via ajax

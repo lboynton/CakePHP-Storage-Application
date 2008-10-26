@@ -1,5 +1,4 @@
 <?php
-
 $data = array();
 
 foreach ($nodes as $node)
@@ -23,5 +22,4 @@ foreach ($nodes as $node)
 }
 
 echo $javascript->object($data);
-
 ?>
