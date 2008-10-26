@@ -4,7 +4,7 @@ uses('sanitize');
 class BackupsController extends AppController
 {
 	var $name = "Backups";
-	var $helpers = array('Html', 'Form', 'Ajax');
+	var $helpers = array('Html', 'Form', 'Ajax', 'Number', 'Time');
 	var $components = array('RequestHandler', 'Number');
 	var $uses = array('Backup', 'SiteParameter');
 	

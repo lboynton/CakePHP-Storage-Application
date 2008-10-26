@@ -29,6 +29,7 @@ table td
 table tr
 {
 	color:#555;
+	background:#F9F9F9;
 }
 table tr p
 {
@@ -138,6 +139,7 @@ table td.delete
 	padding-bottom:0;
 	width:20px;
 }
-table tr
+table tr.altrow
 {
+	background:#FFF;
 }

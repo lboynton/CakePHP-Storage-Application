@@ -26,8 +26,7 @@
 			</tr>
 			<?php endforeach; ?>
 			<tr<?php echo ($i % 2 != 0) ? " class='altrow'" : "" ?> id="tableFooter">
-				<td class="checkbox"><?php echo $form->checkbox('selectAllBottom', array('class' => 'controller actionBox')); ?></td>
-				<td id="actions" colspan="6">
+				<td id="actions" colspan="7">
 					Perform action on selected users:
 					<?php echo $form->input('action', array('type' => 'radio', 'options' => array('quota' => 'Change account quotas', 'delete' => 'Delete user accounts'), 'value' => 'quota', 'legend' => false, 'div' => false)); ?>
 					<?php echo $form->submit('Go'); ?>

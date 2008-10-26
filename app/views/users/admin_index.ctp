@@ -5,7 +5,7 @@
 
 <fieldset class="fieldset2">
 <?php echo $form->create('User', array('action' => 'admin_index')); ?>
-	<?php echo $form->input('query', array('label' => 'Search terms', 'after' => ' ' . $form->submit('Filter'))); ?>
+	<?php echo $form->input('query', array('label' => 'Search terms')); ?>
 	<div id="advancedOptions">
 		<?php echo $form->input('field', array('label' => 'Search for', 'options' => array('real_name' => 'Real name', 'username' => 'Username', 'email' => 'Email address'), 'selected' => $field)); ?>
 		<?php echo $form->input('admin', array('label' => 'Users who are', 'options' => array('' => 'Administrators or normal users', '1' => 'Administrators', '0' => 'Normal users'))); ?>
@@ -16,7 +16,9 @@
 	<div id="advancedControl" style="display:none">
 		<?php echo $form->label('advanced', 'Advanced options', array('class' => 'input')); ?>
 		<?php echo $form->input('advanced', array('type' => 'checkbox', 'label' => false)); ?>
+		<div class="clear"></div>
 	</div>
+	<?php echo $form->submit('Filter'); ?>
 <?php echo $form->end(); ?>
 </fieldset>
 

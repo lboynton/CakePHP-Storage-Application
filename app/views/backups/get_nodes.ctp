@@ -7,18 +7,18 @@ foreach ($nodes as $node)
 	if($node['Backup']['type'] == "file") $leaf = true;
 	else $leaf = false;
 	
+	if($node['Backup']['type'] == "folder") $size = '';
+	else $size = $number->toReadableSize($node['Backup']['size']);
+	
     $data[] = array
 	(
-        "text" => $node['Backup']['name'], 
         "id" => $node['Backup']['id'], 
-        "cls" => "folder",
-		"leaf" => $leaf,
-		"checked" => false,
-		"checkbox.name" => 'data[Backup][ids][' . $node['Backup']['id'] . ']',
 		"name" => $node['Backup']['name'],
-		"size" => $node['Backup']['size'],
-		"cls" => 'master-task',
-    	"iconCls" => 'task-folder'
+		"size" => $size,
+		"created" => $time->niceShort($node['Backup']['created']),
+		"modified" => $time->niceShort($node['Backup']['modified']),
+		"uiProvider" => 'col',
+		"leaf" => $leaf
     );
 }
 

@@ -153,22 +153,17 @@ strong
 {
 	float:right;
 	width:25%;
+	margin-top:-1px;
 }
 #column h5
 {
-	text-transform:uppercase;
-	padding:0 2px 0 6px;
 	margin:0;
 	font-size:9px;
 	padding:1px 5px;
-	font-weight:normal;
-	margin:0;
 	background:url(/img/td_bg.gif) repeat-x 1px 1px;
 	border-top:1px solid #DDD;
 	border-bottom:1px solid #DDD;
 	text-transform:uppercase;
-	font-size:9px;
-	/*background:#F5E1C9;*/
 	letter-spacing:1px;
 	border-collapse:separate;
 	font-weight:bold;
@@ -258,15 +253,17 @@ strong
 	top:3px;
 	display:block;
 }
-#paginationContainer
+#UserPaging
 {
-	height:65px;
+	margin-top:15px;
 }
 .pagination
 {
-	height:28px;
 	text-align:center;
 	font-size:9px;
+	float:right;
+	text-align:center;
+	width:25%;
 }
 .pagination .current
 {
@@ -314,6 +311,7 @@ strong
 	font-size:15px;
 	font-weight:bold;
 	position:relative;
+	margin-bottom:10px;
 }
 .message p
 {

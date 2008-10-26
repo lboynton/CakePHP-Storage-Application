@@ -49,7 +49,7 @@ input[type="text"]:focus, textarea:focus, input[type="password"]:focus
 	font-weight:bold;
 	border:1px solid #444;
 }
-.text input, .password input , textarea
+.text input, .password input, textarea
 {
 	padding:3px 4px;
 	-moz-border-radius: 3px;
@@ -68,6 +68,7 @@ input[type="text"]:focus, textarea:focus, input[type="password"]:focus
 {
 	color:#385F95;
 	font-weight:bold;
+	width:auto;
 }
 .error-message
 {

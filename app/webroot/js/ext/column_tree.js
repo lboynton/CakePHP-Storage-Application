@@ -12,7 +12,7 @@ Ext.onReady(function()
 {
     var tree = new Ext.tree.ColumnTree(
 	{
-        height: 400,
+        height: 407,
         rootVisible:false,
         autoScroll:true,
         title: 'Files',
@@ -32,12 +32,12 @@ Ext.onReady(function()
 		{
 			header:'Created',
             width:'20%',
-            dataIndex:'duration'
+            dataIndex:'created'
         },
 		{
             header:'Modified',
             width:'20%',
-            dataIndex:'user'
+            dataIndex:'modified'
         }],
 
         loader: new Ext.tree.TreeLoader
