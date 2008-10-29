@@ -16,7 +16,7 @@ Ext.onReady(function()
 	
     var tree = new Ext.tree.ColumnTree(
 	{
-        height: 407,
+        height: 607,
         rootVisible:false,
         autoScroll:true,
         renderTo: 'tree-div',
