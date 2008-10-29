@@ -4,7 +4,6 @@
 		(
 			'Your account' => '/users',
 			'File management' => '/backups',
-			'Test' => '/backups/column',
 			'User management' => '/admin/users',
 			'Settings' => '/admin/site_parameters',
 			'Logout' => '/users/logout')

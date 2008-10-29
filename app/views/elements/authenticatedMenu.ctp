@@ -4,7 +4,6 @@
 		(
 			'Your account' => '/users',
 			'File management' => '/backups',
-			'Test' => '/backups/column',
 			'Logout' => '/users/logout')
 		);
     ?> 
