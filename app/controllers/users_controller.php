@@ -6,7 +6,7 @@ class UsersController extends AppController
 	var $components = array('Number', 'Filter', 'RequestHandler', 'Ticket', 'Email');
 	var $uses = array('User', 'SiteParameter');
 	
-	// pagination defaults
+	// user pagination defaults
 	var $paginate = array
 	(
 		'limit' => 50,
@@ -17,17 +17,13 @@ class UsersController extends AppController
 	function beforeFilter()
 	{
 		parent::beforeFilter();
-		// allow unregistered access to the register and forgot password page
+		
+		// allow unregistered access to the register and forgot password pages
 		$this->Auth->allow('register', 'forgot_password', 'reset_password');
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 		$this->Auth->autoRedirect = false;
 	}
-	
-	function test()
-	{
-		pr($this->User->findById(2));
-	}
-	
+
     function index()
     {
 		$this->helpers[] = "Time";
@@ -165,12 +161,7 @@ class UsersController extends AppController
 				$this->Email->sendAs = 'text';
 
 				// pass the link including the ticket hash to the email view
-				$this->set('link', 'http://'.$_SERVER['SERVER_NAME'].'/'.$this->params['controller'].'/reset_password/'.$ticket);
-				/**
-				 *
-				 * Does not cater for possibility of HTTPS
-				 *
-				 */
+				$this->set('link', FULL_BASE_URL.'/'.$this->params['controller'].'/reset_password/'.$ticket);
 
 				if($this->Email->send())
 				{
@@ -412,7 +403,7 @@ class UsersController extends AppController
 		if(!empty($this->data))
 		{
 			switch($this->data['User']['action'])
-			{
+			{			
 				case "quota":
 					$this->Session->write('User.ids', $this->data['User']['ids']);
 					$this->redirect('/admin/users/quota');

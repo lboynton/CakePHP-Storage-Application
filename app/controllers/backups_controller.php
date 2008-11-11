@@ -11,7 +11,7 @@ class BackupsController extends AppController
 	// pagination defaults
 	var $paginate = array
 	(
-		'limit' => 15,
+		'limit' => 25,
 		'order' => array('Backup.type' => 'desc', 'Backup.name' => 'asc'), // order by type and name
 		'recursive' => -1
 	);
@@ -248,7 +248,7 @@ class BackupsController extends AppController
 			// delete all files in this user's file storage and database
 			$this->Backup->emptyStore($this->Session->read('Auth.User.id'));
 			
-			$this->Session->setFlash("All files in the backup have been deleted.", 'messages/info');
+			$this->Session->setFlash("All stored files have been deleted.", 'messages/info');
 		}
 		else $this->Session->setFlash("No files have been deleted, please select the checkbox to delete all files.", 'messages/info');
 		

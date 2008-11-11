@@ -14,14 +14,12 @@ Backup/restore
 	- Consider changing the file icon function so that it looks for file names with comma separated file extensions, instead of 
 	  needing a file for each extension
 	- Would be nice to show the amount of files and folders in a folder without opening it
-	- Take into account the remaining quota space when displaying the maximum upload 
-	- Don't show empty folders select box
 	
 User accounts
 	- Verify email address upon registration?
 	
 User interface
-	- Add help section
+	- Add help section?
 	- Test on different browsers
 	- IE6 specific bugs
 	
@@ -29,4 +27,5 @@ General
 	- Tidy up code, especially backups controller.
 	- Consider moving some controller functions to the model
 	- Favicon
-	- Cater for possibility of HTTPS when sending URL in password reset email
+	- Rounded corners for h5
+	- Move search to separate page?

@@ -5,7 +5,11 @@
 	<?php echo $paginator->next('Next page <span>&raquo;</span>', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)); ?>
 </div>
 
+<?php if($query == ""): ?>
 <h2>File management</h2>
+<?php else: ?>
+<h2>Search results</h2>
+<?php endif; ?>
 
 <div class="pagination">
 	Page: <?php echo $paginator->numbers(array('separator' => '')); ?>
@@ -27,7 +31,7 @@
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 <div id="column">
 	
-	<h5><?php if($query != ""): echo $html->link('(Reset)', '/backups', array('class' => 'reset')); endif; ?>Search</h5>
+	<h5><?php if($query != ""): echo $html->link('', '/backups', array('class' => 'reset', 'title' => 'Reset search')); endif; ?>Search</h5>
 	<fieldset class="compact">
 		
 		<?php echo $form->create(array('action' => 'index', 'type' => 'get', 'class' => 'compact')); ?> 
@@ -115,6 +119,6 @@
 <?php echo $form->end(); ?>
 </div>
 
-<?php echo $javascript->event('uploadHelpControl', 'click', 'Effect.toggle(\'uploadHelp\', \'blind\')'); ?>
-<?php echo $javascript->event('addFolderHelpControl', 'click', 'Effect.toggle(\'addFolderHelp\', \'blind\')'); ?>
+<?php if(!isset($view) || $view != "all") echo $javascript->event('uploadHelpControl', 'click', 'Effect.toggle(\'uploadHelp\', \'blind\')'); ?>
+<?php if(!isset($view) || $view != "all") echo $javascript->event('addFolderHelpControl', 'click', 'Effect.toggle(\'addFolderHelp\', \'blind\')'); ?>
 <?php echo $javascript->event('BackupSelectAllTop', 'click', 'toggleCheckboxes(\'BackupSelectAllTop\');'); ?>

@@ -1,4 +1,4 @@
-<h2>Settings</h2>
+<h2>Global Settings</h2>
 <fieldset class="fieldset1">
 <?php if($session->check('Message.flash')) $session->flash(); ?>	
 	<?php echo $form->create(null, array('action' => 'admin_index')); ?>

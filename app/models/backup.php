@@ -134,11 +134,14 @@ class Backup extends AppModel
 	 */
 	function emptyStore($id)
 	{
+		// delete files from filesystem if present
+		if(is_dir(BACKUP_ROOT_DIR . $id))
+		{
+			rmRecursive(BACKUP_ROOT_DIR . $id);
+		}
+		
 		// delete all files and folders from the database
 		$this->deleteAll(array('Backup.user_id' => $id));
-		
-		// delete files from filesystem
-		rmRecursive(BACKUP_ROOT_DIR . $id);
 	}
 	
 	/**

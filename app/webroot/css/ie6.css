@@ -33,3 +33,27 @@ a
 {	
 	right:35px;
 }
+.message .error
+{
+	background-image:url(/img/error.gif);
+}
+.message .info
+{
+	background-image:url(/img/information.gif);
+}
+.message .success
+{
+	background-image:url(/img/accept.gif);
+}
+.helpControl
+{
+	background-image:url(/img/help.gif);
+}
+.error-message
+{
+	background-image:url(/img/error.gif);
+}
+form .help
+{
+	background-image:url(/img/information.gif);
+}

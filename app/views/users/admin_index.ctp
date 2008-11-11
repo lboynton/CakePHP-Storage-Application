@@ -1,5 +1,5 @@
 <h2>Users</h2>
-<p>To view a user, and to change a user's quota or administrator status, click on the user's username or icon.</p>
+<p>Individual user settings can be applied by selecting the user you wish to make changes to.</p>
 
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 
@@ -30,4 +30,3 @@
 <?php if(!(boolean)$advanced) echo $javascript->event('document', 'dom:loaded', '$(\'advancedOptions\').hide()'); ?>
 <?php echo $javascript->event('UserAdvanced', 'click', 'Effect.toggle(\'advancedOptions\', \'blind\')'); ?>
 <?php echo $javascript->event('UserSelectAllTop', 'click', 'toggleCheckboxes(\'UserSelectAllTop\', \'actionBox\');'); ?>
-<?php echo $javascript->event('UserSelectAllBottom', 'click', 'toggleCheckboxes(\'UserSelectAllBottom\', \'actionBox\');'); ?>

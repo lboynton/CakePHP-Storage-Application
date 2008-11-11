@@ -35,10 +35,7 @@ h2
 	color:#385F95;
 	font-size:14px;
 	margin:4px 0;
-	border-left:3px solid #839c5a;
-	padding:0 0 2px 5px;
 	text-transform:uppercase;
-	
 }
 h3
 {
@@ -148,6 +145,7 @@ strong
 {
 	padding:15px 15px 15px 30px;
 	background:url(/img/content_bg.gif) no-repeat;
+	position:relative;
 }
 #column
 {
@@ -169,17 +167,19 @@ strong
 	font-weight:bold;
 	color:#777;
 }
-#column h5 a
+#column h5 a.reset
 {
 	float:right;
-	color:#EFEFEF;
+	color:#999;
 	border:0;
+	background:url(/img/cross.png);
+	height:16px;
+	width:16px;
 }
 #main
 {
 	float:left;
 	width:73%;
-	background:url(/img/content_bg.gif) no-repeat bottom right;
 	padding-right:12px;
 }
 #footer
@@ -257,6 +257,18 @@ strong
 {
 	margin-top:15px;
 }
+#pagination
+{
+	padding:5px;
+	text-align:center;
+	margin:10px 0;
+}
+#pagination div
+{
+	margin:5px 0;
+	text-align:center;
+	font-size:10px;
+}
 .pagination
 {
 	text-align:center;
@@ -265,13 +277,14 @@ strong
 	text-align:center;
 	width:25%;
 }
-.pagination .current
+.pagination .current, #pagination .current
 {
-	padding:4px 6px;
+	padding:2px 5px;
 	color:#839c5a;
 	font-weight:bold;
+	vertical-align:bottom;
 }
-.pagination a
+.pagination a, #pagination a
 {
 	padding:4px;
 	background:#777;
@@ -280,13 +293,13 @@ strong
 	font-size:9px;
 	border:0;
 }
-.pagination a span
+.pagination a span, #pagination a span
 {
 	color:#93cf36;
 	font-size:12px;
 	font-weight:bold;
 }
-.pagination .disabled span
+.pagination .disabled span, #pagination .disabled span
 {
 	color:#839c5a;
 	font-size:12px;
@@ -297,7 +310,7 @@ strong
 	display:inline;
 	font-size:12px;
 }
-.pagination .disabled
+.pagination .disabled, #pagination .disabled
 {
 	padding:4px;
 	color:#999;
@@ -328,7 +341,7 @@ strong
 }
 .message .info
 {
-	background:#ccd7e3 url(/img/information.png) no-repeat 8px 11px;
+	background:#dde3ea url(/img/information.png) no-repeat 8px 11px;
 	-moz-border-radius:2px;
 	-webkit-border-radius:2px;
 	border:1px solid #aec7e3;
