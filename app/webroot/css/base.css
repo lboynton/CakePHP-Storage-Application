@@ -189,14 +189,14 @@ strong
 }
 #loadingIndicator
 {
-	position:fixed;
-	top:10px;
-	left:10px;
-	padding:6px 10px;
-	background:#FFF;
-	border:1px solid #CCC;
+	position:absolute;
+	top:0;
+	left:0;
 	font-size:14px;
-	font-weight:bold;
+	background:#F4F4F4;
+	border-bottom:1px solid #CCC;
+	padding:10px 15px 5px 15px;
+	margin-left:15px;
 }
 #closeBox
 {
