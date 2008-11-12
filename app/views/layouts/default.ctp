@@ -13,6 +13,7 @@
 </head>
 <body>
 <div id="container">
+	<div id="loadingIndicator" style="display:none;">Loading...</div>
 	<?php if($session->check('Auth.User')) echo $this->element('searchForm'); ?>
     <div id="header">
 		<a href="/"><h1></h1></a>
@@ -35,6 +36,5 @@
     </div>
     <div id="footer"></div>  
 </div>
-<div id="loadingIndicator" style="display:none;">Loading...</div>
 </body>
 </html>

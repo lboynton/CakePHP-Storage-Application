@@ -65,3 +65,12 @@ table .checkbox
 {
 	width:auto;
 }
+#loadingIndicator
+{
+	position:absolute;
+	z-index:-1;
+}
+#column
+{
+	z-index:1;
+}
