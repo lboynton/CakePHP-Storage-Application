@@ -4,7 +4,7 @@ uses('sanitize');
 class BackupsController extends AppController
 {
 	var $name = "Backups";
-	var $helpers = array('Html', 'Form', 'Ajax', 'Number', 'Time');
+	var $helpers = array('Html', 'Form', 'Ajax', 'Number', 'Time', 'File');
 	var $components = array('RequestHandler', 'Number');
 	var $uses = array('Backup', 'SiteParameter');
 	
@@ -21,16 +21,9 @@ class BackupsController extends AppController
 	 */
 	function index()
 	{
-		$this->helpers[] = "Time";
-		$this->helpers[] = "Number";
-		$this->helpers[] = "File";
 		$this->pageTitle = "File Management";
 		
 		Sanitize::clean($this->params['named']);
-		
-		// get the search query if set, else set it to empty string to find all files and folders
-		if(isset($this->params['named']['query'])) $query = $this->params['named']['query'];
-		else $query = "";
 		
 		if(isset($this->params['named']['view']))
 		{
@@ -63,51 +56,16 @@ class BackupsController extends AppController
 				}
 			}
 		}
-
-		if(!empty($query))
-		{
-			if($this->params['named']['view'] == "all")
-			{
-				$conditions = array
-				(
-					'Backup.name LIKE' => '%' . $query . '%',
-					'Backup.user_id' => $this->Auth->user('id'),
-				);
-			}
-			else
-			{
-				$conditions = array
-				(
-					'Backup.name LIKE' => '%' . $query . '%',
-					'Backup.user_id' => $this->Auth->user('id'),
-					'Backup.parent_id' => $folder
-				);
-			}
-			
-			$this->set('search_folder', $this->params['named']['search_folder']);
-		}
-		elseif(isset($folder))
-		{
-			$conditions = array
-			(
-				'Backup.user_id' => $this->Auth->user('id'),
-				'Backup.parent_id' => $folder
-			);
-		}
-		else
-		{
-			$conditions = array
-			(
-				'Backup.user_id' => $this->Auth->user('id'),
-				'Backup.parent_id' => null
-			);
-		}
 		
 		// get all files and folders to display in the table
 		if(isset($folder))
 		{
 			// only get files and folder which are in the specified folder
-			$backups = $this->paginate('Backup', $conditions);
+			$backups = $this->paginate('Backup', array
+			(
+				'Backup.user_id' => $this->Auth->user('id'),
+				'Backup.parent_id' => $folder
+			));
 			
 			// get the path of the current folder
 			$this->set('path', $this->Backup->getpath($folder));
@@ -134,7 +92,11 @@ class BackupsController extends AppController
 		else
 		{
 			// get the files and folders which are in the root folder (ie folder ID is null)
-			$backups = $this->paginate('Backup', $conditions);
+			$backups = $this->paginate('Backup', array
+			(
+				'Backup.user_id' => $this->Auth->user('id'),
+				'Backup.parent_id' => null
+			));
 			
 			// set the folder_id to empty string to indicate root folder, and pass this to the view
 			$this->set('folder_id', '');
@@ -151,14 +113,8 @@ class BackupsController extends AppController
 			));
 		}
 		
-		// if we are displaying search results find out the name of the parent folder of all the files to display in the search listing
-		if(!empty($query)) $backups = $this->Backup->getParentFolderNames($backups);
-		
 		// pass the array of folders to the view for moving files to different folders
 		$this->set('folders', $folders);
-		
-		// pass the query to the view
-		$this->set('query', $query);
 		
 		// pass the upload limit to the view
 		$this->Backup->user_id = $this->Auth->user('id');
@@ -166,6 +122,66 @@ class BackupsController extends AppController
 		
 		// pass the paginated backups to the view
 		$this->set(compact('backups'));
+	}
+	
+	function search()
+	{
+		Sanitize::clean($this->params['named']);
+		
+		$query = $this->params['named']['query'];
+		$folder = &$this->params['named']['folder'];
+		
+		// get all the folders for the user to search in
+		$folders = $this->Backup->find('list', array
+		(
+			'conditions' => array
+			(
+				'type' => 'folder',
+				'user_id' => $this->Auth->user('id')
+			)
+		));
+		
+		if(isset($query) && !empty($query))
+		{
+			if($folder == 'all')
+			{
+				$conditions = array
+				(
+					'Backup.name LIKE' => '%' . $query . '%',
+					'Backup.user_id' => $this->Auth->user('id'),
+				);
+			}
+			else
+			{
+				// if the folder we're search in is the storage folder then we are looking for null parent ids
+				if($folder == 'storage') $searchFolder = null;
+				else $searchFolder = $folder;
+				
+				$conditions = array
+				(
+					'Backup.name LIKE' => '%' . $query . '%',
+					'Backup.user_id' => $this->Auth->user('id'),
+					'Backup.parent_id' => $searchFolder
+				);
+			}
+			
+			$backups = $this->paginate('Backup', $conditions);
+			
+			// get the folder names
+			$backups = $this->Backup->getParentFolderNames($backups);
+			
+			// only pass the backups to the view if the query has been set
+			$this->set('backups', $backups);
+		}
+		else
+		{
+			$this->Session->setFlash('Please enter a query to search for.', 'messages/error');
+		}
+		
+		// pass everything to the view
+		$this->set('query', $query);
+		$this->set('folders', array('all' => 'All folders', 'storage' => 'Storage') + $folders);
+		$this->set('folder', $folder);
 	}
 	
 	/**
@@ -177,7 +193,7 @@ class BackupsController extends AppController
 		{		
 			if(!$this->Backup->createBackupDirectory($this->Auth->user('id')))
 			{
-				$this->Session->setFlash('Sorry, due to a misconfiguration no files can currently be stored.', 'messages/error');
+				$this->Session->setFlash('Sorry, due to a misconfiguration no files can currently be stored. Please contact technical support.', 'messages/error');
 				$this->redirect($this->referer());
 			}
 			

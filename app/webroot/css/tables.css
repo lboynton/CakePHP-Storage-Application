@@ -12,6 +12,8 @@ table th
 	background:url(/img/td_bg.gif) repeat-x 1px 1px;
 	border-top:1px solid #DDD;
 	border-bottom:1px solid #DDD;
+	background:#FFF;
+	border:none;
 	text-transform:uppercase;
 	font-size:9px;
 	/*background:#F5E1C9;*/
@@ -29,7 +31,7 @@ table td
 table tr
 {
 	color:#555;
-	background:#F9F9F9;
+	background:#FFF;
 }
 table tr p
 {
@@ -113,6 +115,10 @@ table td.name
 	width:46%;
 	padding:0;
 }
+table td.name p
+{
+	max-width:400px;
+}
 table th.name
 {
 	text-align:left;
@@ -141,5 +147,10 @@ table td.delete
 }
 table tr.altrow
 {
-	background:#FFF;
+	background:#F9F9F9;
+}
+table select
+{
+	overflow:hidden;
+	max-width:100px;
 }

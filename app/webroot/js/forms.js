@@ -46,7 +46,7 @@ function formHelp()
 	// loop through each input type="text" and input type="password"
 	$$(['input[type="text"]', 'input[type="password"]']).each(function(item)
 	{
-		if(!$(item.id + 'Help')) throw $break;
+		if(!$(item.id + 'Help')) return;
 		
 		// hide the help on page load
 		$(item.id + 'Help').setStyle('visibility:hidden;');	

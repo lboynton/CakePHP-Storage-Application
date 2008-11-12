@@ -8,6 +8,6 @@
 			'Global settings' => '/admin/site_parameters',
 			'Logout' => '/users/logout')
 		);
-    ?> 
+    ?>
     <div class="clear"></div>
 </div>

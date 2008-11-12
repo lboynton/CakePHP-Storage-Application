@@ -13,6 +13,7 @@
 </head>
 <body>
 <div id="container">
+	<?php if($session->check('Auth.User')) echo $this->element('searchForm'); ?>
     <div id="header">
 		<a href="/"><h1></h1></a>
 		<?php 

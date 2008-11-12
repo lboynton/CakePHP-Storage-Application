@@ -57,3 +57,7 @@ form .help
 {
 	background-image:url(/img/information.gif);
 }
+.search .text input
+{
+	background-image:url(/img/magnifier.gif);
+}

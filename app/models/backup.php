@@ -308,13 +308,15 @@ class Backup extends AppModel
 			(
 				'Backup.name' => $folderName,
 				'Backup.parent_id' => $parentId,
-				'Backup.user_id' => $userId
+				'Backup.user_id' => $userId,
+				'Backup.type' => 'folder'
 			)
 		));
 		
 		// return the folder id if it exists
 		if($folder) return $folder['Backup']['id'];
 		
+		$this->useValidationRules('NewFolder');
 		$this->create();
 		
 		// create a new folder
