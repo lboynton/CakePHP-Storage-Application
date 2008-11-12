@@ -27,5 +27,5 @@ General
 	- Tidy up code, especially backups controller.
 	- Consider moving some controller functions to the model
 	- Favicon
-	- Rounded corners for h5
-	- Move search to separate page?
+	- Make sure button styles are consistent
+	- Only use icons which are pages?
