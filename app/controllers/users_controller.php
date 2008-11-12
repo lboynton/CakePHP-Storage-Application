@@ -1,9 +1,11 @@
 <?php 
+App::import('Sanitize');
+
 class UsersController extends AppController
 {
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
-	var $components = array('Number', 'Filter', 'RequestHandler', 'Ticket', 'Email');
+	var $components = array('Number', 'Filter', 'RequestHandler', 'Ticket', 'Email', 'Security');
 	var $uses = array('User', 'SiteParameter');
 	
 	// user pagination defaults
@@ -22,6 +24,8 @@ class UsersController extends AppController
 		$this->Auth->allow('register', 'forgot_password', 'reset_password');
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 		$this->Auth->autoRedirect = false;
+		
+		$this->Security->requirePost('admin_user_level',  'admin_disable', 'admin_delete', 'admin_perform_action', 'admin_quota');
 	}
 
     function index()
@@ -99,6 +103,8 @@ class UsersController extends AppController
 		// check for POST data
 		if (!empty($this->data)) 
 		{
+			$this->data = Sanitize::clean($this->data);
+			
 			// create user with defaults
 			$this->User->create();
 			$this->data['User']['quota'] = $this->SiteParameter->getParam('default_quota');
@@ -139,6 +145,8 @@ class UsersController extends AppController
 		
 		if(!empty($this->data))
 		{
+			$this->data = Sanitize::clean($this->data);
+			
 			$this->User->set($this->data);
 			$this->User->recursive = -1;
 			

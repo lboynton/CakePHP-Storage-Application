@@ -3,7 +3,7 @@ class SiteParametersController extends AppController
 {
 	var $name = 'SiteParameters';
 	var $helpers = array('Html', 'Form');
-	var $components = array('Number');
+	var $components = array('Number', 'Security');
 	
 	function admin_index()
 	{

@@ -29,3 +29,6 @@ General
 	- Favicon
 	- Make sure button styles are consistent
 	- Only use icons which are pages?
+	- Remove checkboxes from search results
+	- Have an icon for the table header for the file type column so that it can be sorted
+	- Align input boxes in the column?

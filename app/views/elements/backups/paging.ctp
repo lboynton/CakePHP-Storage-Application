@@ -29,8 +29,8 @@
     <?php foreach($backups as $i => $backup): ?>
         <tr<?php echo ($i % 2 == 0) ? " class='altrow'" : "" ?>>
             <td class="checkbox"><?php echo $form->checkbox('Backup.ids.'.$backup['Backup']['id']); ?></td>
-            <td class="type"><?php echo $file->icon($backup['Backup']['type'], '/backups/index/view:' . $backup['Backup']['id'], $backup['Backup']['name']); ?></td>
-            <td class="name"><p id="<?php echo 'fileRename' . $backup['Backup']['id'] ?>"><?php echo $backup['Backup']['name']; ?></p></td>
+            <td class="type"><?php echo $file->icon($backup['Backup']['type'], '/backups/index/view:' . $backup['Backup']['id'], Sanitize::html($backup['Backup']['name'])); ?></td>
+            <td class="name"><p id="<?php echo 'fileRename' . $backup['Backup']['id'] ?>"><?php echo Sanitize::html($backup['Backup']['name']); ?></p></td>
             <td><?php if($backup['Backup']['type'] != 'folder') echo $number->toReadableSize($backup['Backup']['size']); ?></td>
 			<?php if(!empty($query)): ?><td><?php echo $html->link($backup['Backup']['folder_name'], '/backups/index/view:' . $backup['Backup']['parent_id']); ?></td><?php endif; ?>
             <td><?php echo $time->niceShort($backup['Backup']['created']); ?></td>
@@ -48,7 +48,7 @@
 					<?php echo $form->input('nofolders', array('options' => array('No folders exist'), 'div' => false, 'label' => 'folder')); ?>
 					<?php echo $javascript->event('BackupNofolders', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>
 				<?php else: ?>
-					<?php echo $form->input('folder', array('options' => $folders, 'div' => false, 'label' => 'folder', 'escape' => false)); ?>
+					<?php echo $form->input('folder', array('options' => $folders, 'div' => false, 'label' => 'folder')); ?>
 					<?php echo $javascript->event('BackupFolder', 'focus', '$(\'BackupActionMove\').checked = true;'); ?>
 				<?php endif; ?>
                 <?php echo $form->submit('Go'); ?>

@@ -1,5 +1,5 @@
 <?php 
-uses('sanitize');
+App::import('Sanitize');
 
 class BackupsController extends AppController
 {
@@ -86,8 +86,8 @@ class BackupsController extends AppController
 			
 			// add parent folder to list of folders to move to
 			$parent = $this->Backup->getparentnode($folder);	
-			$folders[$parent['Backup']['id']] = '&uarr; ' . $parent['Backup']['name'];
-			$folders[''] = '&larr; Storage';
+			$folders[$parent['Backup']['id']] = '^ ' . $parent['Backup']['name'];
+			$folders[''] = '< Storage';
 		}
 		else
 		{
@@ -190,7 +190,9 @@ class BackupsController extends AppController
 	function add() 
 	{
 		if (!empty($this->data))
-		{		
+		{
+			$this->data = Sanitize::clean($this->data);
+			
 			if(!$this->Backup->createBackupDirectory($this->Auth->user('id')))
 			{
 				$this->Session->setFlash('Sorry, due to a misconfiguration no files can currently be stored. Please contact technical support.', 'messages/error');
@@ -223,32 +225,37 @@ class BackupsController extends AppController
 	 */
 	function add_folder()
 	{
-		$this->Backup->useValidationRules('NewFolder');
-		
-		$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
-		$this->data['Backup']['type'] = 'folder';
-		
-		// set parent_id to null for the root folder
-		if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
-		
-		// set the data to the model to check if the data is valid
-		$this->Backup->set($this->data);
-		
-		// set the validation errors as a flash message
-		if (!$this->Backup->validates()) 
+		if($this->data)
 		{
-			// join the validation errors and display them in the flash message
-			$this->Session->setFlash(join(' ', $this->Backup->invalidFields()), 'messages/error');
-			$this->redirect($this->referer());
-		}
-		
-		if($this->Backup->save($this->data))
-		{
-			$this->Session->setFlash('Folder "' . $this->data['Backup']['name'] . '" added.', 'messages/success');
-		}
-		else 
-		{
-			$this->Session->setFlash('The folder could not be created.', 'messages/error');
+			$this->data = Sanitize::clean($this->data);
+			
+			$this->Backup->useValidationRules('NewFolder');
+			
+			$this->data['Backup']['user_id'] = $this->Session->read('Auth.User.id');
+			$this->data['Backup']['type'] = 'folder';
+			
+			// set parent_id to null for the root folder
+			if(empty($this->data['Backup']['parent_id'])) $this->data['Backup']['parent_id'] = null;
+			
+			// set the data to the model to check if the data is valid
+			$this->Backup->set($this->data);
+			
+			// set the validation errors as a flash message
+			if (!$this->Backup->validates()) 
+			{
+				// join the validation errors and display them in the flash message
+				$this->Session->setFlash(join(' ', $this->Backup->invalidFields()), 'messages/error');
+				$this->redirect($this->referer());
+			}
+			
+			if($this->Backup->save($this->data))
+			{
+				$this->Session->setFlash('Folder "' . Sanitize::html($this->data['Backup']['name']) . '" added.', 'messages/success');
+			}
+			else 
+			{
+				$this->Session->setFlash('The folder could not be created.', 'messages/error');
+			}
 		}
 		
 		$this->redirect($this->referer());
@@ -282,6 +289,7 @@ class BackupsController extends AppController
 			// check for POST data
 			if(!empty($this->data))
 			{
+				$this->data = Sanitize::clean($this->data);
 				$this->Backup->id = $id;
 				$this->Backup->useValidationRules('Rename');
 				
@@ -305,7 +313,7 @@ class BackupsController extends AppController
 			}
 			
 			// get the file name
-			$this->set('file', $this->Backup->findById($id));
+			$this->set('theFile', $this->Backup->findById($id));
 		}
 		else $this->redirect('/backups');
 	}
@@ -317,6 +325,8 @@ class BackupsController extends AppController
 	{
 		if(isset($this->data))
 		{
+			$this->data = Sanitize::clean($this->data);
+			
 			if(!isset($this->data['Backup']['ids'])) $this->data['Backup']['ids'] = array();
 			
 			// perform appropriate action
@@ -681,7 +691,7 @@ class BackupsController extends AppController
 		
 		foreach($folders as $folder)
 		{
-			$path .= $folder['Backup']['name'] . DS;
+			$path .= Sanitize::clean($folder['Backup']['name']) . DS;
 		}
 		
 		return $path;
@@ -692,9 +702,9 @@ class BackupsController extends AppController
 		Configure::write('debug', 0);
 		$fp = fopen(BACKUP_ROOT_DIR . $this->Session->read('Auth.User.id') . DS . $file['Backup']['id'], 'r');
 	
-		header('Content-type: unkown');
+		header('Content-type: unknown');
 		header('Content-length: ' . $file['Backup']['size']);
-		header('Content-Disposition: inline; filename="'.$file['Backup']['name'].'"');
+		header('Content-Disposition: inline; filename="'.Sanitize::clean($file['Backup']['name']).'"');
 		echo fread($fp, $file['Backup']['size']);
 		fclose($fp);
 		exit();

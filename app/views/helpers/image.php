@@ -20,7 +20,7 @@ class ImageHelper extends AppHelper {
         $width   = $info[0];
         $height  = $info[1];
         $type    = $info['mime'];
-        $src     = '../img/'.$src;
+        $src     = '/img/'.$src;
         // Check if the user's browser is lower than Internet Explorer 7
         preg_match('~MSIE (.*?);~', $_SERVER['HTTP_USER_AGENT'], $out);
         $needHack = (isset($out[1]) && $out[1] < 7 && $type='image/png') ? true : false;

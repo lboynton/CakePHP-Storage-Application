@@ -128,9 +128,10 @@ table th.name
 	padding:0 0 0 5px;
 	min-width:40%;
 }
-table td.type
+table td.type, table th.type
 {
 	width:16px;
+	padding:0;
 }
 table td.type a
 {

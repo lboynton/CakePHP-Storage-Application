@@ -3,8 +3,8 @@
 
 <h3>User details</h3>
 <dl>
-	<dt>Username</dt><dd><?php echo $user['User']['username']; ?></dd>
-	<dt>Real name</dt><dd><?php echo $user['User']['real_name']; ?></dd>
+	<dt>Username</dt><dd><?php echo Sanitize::html($user['User']['username']); ?></dd>
+	<dt>Real name</dt><dd><?php echo Sanitize::html($user['User']['real_name']); ?></dd>
 	<dt>Email</dt><dd><?php echo $html->link($user['User']['email'], 'mailto:' . $user['User']['email']); ?></dd>
 	<dt>Registered</dt><dd><?php echo $time->niceShort($user['User']['created']); ?></dd>
 	<dt>Last login</dt><dd><?php echo $time->niceShort($user['User']['last_login']); ?></dd>

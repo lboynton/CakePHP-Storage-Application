@@ -1,9 +1,9 @@
 <h2>Your account</h2>
 
-<?php if ($session->read("Auth.User.real_name") != ""): ?>
-<p>Hi <?php echo $session->read("Auth.User.real_name"); ?>. Use this page to view and make changes to your account.</p>
+<?php if($session->read("Auth.User.real_name") != ""): ?>
+<p>Hi <?php echo Sanitize::html($session->read("Auth.User.real_name")); ?>. Use this page to view and make changes to your account.</p>
 <?php else: ?>
-<p>Hi <?php echo $session->read("Auth.User.username"); ?>. Use this page to view and make changes to your account.</p>
+<p>Hi <?php echo Sanitize::html($session->read("Auth.User.username")); ?>. Use this page to view and make changes to your account.</p>
 <?php endif; ?>
 <?php if($session->check('Message.flash')) $session->flash(); ?>
 <h3>Account statistics</h3>

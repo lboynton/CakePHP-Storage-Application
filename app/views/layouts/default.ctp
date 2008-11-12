@@ -4,12 +4,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><?php echo $title_for_layout?></title>
 	<?php /* <link rel="shortcut icon" href="<?php echo $html->url('/favicon.ico');?>" type="image/x-icon" /> */ ?>
-	<?php echo $html->css(array('base', 'forms', 'tables', 'ext-tree', 'ext-dd', 'ext-column-tree')); ?>
+	<?php echo $html->css(array('base', 'forms', 'tables')); ?>
 	
 	<!--[if lt IE 7]><?php echo $html->css(array('ie6')); ?>
 	<![endif]-->
-	<?php echo $javascript->link(array('prototype', 'scriptaculous.js?load=effects,controls', 'ext/adapter/prototype/ext-prototype-adapter.js', 'ext/ext-all-debug.js', 'forms')); ?>
-	<?php echo $scripts_for_layout; ?>
+	<?php echo $javascript->link(array('prototype', 'scriptaculous.js?load=effects,controls', 'forms')); ?>
+	<?php echo $scripts_for_layout."\n"; ?>
 </head>
 <body>
 <div id="container">
