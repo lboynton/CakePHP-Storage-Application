@@ -21,12 +21,14 @@ table th
 	border-collapse:separate;
 	font-weight:bold;
 	padding:0;
+	position:relative;
 }
 table td
 {
 	padding:4px 2px;
 	text-align:center;
 	font-size:10px;
+	position:relative;
 }
 table tr
 {

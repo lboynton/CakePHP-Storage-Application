@@ -61,3 +61,7 @@ form .help
 {
 	background-image:url(/img/magnifier.gif);
 }
+table .checkbox
+{
+	width:auto;
+}
