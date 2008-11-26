@@ -5,7 +5,7 @@ class UsersController extends AppController
 {
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
-	var $components = array('Number', 'Filter', 'RequestHandler', 'Ticket', 'Email', 'Security');
+	var $components = array('Number', 'Filter', 'RequestHandler', 'Ticket', 'Email', 'Security', 'Openid');
 	var $uses = array('User', 'SiteParameter');
 	
 	// user pagination defaults
@@ -21,7 +21,7 @@ class UsersController extends AppController
 		parent::beforeFilter();
 		
 		// allow unregistered access to the register and forgot password pages
-		$this->Auth->allow('register', 'forgot_password', 'reset_password');
+		$this->Auth->allow('register', 'forgot_password', 'reset_password', 'openid');
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 		$this->Auth->autoRedirect = false;
 		
@@ -236,6 +236,37 @@ class UsersController extends AppController
         $this->Ticket->del($hash);
         $this->redirect('/');
 	}
+
+    function openid()
+    {
+        $returnTo = 'http://'.$_SERVER['SERVER_NAME'].'/users/openid';
+
+        if (!empty($this->data)) {
+            try {
+                $this->Openid->authenticate($this->data['OpenidUrl']['openid'], $returnTo, 'http://'.$_SERVER['SERVER_NAME']);
+            } catch (InvalidArgumentException $e) {
+                $this->setMessage('Invalid OpenID');
+            } catch (Exception $e) {
+                $this->setMessage($e->getMessage());
+            }
+        } elseif (count($_GET) > 1) {
+            $response = $this->Openid->getResponse($returnTo);
+
+            if ($response->status == Auth_OpenID_CANCEL) {
+                $this->setMessage('Verification cancelled');
+            } elseif ($response->status == Auth_OpenID_FAILURE) {
+                $this->setMessage('OpenID verification failed: '.$response->message);
+            } elseif ($response->status == Auth_OpenID_SUCCESS) {
+                echo 'successfully authenticated!';
+                exit;
+            }
+        }
+    }
+
+    private function setMessage($message)
+    {
+        $this->set('message', $message);
+    }
 	
 	function _update_details()
 	{

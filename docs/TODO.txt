@@ -32,3 +32,4 @@ General
 	- Remove checkboxes from search results
 	- Have an icon for the table header for the file type column so that it can be sorted
 	- Align input boxes in the column?
+    - See if we can remove the need for the redirectToNamedParameters() function
