@@ -203,8 +203,6 @@ class Backup extends AppModel
 	 */	
 	function isDuplicateFile($name, $parent_id, $hash)
 	{
-		die($this->user_id);
-		
 		return (boolean) $this->find('first', array
 		(
 			'conditions' => array
@@ -216,8 +214,6 @@ class Backup extends AppModel
 			),
 			'recursive' => false
 		));
-		
-		
 	}
 	
 	function validateNewFolder($data)
