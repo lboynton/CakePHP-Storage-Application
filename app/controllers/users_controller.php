@@ -245,7 +245,7 @@ class UsersController extends AppController
         {
             try
             {
-                $this->Openid->authenticate($this->data['OpenidUrl']['openid'], $returnTo, 'http://'.$_SERVER['SERVER_NAME']);
+                $this->Openid->authenticate($this->data['User']['open_id'], $returnTo, 'http://'.$_SERVER['SERVER_NAME']);
             } 
             catch (InvalidArgumentException $e)
             {

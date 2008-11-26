@@ -35,8 +35,8 @@ h2
 	color:#385F95;
 	font-size:14px;
 	margin:4px 0 10px 0;
-	text-transform:uppercase;
 	letter-spacing:1px;
+    text-transform:capitalize;
 }
 h3
 {
