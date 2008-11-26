@@ -15,7 +15,7 @@ class AppController extends Controller
 		$this->Auth->allow(array('controller' => 'pages', 'action' => 'display', 'home'));
 		// controller action access is defined on a per controller basis
 		
-		$this->_redirectToNamedParameters();
+		//$this->_redirectToNamedParameters();
 	}
 	
 	function isAuthorized() 

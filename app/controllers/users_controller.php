@@ -241,31 +241,39 @@ class UsersController extends AppController
     {
         $returnTo = 'http://'.$_SERVER['SERVER_NAME'].'/users/openid';
 
-        if (!empty($this->data)) {
-            try {
+        if (!empty($this->data))
+        {
+            try
+            {
                 $this->Openid->authenticate($this->data['OpenidUrl']['openid'], $returnTo, 'http://'.$_SERVER['SERVER_NAME']);
-            } catch (InvalidArgumentException $e) {
-                $this->setMessage('Invalid OpenID');
-            } catch (Exception $e) {
-                $this->setMessage($e->getMessage());
+            } 
+            catch (InvalidArgumentException $e)
+            {
+                $this->Session->setFlash('Sorry, that is an invalid OpenID.', 'messages/error');
+            } 
+            catch (Exception $e)
+            {
+                $this->Session->setFlash($e->getMessage(), 'messages/error');
             }
-        } elseif (count($_GET) > 1) {
+        } 
+        elseif (count($_GET) > 1)
+        {
             $response = $this->Openid->getResponse($returnTo);
 
-            if ($response->status == Auth_OpenID_CANCEL) {
-                $this->setMessage('Verification cancelled');
-            } elseif ($response->status == Auth_OpenID_FAILURE) {
-                $this->setMessage('OpenID verification failed: '.$response->message);
-            } elseif ($response->status == Auth_OpenID_SUCCESS) {
-                echo 'successfully authenticated!';
-                exit;
+            if ($response->status == Auth_OpenID_CANCEL)
+            {
+                $this->Session->setFlash('Verification was cancelled by the user.', 'messages/error');
+            } 
+            elseif ($response->status == Auth_OpenID_FAILURE)
+            {
+                $this->Session->setFlash('OpenID verification failed: '.$response->message, 'messages/error');
+            } 
+            elseif ($response->status == Auth_OpenID_SUCCESS)
+            {
+                $this->Session->setFlash('Successfully authenticated!', 'messages/success');
+                //exit;
             }
         }
-    }
-
-    private function setMessage($message)
-    {
-        $this->set('message', $message);
     }
 	
 	function _update_details()
