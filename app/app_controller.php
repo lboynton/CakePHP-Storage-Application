@@ -38,6 +38,7 @@ class AppController extends Controller
 	
 	/**
 	 * Checks for normal GET parameters and redirects them to the named parameter equivalent
+     * Looks nicer than normal parameters and the pagination includes them by default
 	 */
 	function _redirectToNamedParameters()
 	{
