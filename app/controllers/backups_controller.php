@@ -5,7 +5,7 @@ class BackupsController extends AppController
 {
 	var $name = "Backups";
 	var $helpers = array('Html', 'Form', 'Ajax', 'Number', 'Time', 'File');
-	var $components = array('RequestHandler', 'Number');
+	var $components = array('RequestHandler', 'Number', 'Security');
 	var $uses = array('Backup', 'SiteParameter');
 	
 	// pagination defaults

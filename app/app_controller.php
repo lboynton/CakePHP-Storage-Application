@@ -14,8 +14,11 @@ class AppController extends Controller
 		// allow unregistered access to the homepage
 		$this->Auth->allow(array('controller' => 'pages', 'action' => 'display', 'home'));
 		// controller action access is defined on a per controller basis
-		
-		//$this->_redirectToNamedParameters();
+
+        if(!($this->params['controller'] == "users" && $this->params['action'] == "openid"))
+        {
+            $this->_redirectToNamedParameters();
+        }
 	}
 	
 	function isAuthorized() 
@@ -42,7 +45,8 @@ class AppController extends Controller
 		
 		foreach($this->params['url'] as $param => $paramValue)
 		{
-			if($param != 'url') $namedParams .= $param . ":" . $paramValue . '/';
+            // don't redirect Security component fields, url field causes endless redirect loop
+			if($param != 'url' && $param != 'token' && $param != 'fields' && $param != 'key') $namedParams .= $param . ":" . $paramValue . '/';
 		}
 		
 		if(isset($namedParams))
