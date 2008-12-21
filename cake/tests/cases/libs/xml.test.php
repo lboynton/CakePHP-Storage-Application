@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: xml.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: xml.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,34 +8,31 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.5432
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.5432
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Xml');
 
 /**
  * Short description for class.
  *
- * @package    cake.tests
- * @subpackage cake.tests.cases.libs
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
  */
 class XmlTest extends CakeTestCase {
-
 	function setUp() {
 		$manager =& new XmlManager();
 		$manager->namespaces = array();
@@ -162,10 +159,25 @@ class XmlTest extends CakeTestCase {
  */
 	function testArraySingleSerialization() {
 		$input = array(
-			'Post' => array('id' => '1', 'author_id' => '1', 'title' => 'First Post', 'body' => 'First Post Body', 'published' => 'Y', 'created' => '2007-03-18 10:39:23', 'updated' => '2007-03-18 10:41:31'),
-			'Author' => array('id' => '1', 'user' => 'mariano', 'password' => '5f4dcc3b5aa765d61d8327deb882cf99', 'created' => '2007-03-17 01:16:23', 'updated' => '2007-03-17 01:18:31', 'test' => 'working'),
+			'Post' => array(
+				'id' => '1', 'author_id' => '1', 'title' => 'First Post',
+				'body' => 'First Post Body', 'published' => 'Y',
+				'created' => '2007-03-18 10:39:23', 'updated' => '2007-03-18 10:41:31'
+			),
+			'Author' => array(
+				'id' => '1', 'user' => 'mariano', 'password' => '5f4dcc3b5aa765d61d8327deb882cf99',
+				'created' => '2007-03-17 01:16:23', 'updated' => '2007-03-17 01:18:31', 'test' => 'working'
+			)
 		);
-		$expected = '<post><id>1</id><author_id>1</author_id><title><![CDATA[First Post]]></title><body><![CDATA[First Post Body]]></body><published><![CDATA[Y]]></published><created><![CDATA[2007-03-18 10:39:23]]></created><updated><![CDATA[2007-03-18 10:41:31]]></updated><author><id>1</id><user><![CDATA[mariano]]></user><password><![CDATA[5f4dcc3b5aa765d61d8327deb882cf99]]></password><created><![CDATA[2007-03-17 01:16:23]]></created><updated><![CDATA[2007-03-17 01:18:31]]></updated><test><![CDATA[working]]></test></author></post>';
+
+		$expected = '<post><id>1</id><author_id>1</author_id><title><![CDATA[First Post]]>';
+		$expected .= '</title><body><![CDATA[First Post Body]]></body><published><![CDATA[Y]]>';
+		$expected .= '</published><created><![CDATA[2007-03-18 10:39:23]]></created><updated>';
+		$expected .= '<![CDATA[2007-03-18 10:41:31]]></updated><author><id>1</id><user>';
+		$expected .= '<![CDATA[mariano]]></user><password><![CDATA[5f4dcc3b5aa765d61d8327deb882';
+		$expected .= 'cf99]]></password><created><![CDATA[2007-03-17 01:16:23]]></created>';
+		$expected .= '<updated><![CDATA[2007-03-17 01:18:31]]></updated><test><![CDATA[working]]>';
+		$expected .= '</test></author></post>';
 
 		$xml = new Xml($input, array('format' => 'tags'));
 		$result = $xml->toString(false);
@@ -960,7 +972,6 @@ class XmlTest extends CakeTestCase {
 		));
 
 		$this->assertEqual($result, $expected);
-
 	}
 
 
@@ -997,5 +1008,41 @@ class XmlTest extends CakeTestCase {
 		$node->addNamespace('cake', 'http://cakephp.org');
 		$this->assertEqual($node->toString(), '<xml xmlns:cake="http://cakephp.org" />');
 	}
+
+	function testCamelize() {
+		$xmlString = '<methodCall><methodName>examples.getStateName</methodName>' .
+			'<params><param><value><i4>41</i4></value></param></params></methodCall>';
+
+		$Xml = new Xml($xmlString);
+		$expected = array(
+			'methodCall' => array(
+				'methodName' => 'examples.getStateName',
+					'params' => array(
+						'param' => array('value' => array('i4' => 41)))));
+		$this->assertEqual($expected, $Xml->toArray(false));
+
+		$Xml = new Xml($xmlString);
+		$expected = array(
+			'MethodCall' => array(
+				'methodName' => 'examples.getStateName',
+					'Params' => array(
+						'Param' => array('Value' => array('i4' => 41)))));
+		$this->assertEqual($expected, $Xml->toArray());
+	}
+
+	function testNumericDataHandling() {
+		$data = '<xml><data>012345</data></xml>';
+
+		$node = new Xml();
+		$node->load($data);
+		$node->parse();
+
+		$result = $node->first();
+		$result = $result->children("data");
+
+		$result = $result[0]->first();
+		$this->assertEqual($result->value, '012345');
+	}
 }
+
 ?>

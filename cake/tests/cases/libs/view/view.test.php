@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: view.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: view.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,23 +8,21 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', array('View', 'Controller'));
 if (!class_exists('ErrorHandler')) {
@@ -36,8 +34,8 @@ if (!defined('CAKEPHP_UNIT_TEST_EXECUTION')) {
 /**
  * ViewPostsController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view
  */
 class ViewPostsController extends Controller {
 /**
@@ -80,8 +78,8 @@ class ViewPostsController extends Controller {
 /**
  * ViewTestErrorHandler class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view
  */
 class ViewTestErrorHandler extends ErrorHandler {
 /**
@@ -97,8 +95,8 @@ class ViewTestErrorHandler extends ErrorHandler {
 /**
  * TestView class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view
  */
 class TestView extends View {
 /**
@@ -160,8 +158,8 @@ class TestView extends View {
 /**
  * TestAfterHelper class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view
  */
 class TestAfterHelper extends Helper {
 /**
@@ -194,8 +192,8 @@ class TestAfterHelper extends Helper {
 /**
  * Short description for class.
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
  */
 class ViewTest extends CakeTestCase {
 /**
@@ -402,7 +400,7 @@ class ViewTest extends CakeTestCase {
 
 		$cached = false;
 		$result = $View->element($element, array('cache'=>'+1 second'));
-		if(file_exists(CACHE . 'views' . DS . 'element_cache_'.$element)) {
+		if (file_exists(CACHE . 'views' . DS . 'element_cache_'.$element)) {
 			$cached = true;
 			unlink(CACHE . 'views' . DS . 'element_cache_'.$element);
 		}
@@ -410,7 +408,7 @@ class ViewTest extends CakeTestCase {
 
 		$cached = false;
 		$result = $View->element($element, array('cache'=>'+1 second', 'other_param'=> true, 'anotherParam'=> true));
-		if(file_exists(CACHE . 'views' . DS . 'element_cache_other_param_anotherParam_'.$element)) {
+		if (file_exists(CACHE . 'views' . DS . 'element_cache_other_param_anotherParam_'.$element)) {
 			$cached = true;
 			unlink(CACHE . 'views' . DS . 'element_cache_other_param_anotherParam_'.$element);
 		}
@@ -418,7 +416,7 @@ class ViewTest extends CakeTestCase {
 
 		$cached = false;
 		$result = $View->element($element, array('cache'=>array('time'=>'+1 second', 'key'=>'/whatever/here')));
-		if(file_exists(CACHE . 'views' . DS . 'element_'.Inflector::slug('/whatever/here').'_'.$element)) {
+		if (file_exists(CACHE . 'views' . DS . 'element_'.Inflector::slug('/whatever/here').'_'.$element)) {
 			$cached = true;
 			unlink(CACHE . 'views' . DS . 'element_'.Inflector::slug('/whatever/here').'_'.$element);
 		}
@@ -426,7 +424,7 @@ class ViewTest extends CakeTestCase {
 
 		$cached = false;
 		$result = $View->element($element, array('cache'=>array('time'=>'+1 second', 'key'=>'whatever_here')));
-		if(file_exists(CACHE . 'views' . DS . 'element_whatever_here_'.$element)) {
+		if (file_exists(CACHE . 'views' . DS . 'element_whatever_here_'.$element)) {
 			$cached = true;
 			unlink(CACHE . 'views' . DS . 'element_whatever_here_'.$element);
 		}

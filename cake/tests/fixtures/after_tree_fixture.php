@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: after_tree_fixture.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: after_tree_fixture.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for after_tree_fixture.php
  *
@@ -7,27 +7,27 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework <http://www.cakephp.org/>
+ * CakePHP(tm) : Rapid Development Framework (http://www.cakephp.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright            CakePHP(tm) : Rapid Development Framework <http://www.cakephp.org/>
- * @link                 http://www.cakephp.org
- * @package              cake
- * @subpackage           cake.tests.fixtures
- * @since                1.2
- * @version              $Revision: 7690 $
- * @modifiedBy           $LastChangedBy: nate $
- * @lastModified         $Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license              http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     CakePHP(tm) : Rapid Development Framework (http://www.cakephp.org)
+ * @link          http://www.cakephp.org
+ * @package       cake
+ * @subpackage    cake.tests.fixtures
+ * @since         1.2
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * AdFixture class
  *
- * @package              cake
- * @subpackage           cake.tests.fixtures
+ * @package       cake
+ * @subpackage    cake.tests.fixtures
  */
 class AfterTreeFixture extends CakeTestFixture {
 /**

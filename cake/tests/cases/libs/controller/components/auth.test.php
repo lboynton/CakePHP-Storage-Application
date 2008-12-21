@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: auth.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: auth.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,23 +8,21 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake
- * @subpackage		cake.cake.tests.cases.libs.controller.components
- * @since			CakePHP(tm) v 1.2.0.5347
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.cake.tests.cases.libs.controller.components
+ * @since         CakePHP(tm) v 1.2.0.5347
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import(array('controller' . DS . 'components' . DS .'auth', 'controller' . DS . 'components' . DS .'acl'));
 App::import(array('controller'.DS.'components'.DS.'acl', 'model'.DS.'db_acl'));
@@ -34,8 +32,8 @@ Configure::write('Security.salt', 'JfIxfs2guVoUubWDYhG93b0qyJfIxfs2guwvniR2G0Fga
 /**
 * Short description for class.
 *
-* @package		cake.tests
-* @subpackage	cake.tests.cases.libs.controller.components
+* @package       cake.tests
+* @subpackage    cake.tests.cases.libs.controller.components
 */
 class TestAuthComponent extends AuthComponent {
 /**
@@ -65,8 +63,8 @@ class TestAuthComponent extends AuthComponent {
 /**
 * Short description for class.
 *
-* @package		cake.tests
-* @subpackage	cake.tests.cases.libs.controller.components
+* @package       cake.tests
+* @subpackage    cake.tests.cases.libs.controller.components
 */
 class AuthUser extends CakeTestModel {
 /**
@@ -121,8 +119,8 @@ class AuthUser extends CakeTestModel {
 /**
 * Short description for class.
 *
-* @package		cake.tests
-* @subpackage	cake.tests.cases.libs.controller.components
+* @package       cake.tests
+* @subpackage    cake.tests.cases.libs.controller.components
 */
 class UuidUser extends CakeTestModel {
 /**
@@ -184,8 +182,8 @@ class UuidUser extends CakeTestModel {
 /**
 * Short description for class.
 *
-* @package		cake.tests
-* @subpackage	cake.tests.cases.libs.controller.components
+* @package       cake.tests
+* @subpackage    cake.tests.cases.libs.controller.components
 */
 class AuthTestController extends Controller {
 /**
@@ -289,17 +287,31 @@ class AuthTestController extends Controller {
  * @return void
  */
 	function isAuthorized() {
-		if(isset($this->params['testControllerAuth'])) {
+		if (isset($this->params['testControllerAuth'])) {
 			return false;
 		}
 		return true;
+	}
+/**
+ * Mock delete method
+ *
+ * @param mixed $url
+ * @param mixed $status
+ * @param mixed $exit
+ * @access public
+ * @return void
+ */
+	function delete($id = null) {
+		if ($this->TestAuth->testStop !== true && $id !== null) {
+			echo 'Deleted Record: ' . var_export($id, true);
+		}
 	}
 }
 /**
  * AjaxAuthController class
  *
- * @package		cake
- * @subpackage	cake.tests.cases.libs.controller.components
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller.components
  */
 class AjaxAuthController extends Controller {
 /**
@@ -361,7 +373,7 @@ class AjaxAuthController extends Controller {
  * @access public
  * @return void
  */
-	function redirect($url, $status, $exit) {
+	function redirect($url, $status = null, $exit = true) {
 		$this->testUrl = Router::url($url);
 		return false;
 	}
@@ -369,8 +381,8 @@ class AjaxAuthController extends Controller {
 /**
 * Short description for class.
 *
-* @package		cake.tests
-* @subpackage	cake.tests.cases.libs.controller.components
+* @package       cake.tests
+* @subpackage    cake.tests.cases.libs.controller.components
 */
 class AuthTest extends CakeTestCase {
 /**
@@ -556,7 +568,6 @@ class AuthTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->Session->check('Message.auth'));
 		$result = $this->Controller->Auth->isAuthorized();
 		$this->assertFalse($result);
-
 	}
 
 /**
@@ -576,19 +587,21 @@ class AuthTest extends CakeTestCase {
 		$this->Controller->Acl->name = 'DbAclTest';
 
 		$this->Controller->Acl->Aro->id = null;
-		$this->Controller->Acl->Aro->create(array('alias'=>'Roles'));
+		$this->Controller->Acl->Aro->create(array('alias' => 'Roles'));
 		$result = $this->Controller->Acl->Aro->save();
 		$this->assertTrue($result);
 
 		$parent = $this->Controller->Acl->Aro->id;
 
-		$this->Controller->Acl->Aro->create(array('parent_id'=> $parent, 'alias'=>'Admin'));
+		$this->Controller->Acl->Aro->create(array('parent_id' => $parent, 'alias' => 'Admin'));
 		$result = $this->Controller->Acl->Aro->save();
 		$this->assertTrue($result);
 
 		$parent = $this->Controller->Acl->Aro->id;
 
-		$this->Controller->Acl->Aro->create(array('model' => 'AuthUser', 'parent_id' => $parent, 'foreign_key' => 1, 'alias'=> 'mariano'));
+		$this->Controller->Acl->Aro->create(array(
+			'model' => 'AuthUser', 'parent_id' => $parent, 'foreign_key' => 1, 'alias'=> 'mariano'
+		));
 		$result = $this->Controller->Acl->Aro->save();
 		$this->assertTrue($result);
 
@@ -612,15 +625,30 @@ class AuthTest extends CakeTestCase {
 		$this->Controller->Auth->actionPath = 'Root/';
 
 		$this->Controller->Auth->startup($this->Controller);
-
-
 		$this->assertTrue($this->Controller->Auth->isAuthorized());
 
 		$this->Controller->Session->del('Auth');
 		$this->Controller->Auth->startup($this->Controller);
 		$this->assertTrue($this->Controller->Session->check('Message.auth'));
 	}
+/**
+ * Tests that deny always takes precedence over allow
+ *
+ * @access public
+ * @return void
+ */
+	function testAllowDenyAll() {
+		$this->Controller->Auth->initialize($this->Controller);
 
+		$this->Controller->Auth->allow('*');
+		$this->Controller->Auth->deny('add');
+
+		$this->Controller->action = 'delete';
+		$this->assertTrue($this->Controller->Auth->startup($this->Controller));
+
+		$this->Controller->action = 'add';
+		$this->assertFalse($this->Controller->Auth->startup($this->Controller));
+	}
 /**
  * testLoginRedirect method
  *
@@ -636,13 +664,17 @@ class AuthTest extends CakeTestCase {
 
 		$_SERVER['HTTP_REFERER'] = false;
 
-		$this->Controller->Session->write('Auth', array('AuthUser' => array('id'=>'1', 'username'=>'nate')));
+		$this->Controller->Session->write('Auth', array(
+			'AuthUser' => array('id' => '1', 'username' => 'nate')
+		));
 
 		$this->Controller->params['url']['url'] = 'users/login';
 		$this->Controller->Auth->initialize($this->Controller);
 
 		$this->Controller->Auth->userModel = 'AuthUser';
-		$this->Controller->Auth->loginRedirect = array('controller' => 'pages', 'action' => 'display', 'welcome');
+		$this->Controller->Auth->loginRedirect = array(
+			'controller' => 'pages', 'action' => 'display', 'welcome'
+		);
 		$this->Controller->Auth->startup($this->Controller);
 		$expected = Router::normalize($this->Controller->Auth->loginRedirect);
 		$this->assertEqual($expected, $this->Controller->Auth->redirect());
@@ -666,14 +698,18 @@ class AuthTest extends CakeTestCase {
 		putenv('HTTP_REFERER=');
 		$url = '/posts/view/1';
 
-		$this->Controller->Session->write('Auth', array('AuthUser' => array('id'=>'1', 'username'=>'nate')));
+		$this->Controller->Session->write('Auth', array(
+			'AuthUser' => array('id' => '1', 'username' => 'nate'))
+		);
 		$this->Controller->testUrl = null;
 		$this->Controller->params = Router::parse($url);
 		$this->Controller->Auth->initialize($this->Controller);
 		$this->Controller->Auth->authorize = 'controller';
 		$this->Controller->params['testControllerAuth'] = true;
 
-		$this->Controller->Auth->loginAction = array('controller' => 'AuthTest', 'action' => 'login');
+		$this->Controller->Auth->loginAction = array(
+			'controller' => 'AuthTest', 'action' => 'login'
+		);
 		$this->Controller->Auth->userModel = 'AuthUser';
 		$this->Controller->Auth->startup($this->Controller);
 		$expected = Router::normalize('/');
@@ -681,17 +717,18 @@ class AuthTest extends CakeTestCase {
 
 
 		$this->Controller->Session->del('Auth');
-		$_SERVER['HTTP_REFERER'] = '/admin/';
+		$_SERVER['HTTP_REFERER'] = Router::url('/admin/', true);
 
-		$this->Controller->Session->write('Auth', array('AuthUser' => array('id'=>'1', 'username'=>'nate')));
-		
+		$this->Controller->Session->write('Auth', array(
+			'AuthUser' => array('id'=>'1', 'username'=>'nate'))
+		);
 		$this->Controller->params['url']['url'] = 'auth_test/login';
 		$this->Controller->Auth->initialize($this->Controller);
 		$this->Controller->Auth->loginAction = 'auth_test/login';
 		$this->Controller->Auth->userModel = 'AuthUser';
 		$this->Controller->Auth->loginRedirect = false;
 		$this->Controller->Auth->startup($this->Controller);
-		$expected = Router::normalize('admin');
+		$expected = Router::normalize('/admin');
 		$this->assertEqual($expected, $this->Controller->Auth->redirect());
 
 		//Ticket #4750
@@ -715,6 +752,30 @@ class AuthTest extends CakeTestCase {
 		$this->Controller->Auth->userModel = 'AuthUser';
 		$this->Controller->Auth->startup($this->Controller);
 		$expected = Router::normalize('posts/view/1');
+		$this->assertEqual($expected, $this->Controller->Session->read('Auth.redirect'));
+
+		//external authed action
+		$_SERVER['HTTP_REFERER'] = 'http://webmail.example.com/view/message';
+		$this->Controller->Session->del('Auth');
+		$url = '/posts/edit/1';
+		$this->Controller->params = Router::parse($url);
+		$this->Controller->Auth->initialize($this->Controller);
+		$this->Controller->Auth->loginAction = array('controller' => 'AuthTest', 'action' => 'login');
+		$this->Controller->Auth->userModel = 'AuthUser';
+		$this->Controller->Auth->startup($this->Controller);
+		$expected = Router::normalize('/posts/edit/1');
+		$this->assertEqual($expected, $this->Controller->Session->read('Auth.redirect'));
+
+		//external direct login link
+		$_SERVER['HTTP_REFERER'] = 'http://webmail.example.com/view/message';
+		$this->Controller->Session->del('Auth');
+		$url = '/AuthTest/login';
+		$this->Controller->params = Router::parse($url);
+		$this->Controller->Auth->initialize($this->Controller);
+		$this->Controller->Auth->loginAction = array('controller' => 'AuthTest', 'action' => 'login');
+		$this->Controller->Auth->userModel = 'AuthUser';
+		$this->Controller->Auth->startup($this->Controller);
+		$expected = Router::normalize('/');
 		$this->assertEqual($expected, $this->Controller->Session->read('Auth.redirect'));
 
 		$_SERVER['HTTP_REFERER'] = $backup;
@@ -834,14 +895,24 @@ class AuthTest extends CakeTestCase {
  */
 	function testCustomRoute() {
 		Router::reload();
-		Router::connect('/:lang/:controller/:action/*', array('lang' => null), array('lang' => '[a-z]{2,3}'));
+		Router::connect(
+			'/:lang/:controller/:action/*',
+			array('lang' => null),
+			array('lang' => '[a-z]{2,3}')
+		);
 
 		$url = '/en/users/login';
 		$this->Controller->params = Router::parse($url);
-		Router::setRequestInfo(array($this->Controller->passedArgs, array('base' => null, 'here' => $url, 'webroot' => '/', 'passedArgs' => array(), 'argSeparator' => ':', 'namedArgs' => array())));
+		Router::setRequestInfo(array($this->Controller->passedArgs, array(
+			'base' => null, 'here' => $url, 'webroot' => '/', 'passedArgs' => array(),
+			'argSeparator' => ':', 'namedArgs' => array()
+		)));
 
 		$this->AuthUser =& new AuthUser();
-		$user = array('id' => 1, 'username' => 'felix', 'password' => Security::hash(Configure::read('Security.salt') . 'cake'));
+		$user = array(
+			'id' => 1, 'username' => 'felix',
+			'password' => Security::hash(Configure::read('Security.salt') . 'cake'
+		));
 		$user = $this->AuthUser->save($user, false);
 
 		$this->Controller->data['AuthUser'] = array('username' => 'felix', 'password' => 'cake');
@@ -871,8 +942,9 @@ class AuthTest extends CakeTestCase {
 		$this->Controller->params['url']['url'] = ltrim($url, '/');
 		Router::setRequestInfo(array(
 			array(
-				'pass' => array(), 'action' => 'index', 'plugin' => null, 'controller' => 'something',
-				'admin' => true, 'url' => array('url' => $this->Controller->params['url']['url']),
+				'pass' => array(), 'action' => 'index', 'plugin' => null,
+				'controller' => 'something', 'admin' => true,
+				'url' => array('url' => $this->Controller->params['url']['url'])
 			),
 			array(
 				'base' => null, 'here' => $url,
@@ -881,7 +953,9 @@ class AuthTest extends CakeTestCase {
 		));
 		$this->Controller->Auth->initialize($this->Controller);
 
-		$this->Controller->Auth->loginAction = array('admin' => true, 'controller' => 'auth_test', 'action' => 'login');
+		$this->Controller->Auth->loginAction = array(
+			'admin' => true, 'controller' => 'auth_test', 'action' => 'login'
+		);
 		$this->Controller->Auth->userModel = 'AuthUser';
 
 		$this->Controller->Auth->startup($this->Controller);

@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: javascript.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: javascript.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -9,42 +9,40 @@
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
  * Copyright 2006-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2006-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs.view.helpers
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2006-2008, Cake Software Foundation, Inc.
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.view.helpers
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', array('Controller', 'View', 'ClassRegistry', 'View'));
 App::import('Helper', array('Javascript', 'Html', 'Form'));
 /**
  * TheJsTestController class
- * 
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view.helpers
+ *
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view.helpers
  */
 class TheJsTestController extends Controller {
 /**
  * name property
- * 
+ *
  * @var string 'TheTest'
  * @access public
  */
 	var $name = 'TheTest';
 /**
  * uses property
- * 
+ *
  * @var mixed null
  * @access public
  */
@@ -52,14 +50,14 @@ class TheJsTestController extends Controller {
 }
 /**
  * TheView class
- * 
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view.helpers
+ *
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view.helpers
  */
 class TheView extends View {
 /**
  * scripts method
- * 
+ *
  * @access public
  * @return void
  */
@@ -69,21 +67,21 @@ class TheView extends View {
 }
 /**
  * TestJavascriptObject class
- * 
- * @package              cake
- * @subpackage           cake.tests.cases.libs.view.helpers
+ *
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.view.helpers
  */
 class TestJavascriptObject {
 /**
  * property1 property
- * 
+ *
  * @var string 'value1'
  * @access public
  */
 	var $property1 = 'value1';
 /**
  * property2 property
- * 
+ *
  * @var int 2
  * @access public
  */
@@ -92,14 +90,14 @@ class TestJavascriptObject {
 /**
  * Short description for class.
  *
- * @package    test_suite
- * @subpackage test_suite.cases.libs
- * @since      CakePHP Test Suite v 1.0.0.0
+ * @package       test_suite
+ * @subpackage    test_suite.cases.libs
+ * @since         CakePHP Test Suite v 1.0.0.0
  */
 class JavascriptTest extends CakeTestCase {
 /**
  * setUp method
- * 
+ *
  * @access public
  * @return void
  */
@@ -112,7 +110,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * tearDown method
- * 
+ *
  * @access public
  * @return void
  */
@@ -125,7 +123,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testConstruct method
- * 
+ *
  * @access public
  * @return void
  */
@@ -138,7 +136,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testLink method
- * 
+ *
  * @access public
  * @return void
  */
@@ -198,7 +196,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testFilteringAndTimestamping method
- * 
+ *
  * @access public
  * @return void
  */
@@ -243,11 +241,28 @@ class JavascriptTest extends CakeTestCase {
 			Configure::delete('Asset.filter.js');
 		}
 
+		$debug = Configure::read('debug');
+		$webroot = $this->Javascript->webroot;
+
+		Configure::write('debug', 0);
+		Configure::write('Asset.timestamp', 'force');
+
+		$this->Javascript->webroot = '/testing/';
+		$result = $this->Javascript->link('__cake_js_test');
+		$this->assertPattern('/^<script[^<>]+src="\/testing\/js\/__cake_js_test\.js\?"[^<>]*>/', $result);
+
+		$this->Javascript->webroot = '/testing/longer/';
+		$result = $this->Javascript->link('__cake_js_test');
+		$this->assertPattern('/^<script[^<>]+src="\/testing\/longer\/js\/__cake_js_test\.js\?"[^<>]*>/', $result);
+
+		$this->Javascript->webroot = $webroot;
+		Configure::write('debug', $debug);
+
 		unlink(JS . '__cake_js_test.js');
 	}
 /**
  * testValue method
- * 
+ *
  * @access public
  * @return void
  */
@@ -293,7 +308,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testObjectGeneration method
- * 
+ *
  * @access public
  * @return void
  */
@@ -324,11 +339,11 @@ class JavascriptTest extends CakeTestCase {
 			if (!$this->Javascript->useNative) {
 				$number = sprintf("%.11f", $number);
 			}
-			
+
 			$result = $this->Javascript->object(array('Object' => array(true, false, 1, '02101', 0, -1, 3.141592653589, "1")));
 			$expected = '{"Object":[true,false,1,"02101",0,-1,' . $number . ',"1"]}';
 			$this->assertEqual($result, $expected);
-	
+
 			$result = $this->Javascript->object(array('Object' => array(true => true, false, -3.141592653589, -10)));
 			$expected = '{"Object":{"1":true,"2":false,"3":' . (-1 * $number) . ',"4":-10}}';
 			$this->assertEqual($result, $expected);
@@ -359,14 +374,14 @@ class JavascriptTest extends CakeTestCase {
 	}
 	/**
  * testObjectNonNative method
- * 
+ *
  * @access public
  * @return void
  */
 	function testObjectNonNative() {
-		$oldNative = $this->Javascript->useNative; 
+		$oldNative = $this->Javascript->useNative;
 		$this->Javascript->useNative = false;
-		
+
 		$object = array(
 			'Object' => array(
 				'key1' => 'val1',
@@ -378,35 +393,35 @@ class JavascriptTest extends CakeTestCase {
 		$expected = '{"Object":{"key1":val1,"key2":"val2","key3":val3}}';
 		$result = $this->Javascript->object($object, array('quoteKeys' => false, 'stringKeys' => array('key1', 'key3')));
 		$this->assertEqual($result, $expected);
-		
+
 		$this->Javascript->useNative = $oldNative;
 	}
 /**
  * testScriptBlock method
- * 
+ *
  * @access public
  * @return void
  */
 	function testScriptBlock() {
-		$result = $this->Javascript->codeBlock('something', true, false);
+		$result = $this->Javascript->codeBlock('something', array('allowCache' => true, 'safe' => false));
 		$this->assertPattern('/^<script[^<>]+>something<\/script>$/', $result);
 		$this->assertPattern('/^<script[^<>]+type="text\/javascript">something<\/script>$/', $result);
 		$this->assertPattern('/^<script[^<>]+type="text\/javascript"[^<>]*>/', $result);
 		$this->assertNoPattern('/^<script[^type]=[^<>]*>/', $result);
 
-		$result = $this->Javascript->codeBlock('something', false, false);
+		$result = $this->Javascript->codeBlock('something', array('allowCache' => false, 'safe' => false));
 		$this->assertPattern('/^<script[^<>]+>something<\/script>$/', $result);
 		$this->assertPattern('/^<script[^<>]+type="text\/javascript">something<\/script>$/', $result);
 		$this->assertPattern('/^<script[^<>]+type="text\/javascript"[^<>]*>/', $result);
 		$this->assertNoPattern('/^<script[^type]=[^<>]*>/', $result);
 
-		$result = $this->Javascript->codeBlock('something', true, true);
+		$result = $this->Javascript->codeBlock('something', true);
 		$this->assertPattern('/^<script[^<>]+>\s*' . str_replace('/', '\\/', preg_quote('//<![CDATA[')) . '\s*something\s*' . str_replace('/', '\\/', preg_quote('//]]>')) . '\s*<\/script>$/', $result);
 		$this->assertPattern('/^<script[^<>]+type="text\/javascript">\s*' . str_replace('/', '\\/', preg_quote('//<![CDATA[')) . '\s*something\s*' . str_replace('/', '\\/', preg_quote('//]]>')) . '\s*<\/script>$/', $result);
 		$this->assertPattern('/^<script[^<>]+type="text\/javascript"[^<>]*>/', $result);
 		$this->assertNoPattern('/^<script[^type]=[^<>]*>/', $result);
 
-		$result = $this->Javascript->codeBlock('something', false, true);
+		$result = $this->Javascript->codeBlock('something', false);
 		$this->assertPattern('/^<script[^<>]+>\s*' . str_replace('/', '\\/', preg_quote('//<![CDATA[')) . '\s*something\s*' . str_replace('/', '\\/', preg_quote('//]]>')) . '\s*<\/script>$/', $result);
 		$this->assertPattern('/^<script[^<>]+type="text\/javascript">\s*' . str_replace('/', '\\/', preg_quote('//<![CDATA[')) . '\s*something\s*' . str_replace('/', '\\/', preg_quote('//]]>')) . '\s*<\/script>$/', $result);
 		$this->assertPattern('/^<script[^<>]+type="text\/javascript"[^<>]*>/', $result);
@@ -463,7 +478,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testOutOfLineScriptWriting method
- * 
+ *
  * @access public
  * @return void
  */
@@ -476,7 +491,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testEvent method
- * 
+ *
  * @access public
  * @return void
  */
@@ -544,7 +559,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testWriteEvents method
- * 
+ *
  * @access public
  * @return void
  */
@@ -582,7 +597,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testEscapeScript method
- * 
+ *
  * @access public
  * @return void
  */
@@ -609,7 +624,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testEscapeString method
- * 
+ *
  * @access public
  * @return void
  */
@@ -636,7 +651,7 @@ class JavascriptTest extends CakeTestCase {
 	}
 /**
  * testAfterRender method
- * 
+ *
  * @access public
  * @return void
  */

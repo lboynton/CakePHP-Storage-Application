@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: behavior.test.php 7296 2008-06-27 09:09:03Z gwoo $ */
+/* SVN FILE: $Id: behavior.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for behavior.test.php
  *
@@ -7,29 +7,30 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework <http://www.cakephp.org/>
+ * CakePHP(tm) : Rapid Development Framework (http://www.cakephp.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright            CakePHP(tm) : Rapid Development Framework <http://www.cakephp.org/>
- * @link                 http://www.cakephp.org
- * @package              cake
- * @subpackage           cake.tests.cases.libs.model
- * @since                1.2
- * @version              $Revision: 7296 $
- * @modifiedBy           $LastChangedBy: gwoo $
- * @lastModified         $Date: 2008-06-27 05:09:03 -0400 (Fri, 27 Jun 2008) $
- * @license              http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     CakePHP(tm) : Rapid Development Framework (http://www.cakephp.org)
+ * @link          http://www.cakephp.org
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.model
+ * @since         1.2
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+App::import('Model', 'AppModel');
 
 require_once dirname(__FILE__) . DS . 'models.php';
 /**
  * Short description for class.
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs.model
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.model
  */
 class TestBehavior extends ModelBehavior {
 /**
@@ -324,8 +325,8 @@ class TestBehavior extends ModelBehavior {
 /**
  * Test2Behavior class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.model
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.model
  */
 class Test2Behavior extends TestBehavior{
 
@@ -333,8 +334,8 @@ class Test2Behavior extends TestBehavior{
 /**
  * Test3Behavior class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.model
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.model
  */
 class Test3Behavior extends TestBehavior{
 
@@ -342,8 +343,8 @@ class Test3Behavior extends TestBehavior{
 /**
  * BehaviorTest class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.model
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.model
  */
 class BehaviorTest extends CakeTestCase {
 /**
@@ -932,6 +933,22 @@ class BehaviorTest extends CakeTestCase {
 		$expected = array('TestBehavior', 'Test2Behavior');
 		$this->assertIdentical($Apple->beforeTestResult, $expected);
 	}
+	
+/**
+ * Test attach and detaching
+ *
+ * @return void
+ **/
+	function testBehaviorAttachAndDetach() {
+		$Sample =& new Sample();
+		$Sample->actsAs = array('Test3' => array('bar'), 'Test2' => array('foo', 'bar'));
+		$Sample->Behaviors->init($Sample->alias, $Sample->actsAs);
+		$Sample->Behaviors->attach('Test2');
+		$Sample->Behaviors->detach('Test3');
+		
+		$Sample->Behaviors->trigger($Sample, 'beforeTest');
+	}
+	
 /**
  * tearDown method
  *

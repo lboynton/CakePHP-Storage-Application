@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: schema.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: schema.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Command-line database management utility to automate programmer chores.
  *
@@ -8,32 +8,31 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link			http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.console.libs
- * @since			CakePHP(tm) v 1.2.0.5550
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.console.libs
+ * @since         CakePHP(tm) v 1.2.0.5550
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('File');
 App::import('Model', 'Schema');
 /**
  * Schema is a command-line database management utility for automating programmer chores.
  *
- * @package		cake
- * @subpackage	cake.cake.console.libs
+ * @package       cake
+ * @subpackage    cake.cake.console.libs
+ * @link          http://book.cakephp.org/view/734/Schema-management-and-migrations
  */
 class SchemaShell extends Shell {
 /**
@@ -154,7 +153,7 @@ class SchemaShell extends Shell {
 			$count = 1;
 			if (!empty($result[1])) {
 				foreach ($result[1] as $file) {
-					if (preg_match('/schema/', $file)) {
+					if (preg_match('/schema(?:[_\d]*)?\.php$/', $file)) {
 						$count++;
 					}
 				}
@@ -264,7 +263,7 @@ class SchemaShell extends Shell {
 			$table = $this->args[1];
 		}
 
-		switch($command) {
+		switch ($command) {
 			case 'create':
 				$this->__create($Schema, $table);
 			break;
@@ -372,7 +371,7 @@ class SchemaShell extends Shell {
 		$db->fullDebug = true;
 
 		$errors = array();
-		foreach($contents as $table => $sql) {
+		foreach ($contents as $table => $sql) {
 			if (empty($sql)) {
 				$this->out(sprintf(__('%s is up to date.', true), $table));
 			} else {

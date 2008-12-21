@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: object.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: object.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,30 +8,28 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.5432
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.5432
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', array('Object', 'Controller', 'Model'));
 /**
  * RequestActionPost class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.object
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.object
  */
 class RequestActionPost extends CakeTestModel {
 /**
@@ -52,8 +50,8 @@ class RequestActionPost extends CakeTestModel {
 /**
  * RequestActionController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
 class RequestActionController extends Controller {
 /**
@@ -102,12 +100,28 @@ class RequestActionController extends Controller {
 		$data = $this->paginate();
 		return true;
 	}
+/**
+ * post pass, testing post passing
+ *
+ * @return array
+ **/
+	function post_pass() {
+		return $this->data;
+	}
+/**
+ * test param passing and parsing.
+ *
+ * @return array
+ */
+	function params_pass() {
+		return $this->params;
+	}
 }
 /**
  * TestObject class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
 class TestObject extends Object {
 /**
@@ -241,8 +255,8 @@ class TestObject extends Object {
 /**
  * ObjectTestModel
  *
- * @package    cake.tests
- * @subpackage cake.tests.cases.libs
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
  */
 class ObjectTestModel extends CakeTestModel {
 	var $useTable = false;
@@ -253,8 +267,8 @@ class ObjectTestModel extends CakeTestModel {
 /**
  * Object Test Class
  *
- * @package    cake.tests
- * @subpackage cake.tests.cases.libs
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
  */
 class ObjectTest extends CakeTestCase {
 /**
@@ -527,6 +541,47 @@ class ObjectTest extends CakeTestCase {
 		Configure::write('controllerPaths', $_back['controller']);
 		Configure::write('viewPaths', $_back['view']);
 		Configure::write('pluginPaths', $_back['plugin']);
+	}
+/**
+ * Test that requestAction() is populating $this->params properly
+ *
+ * @access public
+ * @return void
+ */
+	function testRequestActionParamParseAndPass() {
+		$result = $this->object->requestAction('/request_action/params_pass');
+		$this->assertTrue(isset($result['url']['url']));
+		$this->assertEqual($result['url']['url'], '/request_action/params_pass');
+		$this->assertEqual($result['controller'], 'request_action');
+		$this->assertEqual($result['action'], 'params_pass');
+		$this->assertEqual($result['form'], array());
+		$this->assertEqual($result['plugin'], null);
+	}
+/**
+ * test requestAction and POST parameter passing, and not passing when url is an array.
+ *
+ * @access public
+ * @return void
+ */
+	function testRequestActionPostPassing() {
+		$_tmp = $_POST;
+
+		$_POST = array('data' => array(
+			'item' => 'value'
+		));
+		$result = $this->object->requestAction(array('controller' => 'request_action', 'action' => 'post_pass'));
+		$expected = array();
+		$this->assertEqual($expected, $result);
+
+		$result = $this->object->requestAction(array('controller' => 'request_action', 'action' => 'post_pass', 'data' => $_POST['data']));
+		$expected = $_POST['data'];
+		$this->assertEqual($expected, $result);
+
+		$result = $this->object->requestAction('/request_action/post_pass');
+		$expected = $_POST['data'];
+		$this->assertEqual($expected, $result);
+
+		$_POST = $_tmp;
 	}
 
 /**

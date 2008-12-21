@@ -1,28 +1,26 @@
 <?php
-/* SVN FILE: $Id: dbo_mssql.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: dbo_mssql.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * DboMssql test
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link			http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs
- * @since			CakePHP(tm) v 1.2.0
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs
+ * @since         CakePHP(tm) v 1.2.0
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 if (!defined('CAKEPHP_UNIT_TEST_EXECUTION')) {
 	define('CAKEPHP_UNIT_TEST_EXECUTION', 1);
@@ -34,22 +32,29 @@ require_once LIBS.'model'.DS.'datasources'.DS.'dbo'.DS.'dbo_mssql.php';
 
 /**
  * DboMssqlTestDb class
- * 
- * @package              cake
- * @subpackage           cake.tests.cases.libs.model.datasources.dbo
+ *
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.model.datasources.dbo
  */
 class DboMssqlTestDb extends DboMssql {
 /**
  * simulated property
- * 
+ *
  * @var array
  * @access public
  */
 	var $simulated = array();
 /**
- * execute method
+ * fetchAllResultsStack
  * 
- * @param mixed $sql 
+ * @var array
+ * @access public
+ */
+	var $fetchAllResultsStack = array();
+/**
+ * execute method
+ *
+ * @param mixed $sql
  * @access protected
  * @return void
  */
@@ -58,8 +63,22 @@ class DboMssqlTestDb extends DboMssql {
 		return null;
 	}
 /**
- * getLastQuery method
+ * fetchAll method
  * 
+ * @param mixed $sql 
+ * @access protected
+ * @return void
+ */
+	function fetchAll($sql, $cache = true, $modelName = null) {
+		$result = parent::fetchAll($sql, $cache, $modelName);
+		if (!empty($this->fetchAllResultsStack)) {
+    		return array_pop($this->fetchAllResultsStack);
+		}
+		return $result;
+	}
+/**
+ * getLastQuery method
+ *
  * @access public
  * @return void
  */
@@ -71,31 +90,31 @@ class DboMssqlTestDb extends DboMssql {
 /**
  * Short description for class.
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs.model.datasources
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.model.datasources
  */
 class MssqlTestModel extends Model {
 /**
  * name property
- * 
+ *
  * @var string 'MssqlTestModel'
  * @access public
  */
 	var $name = 'MssqlTestModel';
 /**
  * useTable property
- * 
+ *
  * @var bool false
  * @access public
  */
 	var $useTable = false;
 /**
  * find method
- * 
- * @param mixed $conditions 
- * @param mixed $fields 
- * @param mixed $order 
- * @param mixed $recursive 
+ *
+ * @param mixed $conditions
+ * @param mixed $fields
+ * @param mixed $order
+ * @param mixed $recursive
  * @access public
  * @return void
  */
@@ -104,11 +123,11 @@ class MssqlTestModel extends Model {
 	}
 /**
  * findAll method
- * 
- * @param mixed $conditions 
- * @param mixed $fields 
- * @param mixed $order 
- * @param mixed $recursive 
+ *
+ * @param mixed $conditions
+ * @param mixed $fields
+ * @param mixed $order
+ * @param mixed $recursive
  * @access public
  * @return void
  */
@@ -117,7 +136,7 @@ class MssqlTestModel extends Model {
 	}
 /**
  * schema method
- * 
+ *
  * @access public
  * @return void
  */
@@ -148,8 +167,8 @@ class MssqlTestModel extends Model {
 /**
  * The test class for the DboMssql
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs.model.datasources.dbo
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.model.datasources.dbo
  */
 class DboMssqlTest extends CakeTestCase {
 /**
@@ -180,7 +199,7 @@ class DboMssqlTest extends CakeTestCase {
 	}
 /**
  * testQuoting method
- * 
+ *
  * @access public
  * @return void
  */
@@ -218,7 +237,7 @@ class DboMssqlTest extends CakeTestCase {
 	}
 /**
  * testDistinctFields method
- * 
+ *
  * @access public
  * @return void
  */
@@ -233,7 +252,7 @@ class DboMssqlTest extends CakeTestCase {
 	}
 /**
  * testDistinctWithLimit method
- * 
+ *
  * @access public
  * @return void
  */
@@ -246,8 +265,42 @@ class DboMssqlTest extends CakeTestCase {
 		$this->assertPattern('/^SELECT DISTINCT TOP 5/', $result);
 	}
 /**
- * tearDown method
+ * testDescribe method
  * 
+ * @access public
+ * @return void
+ */
+	function testDescribe() {
+		$MssqlTableDescription = array(
+			0 => array(
+				0 => array(
+					'Default' => '((0))',
+					'Field' => 'count',
+					'Key' => 0,
+					'Length' => '4',
+					'Null' => 'NO',
+					'Type' => 'integer',
+				)
+			)
+		);
+		$this->db->fetchAllResultsStack = array($MssqlTableDescription);
+		$dummyModel = $this->model;
+		$result = $this->db->describe($dummyModel);
+		$expected = array(
+			'count' => array(
+				'type' => 'integer',
+				'null' => false,
+				'default' => '0',
+				'length' => 4
+			)
+		);
+		$this->assertEqual($result, $expected);
+	}
+
+
+/**
+ * tearDown method
+ *
  * @access public
  * @return void
  */

@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: dispatcher.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: dispatcher.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,31 +8,29 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 require_once CAKE.'dispatcher.php';
 App::import('Core', 'AppController');
 /**
  * TestDispatcher class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class TestDispatcher extends Dispatcher {
 /**
@@ -79,8 +77,8 @@ class TestDispatcher extends Dispatcher {
 /**
  * MyPluginAppController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class MyPluginAppController extends AppController {
 
@@ -88,8 +86,8 @@ class MyPluginAppController extends AppController {
 /**
  * MyPluginController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class MyPluginController extends MyPluginAppController {
 /**
@@ -138,8 +136,8 @@ class MyPluginController extends MyPluginAppController {
 /**
  * SomePagesController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class SomePagesController extends AppController {
 /**
@@ -198,8 +196,8 @@ class SomePagesController extends AppController {
 /**
  * OtherPagesController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class OtherPagesController extends MyPluginAppController {
 /**
@@ -239,8 +237,8 @@ class OtherPagesController extends MyPluginAppController {
 /**
  * TestDispatchPagesController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class TestDispatchPagesController extends AppController {
 /**
@@ -280,8 +278,8 @@ class TestDispatchPagesController extends AppController {
 /**
  * ArticlesTestAppController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class ArticlesTestAppController extends AppController {
 
@@ -289,8 +287,8 @@ class ArticlesTestAppController extends AppController {
 /**
  * ArticlesTestController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class ArticlesTestController extends ArticlesTestAppController {
 /**
@@ -320,8 +318,8 @@ class ArticlesTestController extends ArticlesTestAppController {
 /**
  * SomePostsController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class SomePostsController extends AppController {
 /**
@@ -381,8 +379,8 @@ class SomePostsController extends AppController {
 /**
  * TestCachedPagesController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class TestCachedPagesController extends AppController {
 /**
@@ -454,8 +452,8 @@ class TestCachedPagesController extends AppController {
 /**
  * TimesheetsController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases
+ * @package       cake
+ * @subpackage    cake.tests.cases
  */
 class TimesheetsController extends AppController {
 /**
@@ -485,8 +483,8 @@ class TimesheetsController extends AppController {
 /**
  * Short description for class.
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases
  */
 class DispatcherTest extends CakeTestCase {
 /**
@@ -603,6 +601,10 @@ class DispatcherTest extends CakeTestCase {
  * @return void
  */
 	function testQueryStringOnRoot() {
+		Router::reload();
+		Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
+		Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
+
 		$_GET = array('coffee' => 'life', 'sleep' => 'sissies');
 		$Dispatcher =& new Dispatcher();
 		$uri = 'posts/home/?coffee=life&sleep=sissies';
@@ -1640,13 +1642,13 @@ class DispatcherTest extends CakeTestCase {
 		$this->assertEqual($result, $expected);
 		$filename = $this->__cachePath($dispatcher->here);
 		unlink($filename);
-		
+
 		$url = 'test_cached_pages/view/foo:bar/value:goo';
-		
+
 		ob_start();
 		$dispatcher->dispatch($url);
 		$out = ob_get_clean();
-		
+
 		ob_start();
 		$dispatcher->cached($url);
 		$cached = ob_get_clean();
@@ -1654,7 +1656,7 @@ class DispatcherTest extends CakeTestCase {
 		$result = str_replace(array("\t", "\r\n", "\n"), "", $out);
 		$cached = preg_replace('/<!--+[^<>]+-->/', '', $cached);
 		$expected =  str_replace(array("\t", "\r\n", "\n"), "", $cached);
-		
+
 		$this->assertEqual($result, $expected);
 		$filename = $this->__cachePath($dispatcher->here);
 		$this->assertTrue(file_exists($filename));

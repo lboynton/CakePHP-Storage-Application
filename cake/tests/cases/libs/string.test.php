@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: string.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: string.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,30 +8,28 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.5432
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.5432
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'String');
 /**
  * Short description for class.
  *
- * @package    cake.tests
- * @subpackage cake.tests.cases.libs
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
  */
 class StringTest extends CakeTestCase {
 /**
@@ -165,18 +163,52 @@ class StringTest extends CakeTestCase {
 		$expected = "this is a long string with a few? params you know";
 		$this->assertEqual($result, $expected);
 
-		$result = String::insert('update saved_urls set url = :url where id = :id', array('url' => 'http://www.testurl.com/param1:url/param2:id','id' => 1));   
+		$result = String::insert('update saved_urls set url = :url where id = :id', array('url' => 'http://www.testurl.com/param1:url/param2:id','id' => 1));
 		$expected = "update saved_urls set url = http://www.testurl.com/param1:url/param2:id where id = 1";
 		$this->assertEqual($result, $expected);
 
-		$result = String::insert('update saved_urls set url = :url where id = :id', array('id' => 1, 'url' => 'http://www.testurl.com/param1:url/param2:id'));   
+		$result = String::insert('update saved_urls set url = :url where id = :id', array('id' => 1, 'url' => 'http://www.testurl.com/param1:url/param2:id'));
 		$expected = "update saved_urls set url = http://www.testurl.com/param1:url/param2:id where id = 1";
 		$this->assertEqual($result, $expected);
-		
-		$result = String::insert(':me cake. :subject :verb fantastic.', array('me' => 'I :verb', 'subject' => 'cake', 'verb' => 'is'));   
+
+		$result = String::insert(':me cake. :subject :verb fantastic.', array('me' => 'I :verb', 'subject' => 'cake', 'verb' => 'is'));
 		$expected = "I :verb cake. cake is fantastic.";
 		$this->assertEqual($result, $expected);
 
+		$result = String::insert(':I.am: :not.yet: passing.', array('I.am' => 'We are'), array('before' => ':', 'after' => ':', 'clean' => array('replacement' => ' of course', 'method' => 'text')));
+		$expected = "We are of course passing.";
+		$this->assertEqual($result, $expected);
+
+		$result = String::insert(':I.am: :not.yet: passing.', array('I.am' => 'We are'), array('before' => ':', 'after' => ':', 'clean' => true));
+		$expected = "We are passing.";
+		$this->assertEqual($result, $expected);
+	}
+/**
+ * test Clean Insert
+ *
+ * @return void
+ **/
+	function testCleanInsert() {
+		$result = String::cleanInsert(':incomplete', array('clean' => true, 'before' => ':', 'after' => ''));
+		$this->assertEqual($result, '');
+
+		$result = String::cleanInsert(':incomplete', array(
+			'clean' => array('method' => 'text', 'replacement' => 'complete'),
+			'before' => ':', 'after' => '')
+		);
+		$this->assertEqual($result, 'complete');
+
+		$result = String::cleanInsert(':in.complete', array('clean' => true, 'before' => ':', 'after' => ''));
+		$this->assertEqual($result, '');
+
+		$result = String::cleanInsert(':in.complete and', array('clean' => true, 'before' => ':', 'after' => ''));
+		$this->assertEqual($result, '');
+
+		$result = String::cleanInsert(':in.complete or stuff', array('clean' => true, 'before' => ':', 'after' => ''));
+		$this->assertEqual($result, 'stuff');
+
+		$result = String::cleanInsert('<p class=":missing" id=":missing">Text here</p>', array('clean' => 'html', 'before' => ':', 'after' => ''));
+		$this->assertEqual($result, '<p>Text here</p>');
 	}
 /**
  * testTokenize method

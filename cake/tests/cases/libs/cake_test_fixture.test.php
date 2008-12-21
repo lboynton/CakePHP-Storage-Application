@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: cake_test_fixture.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: cake_test_fixture.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,31 +8,29 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake
- * @subpackage		cake.cake.tests.libs
- * @since			CakePHP(tm) v 1.2.0.4667
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake
+ * @subpackage    cake.cake.tests.libs
+ * @since         CakePHP(tm) v 1.2.0.4667
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'DboSource');
 
 /**
  * CakeFixture Test Fixture
  *
- * @package cake
- * @subpackage cake.cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.cake.tests.cases.libs
  */
 class CakeTestFixtureTestFixture extends CakeTestFixture {
 /**
@@ -73,8 +71,8 @@ class CakeTestFixtureTestFixture extends CakeTestFixture {
 /**
  * Import Fixture Test Fixture
  *
- * @package cake
- * @subpackage cake.cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.cake.tests.cases.libs
  */
 class CakeTestFixtureImportFixture extends CakeTestFixture {
 /**
@@ -86,16 +84,31 @@ class CakeTestFixtureImportFixture extends CakeTestFixture {
 /**
  * Import property
  *
- * @var array
- */	
+ * @var mixed
+ */
 	var $import = array('table' => 'fixture_tests', 'connection' => 'test_suite');
+}
+
+/**
+ * Import Fixture Test Fixture
+ *
+ * @package       cake
+ * @subpackage    cake.cake.tests.cases.libs
+ */
+class CakeTestFixtureDefaultImportFixture extends CakeTestFixture {
+/**
+ * Name property
+ *
+ * @var string
+ */
+	var $name = 'ImportFixture';
 }
 
 /**
  * Fixture Test Case Model
  *
- * @package default
- * @subpackage cake.cake.tests.cases.libs.
+ * @package       default
+ * @subpackage    cake.cake.tests.cases.libs.
  **/
 class FixtureImportTestModel extends Model {
 	var $name = 'FixtureImport';
@@ -108,11 +121,10 @@ Mock::generate('DboSource', 'FixtureMockDboSource');
 /**
  * Test case for CakeTestFixture
  *
- * @package    cake
- * @subpackage cake.cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.cake.tests.cases.libs
  */
 class CakeTestFixtureTest extends CakeTestCase {
-	
 	function setUp() {
 		$this->criticDb =& new FixtureMockDboSource();
 		$this->criticDb->fullDebug = true;
@@ -156,15 +168,49 @@ class CakeTestFixtureTest extends CakeTestCase {
 
 		$Fixture =& new CakeTestFixtureImportFixture();
 		$Fixture->fields = $Fixture->records = null;
-		$Fixture->import = array('model' => 'FixtureImportTestModel');
+		$Fixture->import = array('model' => 'FixtureImportTestModel', 'connection' => 'test_suite');
 		$Fixture->init();
 		$this->assertEqual(array_keys($Fixture->fields), array('id', 'name', 'created'));
 
-		//assert that model has been removed from registry, stops infinite loops.
 		$keys = array_flip(ClassRegistry::keys());
 		$this->assertFalse(array_key_exists('fixtureimporttestmodel', $keys));
 
 		$Source->drop($this->db);
+	}
+/**
+ * testImport
+ *
+ * @access public
+ * @return void
+ */
+	function testImport() {
+		$this->_initDb();
+
+		$defaultDb =& ConnectionManager::getDataSource('default');
+		$testSuiteDb =& ConnectionManager::getDataSource('test_suite');
+		$defaultConfig = $defaultDb->config;
+		$testSuiteConfig = $testSuiteDb->config;
+		ConnectionManager::create('new_test_suite', array_merge($testSuiteConfig, array('prefix' => 'new_' . $testSuiteConfig['prefix'])));
+		$newTestSuiteDb =& ConnectionManager::getDataSource('new_test_suite');
+
+		$Source =& new CakeTestFixtureTestFixture();
+		$Source->create($newTestSuiteDb);
+		$Source->insert($newTestSuiteDb);
+
+		$defaultDb->config = $newTestSuiteDb->config;
+
+		$Fixture =& new CakeTestFixtureDefaultImportFixture();
+		$Fixture->fields = $Fixture->records = null;
+		$Fixture->import = array('model' => 'FixtureImportTestModel', 'connection' => 'new_test_suite');
+		$Fixture->init();
+		$this->assertEqual(array_keys($Fixture->fields), array('id', 'name', 'created'));
+
+		$defaultDb->config = $defaultConfig;
+
+		$keys = array_flip(ClassRegistry::keys());
+		$this->assertFalse(array_key_exists('fixtureimporttestmodel', $keys));
+
+		$Source->drop($newTestSuiteDb);
 	}
 /**
  * test create method
@@ -178,7 +224,7 @@ class CakeTestFixtureTest extends CakeTestCase {
 		$return = $Fixture->create($this->criticDb);
 		$this->assertTrue($this->criticDb->fullDebug);
 		$this->assertTrue($return);
-		
+
 		unset($Fixture->fields);
 		$return = $Fixture->create($this->criticDb);
 		$this->assertFalse($return);
@@ -209,11 +255,11 @@ class CakeTestFixtureTest extends CakeTestCase {
 		$this->criticDb->setReturnValueAt(0, 'execute', true);
 		$this->criticDb->expectAtLeastOnce('execute');
 		$this->criticDb->expectAtLeastOnce('dropSchema');
-		
+
 		$return = $Fixture->drop($this->criticDb);
 		$this->assertTrue($this->criticDb->fullDebug);
 		$this->assertTrue($return);
-		
+
 		$this->criticDb->setReturnValueAt(1, 'execute', false);
 		$return = $Fixture->drop($this->criticDb);
 		$this->assertFalse($return);

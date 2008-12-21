@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: form.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: form.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Automatic generation of HTML FORMs from given data.
  *
@@ -7,32 +7,30 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package			cake
- * @subpackage		cake.cake.libs.view.helpers
- * @since			CakePHP(tm) v 0.10.0.1076
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
+ * @since         CakePHP(tm) v 0.10.0.1076
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Form helper library.
  *
  * Automatic generation of HTML FORMs from given data.
  *
- * @package		cake
- * @subpackage	cake.cake.libs.view.helpers
+ * @package       cake
+ * @subpackage    cake.cake.libs.view.helpers
  */
 class FormHelper extends AppHelper {
 /**
@@ -236,7 +234,7 @@ class FormHelper extends AppHelper {
 		}
 
 		$this->setEntity($model . '.', true);
-		return $this->output(sprintf($this->Html->tags['form'], $this->Html->_parseAttributes($htmlAttributes, null, ''))) . $append;
+		return $this->output(sprintf($this->Html->tags['form'], $this->_parseAttributes($htmlAttributes, null, ''))) . $append;
 	}
 /**
  * Closes an HTML form, cleans up values set by FormHelper::create(), and writes hidden
@@ -278,7 +276,7 @@ class FormHelper extends AppHelper {
 				}
 			}
 			$out .= $this->submit($submit, $submitOptions);
-		} 
+		}
 		if (isset($this->params['_Token']) && !empty($this->params['_Token'])) {
 			$out .= $this->secure($this->fields);
 			$this->fields = array();
@@ -297,7 +295,7 @@ class FormHelper extends AppHelper {
  * @return string A hidden input field with a security hash
  * @access public
  */
-	function secure($fields) {
+	function secure($fields = array()) {
 		if (!isset($this->params['_Token']) || empty($this->params['_Token'])) {
 			return;
 		}
@@ -346,10 +344,13 @@ class FormHelper extends AppHelper {
 				}
 			}
 		}
-		if ($value !== null) {
-			return $this->fields[join('.', $field)] = $value;
+		$field = join('.', $field);
+		if (!in_array($field, $this->fields)) {
+			if ($value !== null) {
+				return $this->fields[$field] = $value;
+			}
+			$this->fields[] = $field;
 		}
-		$this->fields[] = join('.', $field);
 	}
 /**
  * Returns true if there is an error for the given field, otherwise false
@@ -881,7 +882,7 @@ class FormHelper extends AppHelper {
 				array('name', 'type', 'id'), '', ' '
 			);
 			$tagName = Inflector::camelize(
-				$this->model() . '_' . $this->field() . '_' . Inflector::underscore($optValue)
+				$attributes['id'] . '_' . Inflector::underscore($optValue)
 			);
 
 			if ($label) {
@@ -1137,7 +1138,7 @@ class FormHelper extends AppHelper {
 			unset($attributes['escape']);
 		}
 		$attributes = $this->_initInputField($fieldName, array_merge(
-			$attributes, array('secure' => false)
+			(array)$attributes, array('secure' => false)
 		));
 
 		if (is_string($options) && isset($this->__options[$options])) {
@@ -1164,7 +1165,7 @@ class FormHelper extends AppHelper {
 			} else {
 				$tag = $this->Html->tags['selectmultiplestart'];
 			}
-			$select[] = $this->hidden(null, array('value' => '', 'id' => null));
+			$select[] = $this->hidden(null, array('value' => '', 'id' => null, 'secure' => false));
 		} else {
 			$tag = $this->Html->tags['selectstart'];
 		}
@@ -1459,7 +1460,7 @@ class FormHelper extends AppHelper {
 			$selected = $this->value($fieldName);
 		}
 
-		if ($selected === null && $showEmpty !== true) {
+		if ($selected === null && $showEmpty != true) {
 			$selected = time();
 		}
 
@@ -1467,7 +1468,7 @@ class FormHelper extends AppHelper {
 			if (is_array($selected)) {
 				extract($selected);
 			} else {
-				if (is_int($selected)) {
+				if (is_numeric($selected)) {
 					$selected = strftime('%Y-%m-%d %H:%M:%S', $selected);
 				}
 				$meridian = 'am';
@@ -1567,8 +1568,9 @@ class FormHelper extends AppHelper {
 			$opt = implode($separator, $selects);
 		}
 
-		switch($timeFormat) {
+		switch ($timeFormat) {
 			case '24':
+				$selectMinuteAttr['interval'] = $interval;
 				$opt .= $this->hour($fieldName, true, $hour, $selectHourAttr, $showEmpty) . ':' .
 				$this->minute($fieldName, $min, $selectMinuteAttr, $showEmpty);
 			break;
@@ -1693,13 +1695,13 @@ class FormHelper extends AppHelper {
 						$label = $this->label(null, $title, $label);
 						$item = sprintf(
 							$this->Html->tags['checkboxmultiple'], $name,
-							$this->Html->_parseAttributes($htmlOptions)
+							$this->_parseAttributes($htmlOptions)
 						);
 						$select[] = $this->Html->div($attributes['class'], $item . $label);
 					} else {
 						$select[] = sprintf(
 							$this->Html->tags['selectoption'],
-							$name, $this->Html->_parseAttributes($htmlOptions), $title
+							$name, $this->_parseAttributes($htmlOptions), $title
 						);
 					}
 				}

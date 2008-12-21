@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: controller.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: controller.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,32 +8,69 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs.controller
- * @since			CakePHP(tm) v 1.2.0.5436
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.controller
+ * @since         CakePHP(tm) v 1.2.0.5436
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Controller');
 App::import('Component', 'Security');
 App::import('Component', 'Cookie');
 /**
+ * AppController class
+ *
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller
+ */
+if (!class_exists('AppController')) {
+	/**
+	 * AppController class
+	 *
+	 * @package       cake
+	 * @subpackage    cake.tests.cases.libs.controller
+	 */
+	class AppController extends Controller {
+	/**
+	 * helpers property
+	 *
+	 * @var array
+	 * @access public
+	 */
+		var $helpers = array('Html', 'Javascript');
+	/**
+	 * uses property
+	 *
+	 * @var array
+	 * @access public
+	 */
+		var $uses = array('ControllerPost');
+	/**
+	 * components property
+	 *
+	 * @var array
+	 * @access public
+	 */
+		var $components = array('Cookie');
+	}
+} else if (!defined('APP_CONTROLLER_EXISTS')) {
+	define('APP_CONTROLLER_EXISTS', true);
+}
+/**
  * ControllerPost class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs.controller
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.controller
  */
 class ControllerPost extends CakeTestModel {
 /**
@@ -92,10 +129,25 @@ class ControllerPost extends CakeTestModel {
 	}
 }
 /**
+ * ControllerPostsController class
+ *
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller
+ */
+class ControllerCommentsController extends AppController {
+/**
+ * name property
+ *
+ * @var string 'ControllerPost'
+ * @access public
+ */
+	var $name = 'ControllerComments';
+}
+/**
  * ControllerComment class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs.controller
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.controller
  */
 class ControllerComment extends CakeTestModel {
 /**
@@ -130,8 +182,8 @@ class ControllerComment extends CakeTestModel {
 /**
  * ControllerAlias class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs.controller
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.controller
  */
 class ControllerAlias extends CakeTestModel {
 /**
@@ -159,8 +211,8 @@ class ControllerAlias extends CakeTestModel {
 /**
  * ControllerPaginateModel class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs.controller
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.controller
  */
 class ControllerPaginateModel extends CakeTestModel {
 /**
@@ -199,8 +251,8 @@ class ControllerPaginateModel extends CakeTestModel {
 /**
  * NameTest class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.controller
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller
  */
 class NameTest extends CakeTestModel {
 /**
@@ -223,46 +275,19 @@ class NameTest extends CakeTestModel {
  */
 	var $alias = 'Name';
 }
-if (!class_exists('AppController')) {
-/**
- * AppController class
- *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.controller
- */
-	class AppController extends Controller {
-/**
- * helpers property
- *
- * @var array
- * @access public
- */
-		var $helpers = array('Html', 'Javascript');
-/**
- * uses property
- *
- * @var array
- * @access public
- */
-		var $uses = array('ControllerPost');
-/**
- * components property
- *
- * @var array
- * @access public
- */
-		var $components = array('Cookie');
-	}
-} else if (!defined('APP_CONTROLLER_EXISTS')) {
-	define('APP_CONTROLLER_EXISTS', true);
-}
 /**
  * TestController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.controller
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller
  */
 class TestController extends AppController {
+/**
+ * name property
+ * @var string 'Name'
+ * @access public
+ */
+	var $name = 'TestController';
 /**
  * helpers property
  *
@@ -300,8 +325,8 @@ class TestController extends AppController {
 /**
  * TestComponent class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.controller
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller
  */
 class TestComponent extends Object {
 /**
@@ -315,10 +340,32 @@ class TestComponent extends Object {
 	}
 }
 /**
+ * AnotherTestController class
+ *
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller
+ */
+class AnotherTestController extends AppController {
+/**
+ * name property
+ * @var string 'Name'
+ * @access public
+ */
+	var $name = 'AnotherTest';
+
+/**
+ * uses property
+ *
+ * @var array
+ * @access public
+ */
+	var $uses = null;
+}
+/**
  * Short description for class.
  *
- * @package    cake.tests
- * @subpackage cake.tests.cases.libs.controller
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.controller
  */
 class ControllerTest extends CakeTestCase {
 /**
@@ -515,6 +562,39 @@ class ControllerTest extends CakeTestCase {
 		$expected = array('contain' => array('ControllerPaginateModel'), 'group' => 'Comment.author_id', 'type' => 'foo');
 		$this->assertEqual($Controller->ControllerPaginateModel->extra, $expected);
 		$this->assertEqual($Controller->ControllerPaginateModel->extraCount, $expected);
+	}
+/**
+ * testPaginatePassedArgs method
+ *
+ * @return void
+ * @access public
+ */
+	function testPaginatePassedArgs() {
+		$Controller =& new Controller();
+		$Controller->uses = array('ControllerPost');
+		$Controller->passedArgs[] = array('1', '2', '3');
+		$Controller->params['url'] = array();
+		$Controller->constructClasses();
+
+		$Controller->paginate = array(
+			'fields' => array(),
+			'order' => '',
+			'limit' => 5,
+			'page' => 1,
+			'recursive' => -1
+		);
+		$conditions = array();
+		$Controller->paginate('ControllerPost',$conditions);
+
+		$expected = array(
+			'fields' => array(),
+			'order' => '',
+			'limit' => 5,
+			'page' => 1,
+			'recursive' => -1,
+			'conditions' => array()
+		);
+		$this->assertEqual($Controller->params['paging']['ControllerPost']['options'],$expected);
 	}
 /**
  * testDefaultPaginateParams method
@@ -745,6 +825,33 @@ class ControllerTest extends CakeTestCase {
 		$this->assertEqual(count(array_diff($TestController->helpers, $helpers)), 0);
 		$this->assertEqual(count(array_diff($TestController->uses, $uses)), 0);
 		$this->assertEqual(count(array_diff_assoc(Set::normalize($TestController->components), Set::normalize($components))), 0);
+
+		$TestController =& new AnotherTestController();
+		$TestController->constructClasses();
+
+		$appVars = get_class_vars('AppController');
+		$testVars = get_class_vars('AnotherTestController');
+
+
+		$this->assertTrue(in_array('ControllerPost', $appVars['uses']));
+		$this->assertNull($testVars['uses']);
+
+		$this->assertFalse(isset($TestController->ControllerPost));
+
+
+		$TestController =& new ControllerCommentsController();
+		$TestController->constructClasses();
+
+		$appVars = get_class_vars('AppController');
+		$testVars = get_class_vars('ControllerCommentsController');
+
+
+		$this->assertTrue(in_array('ControllerPost', $appVars['uses']));
+		$this->assertEqual(array('ControllerPost'), $testVars['uses']);
+
+		$this->assertTrue(isset($TestController->ControllerPost));
+		$this->assertTrue(isset($TestController->ControllerComment));
+
 	}
 /**
  * testReferer method

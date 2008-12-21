@@ -1,37 +1,35 @@
 <?php
-/* SVN FILE: $Id: validation.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: validation.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
- * Short description for file.
+ * Validation Class Test Case
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Validation');
 /**
  * CustomValidator class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs
  */
 class CustomValidator {
 /**
@@ -47,10 +45,10 @@ class CustomValidator {
 }
 
 /**
- * Short description for class.
+ * Test Case for Validation Class
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs
  */
 class ValidationTestCase extends CakeTestCase {
 /**
@@ -68,6 +66,20 @@ class ValidationTestCase extends CakeTestCase {
  */
 	function setup() {
 		$this->Validation =& Validation::getInstance();
+	}
+/**
+ * testNotEmpty method
+ *
+ * @access public
+ * @return void
+ */
+	function testNotEmpty() {
+		$this->assertTrue(Validation::notEmpty('abcdefg'));
+		$this->assertTrue(Validation::notEmpty('fasdf '));
+		$this->assertTrue(Validation::notEmpty('fooo'.chr(243).'blabla'));
+
+		$this->assertFalse(Validation::notEmpty("\t "));
+		$this->assertFalse(Validation::notEmpty(""));
 	}
 /**
  * testAlphaNumeric method
@@ -708,6 +720,8 @@ class ValidationTestCase extends CakeTestCase {
  * @return void
  */
 	function testFastCc() {
+		// too short
+		$this->assertFalse(Validation::cc('123456789012'));
 		//American Express
 		$this->assertTrue(Validation::cc('370482756063980'));
 		//Diners Club 14
@@ -834,6 +848,7 @@ class ValidationTestCase extends CakeTestCase {
  * @return void
  */
 	function testComparison() {
+		$this->assertFalse(Validation::comparison(7, null, 6));
 		$this->assertTrue(Validation::comparison(7, 'is greater', 6));
 		$this->assertTrue(Validation::comparison(7, '>', 6));
 		$this->assertTrue(Validation::comparison(6, 'is less', 7));
@@ -909,6 +924,7 @@ class ValidationTestCase extends CakeTestCase {
 		$this->assertTrue(Validation::custom('12345', '/(?<!\\S)\\d++(?!\\S)/'));
 		$this->assertFalse(Validation::custom('Text', '/(?<!\\S)\\d++(?!\\S)/'));
 		$this->assertFalse(Validation::custom('123.45', '/(?<!\\S)\\d++(?!\\S)/'));
+		$this->assertFalse(Validation::custom('missing regex'));
 	}
 /**
  * testCustomAsArray method
@@ -1498,6 +1514,7 @@ class ValidationTestCase extends CakeTestCase {
 		$this->assertTrue(Validation::email('abc@example.pro'));
 		$this->assertTrue(Validation::email('abc@example.tel'));
 		$this->assertTrue(Validation::email('abc@example.travel'));
+		$this->assertTrue(Validation::email('someone@st.t-com.hr'));
 
 		// strange, but technically valid email addresses
 		$this->assertTrue(Validation::email('S=postmaster/OU=rz/P=uni-frankfurt/A=d400/C=de@gateway.d400.de'));
@@ -1632,6 +1649,13 @@ class ValidationTestCase extends CakeTestCase {
 		$this->assertTrue(Validation::url('http://123456789112345678921234567893123456789412345678951234567896123.com'));
 		$this->assertFalse(Validation::url('http://this-domain-is-too-loooooong-by-icann-rules-maximum-length-is-63.com'));
 		$this->assertTrue(Validation::url('http://www.domain.com/blogs/index.php?blog=6&tempskin=_rss2'));
+		$this->assertTrue(Validation::url('http://www.domain.com/blogs/parenth()eses.php'));
+		$this->assertTrue(Validation::url('http://www.domain.com/index.php?get=params&amp;get2=params'));
+		$this->assertTrue(Validation::url('http://www.domain.com/ndex.php?get=params&amp;get2=params#anchor'));
+		$this->assertFalse(Validation::url('http://www.domain.com/fakeenco%ode'));
+		$this->assertTrue(Validation::url('http://www.domain.com/real%20url%20encodeing'));
+		$this->assertTrue(Validation::url('http://en.wikipedia.org/wiki/Architectural_pattern_(computer_science)'));
+		$this->assertFalse(Validation::url('http://en.(wikipedia).org/'));
 	}
 /**
  * testInList method
@@ -1759,28 +1783,28 @@ class ValidationTestCase extends CakeTestCase {
 		$this->assertFalse(Validation::multiple(array()));
 		$this->assertFalse(Validation::multiple(array(0)));
 		$this->assertFalse(Validation::multiple(array('0')));
-		
+
 		$this->assertTrue(Validation::multiple(array(0, 3, 4, 5), array('in' => range(0, 10))));
 		$this->assertFalse(Validation::multiple(array(0, 15, 20, 5), array('in' => range(0, 10))));
 		$this->assertFalse(Validation::multiple(array(0, 5, 10, 11), array('in' => range(0, 10))));
 		$this->assertFalse(Validation::multiple(array('boo', 'foo', 'bar'), array('in' => array('foo', 'bar', 'baz'))));
-		
+
 		$this->assertTrue(Validation::multiple(array(0, 5, 10, 11), array('max' => 3)));
 		$this->assertFalse(Validation::multiple(array(0, 5, 10, 11, 55), array('max' => 3)));
 		$this->assertTrue(Validation::multiple(array('foo', 'bar', 'baz'), array('max' => 3)));
 		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz', 'squirrel'), array('max' => 3)));
-		
+
 		$this->assertTrue(Validation::multiple(array(0, 5, 10, 11), array('min' => 3)));
 		$this->assertTrue(Validation::multiple(array(0, 5, 10, 11, 55), array('min' => 3)));
 		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz'), array('min' => 5)));
-		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz', 'squirrel'), array('min' => 10)));		
-		
+		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz', 'squirrel'), array('min' => 10)));
+
 		$this->assertTrue(Validation::multiple(array(0, 5, 9), array('in' => range(0, 10), 'max' => 5)));
-		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5)));							
+		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5)));
 		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 11), array('in' => range(0, 10), 'max' => 5)));
-		
+
 		$this->assertFalse(Validation::multiple(array(0, 5, 9), array('in' => range(0, 10), 'max' => 5, 'min' => 3)));
-		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5, 'min' => 2)));							
+		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5, 'min' => 2)));
 		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 11), array('in' => range(0, 10), 'max' => 5, 'min' => 2)));
 	}
 /**
@@ -1814,7 +1838,16 @@ class ValidationTestCase extends CakeTestCase {
 		$this->assertFalse(Validation::phone('1-(33)-3-444'));
 		$this->assertFalse(Validation::phone('1-(33)-3-44'));
 
-		$this->assertTrue(Validation::phone('(999) 999-9999'));
+		$this->assertFalse(Validation::phone('(055) 999-9999'));
+		$this->assertFalse(Validation::phone('(155) 999-9999'));
+		$this->assertFalse(Validation::phone('(595) 999-9999'));
+		$this->assertFalse(Validation::phone('(555) 099-9999'));
+		$this->assertFalse(Validation::phone('(555) 199-9999'));
+
+		$this->assertTrue(Validation::phone('1 (222) 333 4444'));
+		$this->assertTrue(Validation::phone('+1 (222) 333 4444'));
+		$this->assertTrue(Validation::phone('(222) 333 4444'));
+
 		$this->assertTrue(Validation::phone('1-(333)-333-4444'));
 		$this->assertTrue(Validation::phone('1.(333)-333-4444'));
 		$this->assertTrue(Validation::phone('1.(333).333-4444'));

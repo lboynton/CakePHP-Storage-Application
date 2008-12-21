@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: request_handler.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: request_handler.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,31 +8,29 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs.controller.components
- * @since			CakePHP(tm) v 1.2.0.5435
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.controller.components
+ * @since         CakePHP(tm) v 1.2.0.5435
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', array('Controller'));
 App::import('Component', array('RequestHandler'));
 /**
  * RequestHandlerTestController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.controller.components
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller.components
  */
 class RequestHandlerTestController extends Controller {
 /**
@@ -59,8 +57,8 @@ class RequestHandlerTestController extends Controller {
 /**
  * RequestHandlerTestDisabledController class
  *
- * @package              cake
- * @subpackage           cake.tests.cases.libs.controller.components
+ * @package       cake
+ * @subpackage    cake.tests.cases.libs.controller.components
  */
 class RequestHandlerTestDisabledController extends Controller {
 /**
@@ -91,8 +89,8 @@ class RequestHandlerTestDisabledController extends Controller {
 /**
  * Short description for class.
  *
- * @package    cake.tests
- * @subpackage cake.tests.cases.libs.controller.components
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.controller.components
  */
 class RequestHandlerComponentTest extends CakeTestCase {
 /**
@@ -232,6 +230,31 @@ class RequestHandlerComponentTest extends CakeTestCase {
 		unset($_SERVER['HTTP_X_REQUESTED_WITH'], $_SERVER['HTTP_X_PROTOTYPE_VERSION']);
 		$this->assertFalse($this->RequestHandler->isAjax());
 		$this->assertFalse($this->RequestHandler->getAjaxVersion());
+	}
+/**
+ * Tests the detection of various Flash versions
+ *
+ * @access public
+ * @return void
+ */
+	function testFlashDetection() {
+		$_agent = env('HTTP_USER_AGENT');
+		$_SERVER['HTTP_USER_AGENT'] = 'Shockwave Flash';
+		$this->assertTrue($this->RequestHandler->isFlash());
+
+		$_SERVER['HTTP_USER_AGENT'] = 'Adobe Flash';
+		$this->assertTrue($this->RequestHandler->isFlash());
+
+		$_SERVER['HTTP_USER_AGENT'] = 'Adobe Flash Player 9';
+		$this->assertTrue($this->RequestHandler->isFlash());
+
+		$_SERVER['HTTP_USER_AGENT'] = 'Adobe Flash Player 10';
+		$this->assertTrue($this->RequestHandler->isFlash());
+
+		$_SERVER['HTTP_USER_AGENT'] = 'Shock Flash';
+		$this->assertFalse($this->RequestHandler->isFlash());
+
+		$_SERVER['HTTP_USER_AGENT'] = $_agent;
 	}
 /**
  * testRequestContentTypes method

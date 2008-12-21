@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: paginator.test.php 7690 2008-10-02 04:56:53Z nate $ */
+/* SVN FILE: $Id: paginator.test.php 7945 2008-12-19 02:16:01Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -8,30 +8,28 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc.
- *								1785 E. Sahara Avenue, Suite 490-204
- *								Las Vegas, Nevada 89104
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
- * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package			cake.tests
- * @subpackage		cake.tests.cases.libs.view.helpers
- * @since			CakePHP(tm) v 1.2.0.4206
- * @version			$Revision: 7690 $
- * @modifiedby		$LastChangedBy: nate $
- * @lastmodified	$Date: 2008-10-02 00:56:53 -0400 (Thu, 02 Oct 2008) $
- * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.view.helpers
+ * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision: 7945 $
+ * @modifiedby    $LastChangedBy: gwoo $
+ * @lastmodified  $Date: 2008-12-18 21:16:01 -0500 (Thu, 18 Dec 2008) $
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Helper', array('Html', 'Paginator', 'Form', 'Ajax', 'Javascript'));
 /**
  * Short description for class.
  *
- * @package		cake.tests
- * @subpackage	cake.tests.cases.libs.view.helpers
+ * @package       cake.tests
+ * @subpackage    cake.tests.cases.libs.view.helpers
  */
 class PaginatorTest extends CakeTestCase {
 /**
@@ -351,10 +349,31 @@ class PaginatorTest extends CakeTestCase {
 		$result = $this->Paginator->prev('<< Previous', null, null, array('class' => 'disabled'));
 		$this->assertPattern('/^<a[^<>]+>&lt;&lt; Previous<\/a>$/', $result);
 		$this->assertPattern('/href="\/index\/page:1"/', $result);
-
+		
 		$result = $this->Paginator->next('Next');
 		$this->assertPattern('/^<a[^<>]+>Next<\/a>$/', $result);
 		$this->assertPattern('/href="\/index\/page:3"/', $result);
+		
+		$result = $this->Paginator->prev('<< Previous', array('escape' => true));
+		$this->assertPattern('/^<a[^<>]+>&lt;&lt; Previous<\/a>$/', $result);
+		
+		$result = $this->Paginator->prev('<< Previous', array('escape' => false));
+		$this->assertPattern('/^<a[^<>]+><< Previous<\/a>$/', $result);
+		
+		$this->Paginator->params['paging'] = array('Client' => array(
+			'page' => 1, 'current' => 1, 'count' => 13, 'prevPage' => false, 'nextPage' => true, 'pageCount' => 5,
+			'defaults' => array(),
+			'options' => array('page' => 1, 'limit' => 3, 'order' => array('Client.name' => 'DESC'), 'conditions' => array()))
+		);
+		
+		$result = $this->Paginator->prev('<< Previous', null, '<strong>Disabled</strong>');
+		$this->assertPattern('/^<div>&lt;strong&gt;Disabled&lt;\/strong&gt;<\/div>$/', $result);
+		
+		$result = $this->Paginator->prev('<< Previous', null, '<strong>Disabled</strong>', array('escape' => true));
+		$this->assertPattern('/^<div>&lt;strong&gt;Disabled&lt;\/strong&gt;<\/div>$/', $result);
+		
+		$result = $this->Paginator->prev('<< Previous', null, '<strong>Disabled</strong>', array('escape' => false));
+		$this->assertPattern('/^<div><strong>Disabled<\/strong><\/div>$/', $result);
 
 		$this->Paginator->params['paging'] = array('Client' => array(
 			'page' => 1, 'current' => 3, 'count' => 13, 'prevPage' => false, 'nextPage' => true, 'pageCount' => 5,
@@ -370,6 +389,18 @@ class PaginatorTest extends CakeTestCase {
 		$result = $this->Paginator->next('Next');
 		$this->assertPattern('/\/sort:Client.name\/direction:DESC"/', $result);
 
+		$this->Paginator->params['paging'] = array('Client' => array(
+			'page' => 2, 'current' => 1, 'count' => 13, 'prevPage' => true, 'nextPage' => false, 'pageCount' => 2,
+			'defaults' => array(),
+			'options' => array('page' => 2, 'limit' => 10, 'order' => array(), 'conditions' => array())
+		));
+		$result = $this->Paginator->prev('Prev');
+		$expected = array(
+			'a' => array('href' => '/index/page:1/limit:10'),
+			'Prev',
+			'/a',
+		);
+		$this->assertTags($result, $expected);
 	}
 /**
  * testGenericLinks method
