@@ -263,9 +263,14 @@ class BackupsController extends AppController
 
     function autoComplete()
     {
-        $this->set('backups', $this->Backup->find('all', array(
-                    'conditions' => array(
-                        'Backup.name LIKE' => $this->data['Backup']['name'].'%'
+        $query = $this->data['Backup']['name'];
+
+        $this->set('backups', $this->Backup->find('all', array
+                (
+                    'conditions' => array
+                    (
+                        'Backup.name LIKE' => $query.'%',
+                        'Backup.user_id' => $this->Auth->user('id'),
                     ),
                     'fields' => array('name')
                 )));
