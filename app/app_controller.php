@@ -15,7 +15,8 @@ class AppController extends Controller
 		$this->Auth->allow(array('controller' => 'pages', 'action' => 'display', 'home'));
 		// controller action access is defined on a per controller basis
 
-        if(!($this->params['controller'] == "users" && $this->params['action'] == "openid"))
+        // don't use named parameters for openid
+        if(!($this->params['controller'] == "users" && $this->params['action'] == "login"))
         {
             $this->_redirectToNamedParameters();
         }

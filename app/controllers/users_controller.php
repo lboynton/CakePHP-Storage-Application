@@ -5,7 +5,7 @@ class UsersController extends AppController
 {
     var $name = "Users";
     var $helpers = array('Html', 'Form', 'Javascript');
-	var $components = array('Number', 'Filter', 'RequestHandler', 'Ticket', 'Email', 'Security', 'Openid');
+	var $components = array('Number', 'Filter', 'RequestHandler', 'Ticket', 'Email', 'Openid');
 	var $uses = array('User', 'SiteParameter');
 	
 	// user pagination defaults
@@ -16,19 +16,20 @@ class UsersController extends AppController
 		'recursive' => -1
 	);
 	
-	function beforeFilter()
+	public function beforeFilter()
 	{
 		parent::beforeFilter();
 		
 		// allow unregistered access to the register and forgot password pages
-		$this->Auth->allow('register', 'forgot_password', 'reset_password', 'openid');
+		$this->Auth->allow('register', 'forgot_password', 'reset_password', 'login');
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'index');
 		$this->Auth->autoRedirect = false;
+        $this->Auth->loginError = 'Login failed';
 		
-		$this->Security->requirePost('admin_user_level',  'admin_disable', 'admin_delete', 'admin_perform_action', 'admin_quota');
+		//$this->Security->requirePost('admin_user_level',  'admin_disable', 'admin_delete', 'admin_perform_action');
 	}
 
-    function index()
+    public function index()
     {
 		$this->helpers[] = "Time";
 		$this->helpers[] = "Number";
@@ -59,224 +60,90 @@ class UsersController extends AppController
 		$this->set('backupSum', $this->User->Backup->find('all', array('fields'=>'SUM(size) as size', 'conditions' => array('Backup.user_id' => $this->Session->read('Auth.User.id')))));
     }
     
-    function login()
-    {
-		$this->pageTitle = "Login";
-		
-		// set the default username to the one created during registration if form hasn't been posted
-		if(empty($this->data)) $this->set('defaultUsername', $this->Session->read('username'));
-		else $this->set('defaultUsername', null);
-		
-		// redirect if the user is logged in
-		if ($this->Auth->user()) 
-		{
-			// check if account has been disabled
-			if($this->User->isAccountDisabled($this->Auth->user('id')))
-			{
-				$this->Session->setFlash('Sorry, your account has been disabled.', 'messages/error');
-				$this->redirect($this->Auth->logout());
-			}
-			else
-			{
-				// update the last login timestamp
-				$this->User->id = $this->Auth->user('id');
-				$this->User->saveField('last_login', date("Y-m-d H:i:s"));
-				
-				// delete any password reset tickets for this user
-				if($this->Ticket->delByData($this->Auth->user('email')))
-				{
-					$this->Session->setFlash('Your password reset request has been cancelled because you logged in successfully.', 'messages/info');
-				}
-				
-				$this->redirect('/users');
-			}
-		}
-    }
-    
-    function logout()
+    public function logout()
     {
 		$this->redirect($this->Auth->logout());
     }
 	
-	function register() 
-	{	
-		// check for POST data
-		if (!empty($this->data)) 
-		{
-			$this->data = Sanitize::clean($this->data);
-			
-			// create user with defaults
-			$this->User->create();
-			$this->data['User']['quota'] = $this->SiteParameter->getParam('default_quota');
+    public function login()
+    {
+        $this->pageTitle = "Login";
 
-			// try to store the data
-			if($this->User->save($this->data, true, array('real_name', 'email', 'username', 'password', 'quota', 'new_password', 'confirm_password')))
-			{
-				// passed validation
-				
-				// login after registering
-				//$this->Session->write('User', $this->User->findByUsername($this->data['User']['username']));
-				
-				// store the username in the session for speedier login
-				$this->Session->write('username', $this->data['User']['username']);
-				
-				// clear POST data
-				$this->data = null;
-				
-				$this->Session->setFlash('Thank you for registering, please login below.', 'messages/success');
-				$this->redirect(array('action' => 'login'));
-			}
-			else
-			{
-				// failed validation
-				$this->Session->setFlash('Your account could not be created. One or more errors were found in the form.','messages/error');
-			}
-		}
-	}
-	
-	function forgot_password()
-	{
-		$this->pageTitle = "Forgotten Password";
-		
-		$this->User->useValidationRules('ForgotPassword');
-		
-		// show the forum unless otherwise stated below
-		$this->set('showForm', true);
-		
-		if(!empty($this->data))
-		{
-			$this->data = Sanitize::clean($this->data);
-			
-			$this->User->set($this->data);
-			$this->User->recursive = -1;
-			
-			if($this->User->validates() && $user = $this->User->findByEmail($this->data['User']['email']))
-			{
-				$ticket = $this->Ticket->set($user['User']['email']);
-				
-				// ticket will not be generated for duplicate requests within 24 hours
-				if(!$ticket)
-				{
-					$this->Session->setFlash('You have already made a password reset attempt within the last 24 hours. Please follow the instructions in the email that was sent to you.', 'messages/error');
-					$this->set('showForm', false);
-					return;
-				}
-				
-				$this->Email->to = $user['User']['email'];
-				$this->Email->subject = 'Password reset';
-				$this->Email->from = 'Backup system <app@backup>';
-				$this->Email->template = 'forgot_password';
-				$this->Email->sendAs = 'text';
+        $this->User->useValidationRules('Login');
+        
+        $returnTo = 'http://'.$_SERVER['SERVER_NAME'].'/users/login';
 
-				// pass the link including the ticket hash to the email view
-				$this->set('link', FULL_BASE_URL.'/'.$this->params['controller'].'/reset_password/'.$ticket);
-
-				if($this->Email->send())
-				{
-					$this->Session->setFlash('An email has been sent to the address you specified. Please check your email and follow the instructions within it.', 'messages/success');
-					$this->set('showForm', false);
-				}
-				else
-				{
-					$this->Session->setFlash('Sorry, due to a misconfiguration an email cannot be sent to you at this time.', 'messages/error');
-					$this->set('showForm', false);
-				}
-			}
-			else
-			{
-				$this->Session->setFlash('There was a problem with the email address you supplied.', 'messages/error');
-				$this->set('showForm', true);
-			}
-		}
-	}
-	
-	/**
-	 * @param hash The ticket required to reset the password
-	 */
-	function reset_password($hash = null)
-	{
-		$this->User->useValidationRules('ResetPassword');
-		
-        if($email = $this->Ticket->get($hash))
+        if ($this->RequestHandler->isPost())
         {
-			$this->set('ticket', $hash);
-			
-            $authUser = $this->User->findByEmail($email);
-			
-            if(is_array($authUser))
+            $this->User->set( $this->data );
+
+            if($this->User->validates())
             {
-                if(!empty($this->data))
-                {
-					$this->User->recursive = -1;
-					$user = $this->User->findByEmail($email);
-					
-					$this->User->set($this->data);
-					$this->User->id = $user['User']['id'];
-					
-					// call validates() because save() doesn't seem to be doing any validation
-					if($this->User->validates())
-					{
-						if($this->User->save($this->data, true, array('password')))
-                    	{
-							$this->Session->setFlash('Your password has been changed. You can now login with the new password below.', 'messages/success');
-							$this->Ticket->del($hash);
-							$this->redirect('/users/login');
-                    	}
-					}
-					else
-					{
-						$this->Session->setFlash('Your password could not be changed. Please check for any errors below.', 'messages/error');
-					}
-                }
-				
-                return;
+                $this->makeOpenIDRequest($this->data['User']['username'], $returnTo);
             }
         }
-		
-        $this->Ticket->del($hash);
-        $this->redirect('/');
-	}
 
-    function openid()
-    {
-        $returnTo = 'http://'.$_SERVER['SERVER_NAME'].'/users/openid';
-
-        if (!empty($this->data))
+        if ($this->isOpenIDResponse())
         {
-            try
+            $this->handleOpenIDResponse($returnTo);
+        }
+
+        // check if user has been authenticated
+        if($this->Auth->user())
+        {
+            $user = $this->User->getUser($this->Auth->user());
+
+            // update the Auth session data
+            foreach(array_shift($user) as $key => $value)
             {
-                $this->Openid->authenticate($this->data['User']['open_id'], $returnTo, 'http://'.$_SERVER['SERVER_NAME']);
-            } 
-            catch (InvalidArgumentException $e)
-            {
-                $this->Session->setFlash('Sorry, that is an invalid OpenID.', 'messages/error');
-            } 
-            catch (Exception $e)
-            {
-                $this->Session->setFlash($e->getMessage(), 'messages/error');
+                $this->Session->write('Auth.User.' . $key, $value);
             }
-        } 
-        elseif (count($_GET) > 1)
-        {
-            $response = $this->Openid->getResponse($returnTo);
 
-            if ($response->status == Auth_OpenID_CANCEL)
+            // check if account has been disabled
+			if($this->User->isAccountDisabled($this->Auth->user('id')))
+			{
+				$this->Session->setFlash('Sorry, you cannot currently log in because your account has been disabled.', 'messages/error');
+				$this->redirect($this->Auth->logout());
+			}
+            else
             {
-                $this->Session->setFlash('Verification was cancelled by the user.', 'messages/error');
-            } 
-            elseif ($response->status == Auth_OpenID_FAILURE)
-            {
-                $this->Session->setFlash('OpenID verification failed: '.$response->message, 'messages/error');
-            } 
-            elseif ($response->status == Auth_OpenID_SUCCESS)
-            {
-                $this->Session->setFlash('Successfully authenticated!', 'messages/success');
-                //exit;
+                // update the last login timestamp
+                $this->User->id = $this->Auth->user('id');
+                $this->User->saveField('last_login', date("Y-m-d H:i:s"));
+
+                // redirect user to their account page
+                $this->redirect('/users');
             }
         }
     }
-	
-	function _update_details()
+
+    private function makeOpenIDRequest($openid, $returnTo)
+    {
+        try
+        {
+            // try to authenticate with the OpenID provider and request sreg extension details
+            // email is required
+            // fullname is optional
+            $this->Openid->authenticate($openid, $returnTo, 'http://'.$_SERVER['SERVER_NAME'], array('email'), array('fullname'));
+        } 
+        catch (Exception $e)
+        {
+            // empty
+        }
+    }
+
+    private function isOpenIDResponse()
+    {
+        return (count($_GET) > 1);
+    }
+
+    private function handleOpenIDResponse($returnTo)
+    {
+        $response = $this->Openid->getResponse($returnTo);
+        $this->Auth->login($response);
+    }
+
+    private function _update_details()
 	{
 		$this->User->id = $this->Session->read('Auth.User.id');
 		
@@ -296,29 +163,8 @@ class UsersController extends AppController
 			$this->Session->setFlash('Your details could not be updated.', 'messages/error');
 		}
 	}
-	
-	function _change_password()
-	{
-		$this->User->id = $this->Session->read('Auth.User.id');
-		
-		// use the change password validation set instead of default
-		$this->User->useValidationRules('ChangePassword');
-		
-		// use save() instead of saveField() which seems to bugger validation up
-		if($this->User->save($this->data, true, array('password', 'old_password', 'new_password', 'confirm_password')))
-		{
-			$this->Session->setFlash('Your password has been updated.', 'messages/success');
-			
-			// clear POST data
-			$this->data = null;
-		}
-		else 
-		{
-			$this->Session->setFlash('Your password could not be updated.', 'messages/error');
-		}
-	}
 
-	function admin_index()
+	public function admin_index()
 	{
 		$this->pageTitle = "Users";
 		$this->helpers[] = "Number";
@@ -351,12 +197,12 @@ class UsersController extends AppController
         }
 	}
 	
-	function admin_login()
+	public function admin_login()
 	{
 		$this->redirect('/users/login');
 	}
 	
-	function admin_view($id)
+	public function admin_view($id)
 	{
 		$this->User->useValidationRules('AdminUserView');
 		
@@ -390,7 +236,7 @@ class UsersController extends AppController
 		$this->set('backupSum', $this->User->Backup->find('all', array('fields' => 'SUM(size) as size', 'conditions' => array('user_id' => $id))));
 	}
 	
-	function admin_user_level($id)
+	public function admin_user_level($id)
 	{
 		if(!empty($this->data))
 		{
@@ -403,7 +249,7 @@ class UsersController extends AppController
 		$this->redirect('/admin/users/view/' . $id);
 	}
 	
-	function admin_disable()
+	public function admin_disable()
 	{
 		if(!empty($this->data))
 		{
@@ -424,7 +270,7 @@ class UsersController extends AppController
 		$this->redirect('/admin/users');
 	}
 	
-	function admin_delete()
+	public function admin_delete()
 	{	
 		if(!empty($this->data))
 		{
@@ -445,7 +291,7 @@ class UsersController extends AppController
 		$this->redirect('/admin/users');
 	}
 	
-	function admin_perform_action()
+	public function admin_perform_action()
 	{
 		if(!empty($this->data))
 		{
@@ -470,7 +316,7 @@ class UsersController extends AppController
 		$this->redirect('/admin/users');
 	}
 	
-	function admin_quota()
+	public function admin_quota()
 	{	
 		$this->User->useValidationRules('AdminUserView');
 		
@@ -500,7 +346,7 @@ class UsersController extends AppController
 		}
 	}
 	
-	function _disable_accounts($ids)
+	private function _disable_accounts($ids)
 	{
 		foreach($ids as $id => $value)
 		{
@@ -515,7 +361,7 @@ class UsersController extends AppController
 		$this->Session->setFlash('The selected user accounts have been enabled/disabled.', 'messages/success');
 	}
 	
-	function _delete_accounts($ids)
+	private function _delete_accounts($ids)
 	{
 		foreach($ids as $id => $value)
 		{

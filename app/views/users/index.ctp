@@ -35,16 +35,6 @@
 <?php echo $form->end('Change'); ?>
 </fieldset>
 
-<h3>Change password</h3>
-<fieldset class="fieldset2">
-<?php echo $form->create(null, array('action' => 'index')); ?>
-	<?php echo $form->input('old_password', array('type' => 'password')); ?>
-    <?php echo $form->input('new_password', array('type' => 'password')); ?>
-    <?php echo $form->input('confirm_password', array('type' => 'password')); ?>
-    <?php echo $form->input('action', array('value' => 'changePassword', 'type' => 'hidden')); ?>
-<?php echo $form->end('Change'); ?>
-</fieldset>
-
 <h3>Empty storage</h3>
 <p>Check the box below and click the 'Delete' button to delete all the files and folders from your file storage.</p>
 <?php echo $form->create('Backup', array('action' => 'deleteAll')); ?>

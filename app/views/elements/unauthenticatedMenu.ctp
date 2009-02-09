@@ -1,9 +1,6 @@
 <div id="menu">
 	<?php
-    echo $menu->mainMenu(array(
-        'Login' => '/users/login',
-        'OpenID login' => '/users/openid',
-        'Register' => '/users/register'));
+    echo $menu->mainMenu(array('Login' => '/users/login'));
     ?> 
     <div class="clear"></div>
 </div>

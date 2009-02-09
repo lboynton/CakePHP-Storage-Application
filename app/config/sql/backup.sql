@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: backup
 -- ------------------------------------------------------
--- Server version	5.0.51a-3ubuntu5.3
+-- Server version	5.0.67-0ubuntu6
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -35,7 +35,7 @@ CREATE TABLE `backups` (
   `type` varchar(255) NOT NULL,
   `hash` varchar(32) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2125 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `tickets` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `data` (`data`),
   UNIQUE KEY `hash` (`hash`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -80,8 +80,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `username` varchar(20) NOT NULL,
-  `password` varchar(40) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `email` varchar(40) default NULL,
   `created` datetime default NULL,
   `real_name` varchar(45) default NULL,
@@ -92,7 +91,7 @@ CREATE TABLE `users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -104,6 +103,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-10-19 11:18:20
-INSERT INTO `backup`.`users` (`id`,`username`,`password`,`email`,`created`,`real_name`,`admin`,`quota`,`last_login`,`disabled`) VALUES
-  (1,'lee','d3521f0f4841ff1a777252f1d0ed1671236ae505','lee@lboynton.com','2008-09-12 17:17:27','Lee Boynton',1,10485760,'2008-09-20 18:07:17',0);
+-- Dump completed on 2008-12-23 15:16:17

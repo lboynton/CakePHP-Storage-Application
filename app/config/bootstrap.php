@@ -80,21 +80,21 @@ function stripFileExtension($filename, $extension)
  * @see Comment by davedx at gmail dot com on { http://us2.php.net/manual/en/function.rmdir.php }
  * @param file {String} The file or folder to be deleted.
  **/
-function rmRecursive($file) 
+function rmRecursive($file)
 {
-	if (is_dir($file) && !is_link($file)) 
+	if (is_dir($file) && !is_link($file))
 	{
-		foreach(glob($file.'/*') as $sf) 
+		foreach(glob($file.'/*') as $sf)
 		{
-			if ( !rmRecursive($sf) ) 
+			if ( !rmRecursive($sf) )
 			{
 				$this->log("Failed to remove $sf\n");
 				return false;
 			}
 		}
 		return rmdir($file);
-	} 
-	else 
+	}
+	else
 	{
 		return unlink($file);
 	}
@@ -107,7 +107,7 @@ function rmRecursive($file)
 function isDirectoryName($filename)
 {
 	$lastCharacter = substr($filename, strlen($filename) - 1, strlen($filename));
-	
+
 	return $lastCharacter == '\\' || $lastCharacter == '/';
 }
 
