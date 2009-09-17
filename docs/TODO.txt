@@ -1,19 +1,27 @@
 Admin section
 	- Message users
-	- Perhaps use ACL for different groups like student, staff, admin. The default quota could then be changed for each group.
+	- Perhaps use ACL for different groups like student, staff, admin. The 
+      default quota could then be changed for each group.
 	
 Backup/restore
 	- Set correct content-type in header when viewing files
-	- Intelligent metadata processing of more file formats (such as MS Office, image, email archives)
+	- Intelligent metadata processing of more file formats (such as MS Office, 
+      image, email archives)
 	- Experiment with displaying files/folders as a tree using ExtJS
-	- Support different archive types such as tar, tar.gz, tar.bz2. Ideally this should be abstracted so that the same code can 
-	  be used to read/write to any archives. Look for libraries for this functionality.
-	- Add option for searching in current folder and in current folder and all subfolders
-	- Perhaps add option for extracting uploaded zip files, so that zip files can be uploaded without being extracted
+	- Support different archive types such as tar, tar.gz, tar.bz2. Ideally this
+      should be abstracted so that the same code can be used to read/write to 
+      any archives. Look for libraries for this functionality.
+	- Add option for searching in current folder and in current folder and all 
+      subfolders
+	- Perhaps add option for extracting uploaded zip files, so that zip files 
+      can be uploaded without being extracted
 	- Look into zip file number limit
-	- Consider changing the file icon function so that it looks for file names with comma separated file extensions, instead of 
-	  needing a file for each extension
-	- Would be nice to show the amount of files and folders in a folder without opening it
+	- Consider changing the file icon function so that it looks for file names 
+      with comma separated file extensions, instead of needing a file for each 
+      extension
+	- Would be nice to show the amount of files and folders in a folder without 
+      opening it
+    - Prevent downloads when no files are selected
 	
 User accounts
 	- Verify email address upon registration?
@@ -21,7 +29,6 @@ User accounts
 User interface
 	- Add help section?
 	- Test on different browsers
-	- IE6 specific bugs
 	
 General
 	- Tidy up code, especially backups controller.
@@ -30,6 +37,10 @@ General
 	- Make sure button styles are consistent
 	- Only use icons which are pages?
 	- Remove checkboxes from search results
-	- Have an icon for the table header for the file type column so that it can be sorted
+	- Have an icon for the table header for the file type column so that it can 
+      be sorted
 	- Align input boxes in the column?
     - See if we can remove the need for the redirectToNamedParameters() function
+    - Display characters properly (some characters are displayed HTML encoded)
+    - Search at top doesn't appear to work
+    - Search box on search page expands when activated
