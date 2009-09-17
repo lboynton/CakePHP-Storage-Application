@@ -1,0 +1,4 @@
+backups/*
+cake/
+*~
+app/tmp/*
