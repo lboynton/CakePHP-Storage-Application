@@ -1,6 +1,6 @@
 #!/bin/sh
 echo Dumping database structure...
-mysqldump backup --user backup --password --no-data > backup.sql
+mysqldump backup --user backup --password --no-data > schema.sql
 
 #echo Adding user to users table...
 # add user to users table
